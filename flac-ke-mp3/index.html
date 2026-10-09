@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FLAC ke MP3 Online | konvertin.</title>
+<meta name="description" content="Ubah FLAC jadi MP3 di browser. File tidak diunggah.">
+
+<meta name="theme-color" content="#1a1714">
+<meta property="og:title" content="FLAC ke MP3 Online | konvertin.">
+<meta property="og:description" content="Ubah FLAC jadi MP3 di browser. File tidak diunggah.">
+<meta property="og:type" content="website">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="">
+<a class="skip" href="#main">Lewati ke isi</a>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="Konvertin, beranda">konvertin<i>.</i></a>
+    <nav aria-label="Utama">
+      <ul>
+        <li><a href="/#tool">Tool</a></li>
+        <li><a href="/#cara-kerja">Cara kerja</a></li>
+        <li><a href="/#privasi">Privasi</a></li>
+        <li><a href="/#faq">FAQ</a></li>
+        <li><a class="btn small" href="/#tool">Mulai konversi</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <p class="crumb"><a href="/">konvertin.</a> / <a href="/#tool">Audio</a> / FLAC ke MP3</p>
+  <div class="tool-head">
+    <h1>FLAC ke MP3</h1>
+    <p>Ubah FLAC jadi MP3 di browser. File tidak diunggah.</p>
+  </div>
+  
+  
+  <div class="notice err" id="alert" role="alert" hidden><b>Ada masalah</b><span id="alert-text"></span></div>
+
+  <div class="tool-grid" id="tool" data-op="audio-convert" data-slug="flac-ke-mp3" data-accept=".flac">
+    <div>
+      <label class="dropzone" id="drop">
+        <input type="file" id="file" accept=".flac" multiple>
+        <strong>Tarik file ke sini</strong>
+        <span>atau klik untuk memilih. Sampai 10 file.</span>
+        <span class="formats">FLAC &middot; 50 MB atau 10 menit per file</span>
+      </label>
+      <ul class="files" id="files" aria-live="polite"></ul>
+      <div class="ad-slot" data-slot="bawah-upload" aria-hidden="true"></div>
+    </div>
+    <form class="panel options" id="opts" onsubmit="return false">
+      <h2>Opsi</h2>
+<div class="field"><label>Format tujuan</label><div class="mono">MP3</div><input type="hidden" id="o-format" name="format" value="mp3"></div>
+<div class="field" id="f-bitrate"><fieldset><legend>Bitrate</legend><div class="seg">
+<label><input type="radio" name="bitrate" value="128"><span>128</span></label>
+<label><input type="radio" name="bitrate" value="192" checked><span>192</span></label>
+<label><input type="radio" name="bitrate" value="320"><span>320</span></label></div><div class="hint">kbps. Tidak berlaku untuk WAV dan FLAC.</div></fieldset></div>
+      <div class="actions">
+        <button class="btn" type="button" id="go" disabled>Konversi</button>
+        <button class="btn ghost" type="button" id="cancel" hidden>Batalkan</button>
+        <button class="btn ghost" type="button" id="zip" hidden>Unduh semua (ZIP)</button>
+      </div>
+      <p class="sum" id="sum" hidden></p>
+    </form>
+  </div>
+
+  <div class="tool-notes">
+    <div>
+      <h2>Yang perlu kamu tahu</h2>
+      <ul><li>Diproses di browser kamu. File tidak diunggah ke server.</li><li>Format masuk: FLAC.</li><li>Batas gratis: 50 MB atau 10 menit per file.</li></ul>
+    </div>
+    <div>
+      <h2>Tool lain</h2>
+      <ul class="related"><li><a href="/konversi-audio/">Konversi audio</a></li><li><a href="/wav-ke-mp3/">WAV ke MP3</a></li><li><a href="/m4a-ke-mp3/">M4A ke MP3</a></li></ul>
+    </div>
+  </div>
+</div>
+<div style="height:72px"></div>
+</main>
+<footer>
+  <div class="wrap">
+    <div>konvertin. &middot; Konverter file untuk pemakaian sehari-hari.</div>
+    <ul>
+      <li><a href="/privasi.html">Kebijakan privasi</a></li>
+      <li><a href="/syarat.html">Syarat penggunaan</a></li>
+      <li><a href="mailto:halo@konvertin.example">Kontak</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="/js/config.js"></script>
+<script src="/js/app.js" defer></script>
+
+</body>
+</html>

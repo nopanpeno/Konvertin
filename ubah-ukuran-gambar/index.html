@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ubah Ukuran Gambar Online (Resize) | konvertin.</title>
+<meta name="description" content="Perkecil atau perbesar gambar dengan rasio terkunci. Jalan di browser.">
+
+<meta name="theme-color" content="#1a1714">
+<meta property="og:title" content="Ubah Ukuran Gambar Online (Resize) | konvertin.">
+<meta property="og:description" content="Perkecil atau perbesar gambar dengan rasio terkunci. Jalan di browser.">
+<meta property="og:type" content="website">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="">
+<a class="skip" href="#main">Lewati ke isi</a>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="/" aria-label="Konvertin, beranda">konvertin<i>.</i></a>
+    <nav aria-label="Utama">
+      <ul>
+        <li><a href="/#tool">Tool</a></li>
+        <li><a href="/#cara-kerja">Cara kerja</a></li>
+        <li><a href="/#privasi">Privasi</a></li>
+        <li><a href="/#faq">FAQ</a></li>
+        <li><a class="btn small" href="/#tool">Mulai konversi</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <p class="crumb"><a href="/">konvertin.</a> / <a href="/#tool">Gambar</a> / Ubah ukuran gambar</p>
+  <div class="tool-head">
+    <h1>Ubah ukuran gambar</h1>
+    <p>Perkecil atau perbesar gambar dengan rasio terkunci. Jalan di browser.</p>
+  </div>
+  
+  
+  <div class="notice err" id="alert" role="alert" hidden><b>Ada masalah</b><span id="alert-text"></span></div>
+
+  <div class="tool-grid" id="tool" data-op="image-resize" data-slug="ubah-ukuran-gambar" data-accept=".jpg,.jpeg,.png,.webp,.heic,.heif">
+    <div>
+      <label class="dropzone" id="drop">
+        <input type="file" id="file" accept=".jpg,.jpeg,.png,.webp,.heic,.heif" multiple>
+        <strong>Tarik file ke sini</strong>
+        <span>atau klik untuk memilih. Sampai 10 file.</span>
+        <span class="formats">JPG, PNG, WEBP, HEIC &middot; 20 MB per file</span>
+      </label>
+      <ul class="files" id="files" aria-live="polite"></ul>
+      <div class="ad-slot" data-slot="bawah-upload" aria-hidden="true"></div>
+    </div>
+    <form class="panel options" id="opts" onsubmit="return false">
+      <h2>Opsi</h2>
+<div class="field"><label for="o-format">Format tujuan</label><select id="o-format" name="format"><option value="jpg" selected>JPG</option><option value="png">PNG</option><option value="webp">WEBP</option></select></div>
+<div class="field" id="f-quality"><label for="o-quality">Kualitas <output id="o-quality-v">80</output></label><input id="o-quality" type="range" min="10" max="100" value="80" step="1"><div class="hint">Makin rendah, makin kecil file.</div></div>
+<div class="field"><label for="o-w">Lebar (px)</label><input id="o-w" type="number" min="1" max="10000" inputmode="numeric"></div>
+<div class="field"><label for="o-h">Tinggi (px)</label><input id="o-h" type="number" min="1" max="10000" inputmode="numeric"><div class="hint">Rasio terkunci. Isi salah satu.</div></div>
+      <div class="actions">
+        <button class="btn" type="button" id="go" disabled>Konversi</button>
+        <button class="btn ghost" type="button" id="cancel" hidden>Batalkan</button>
+        <button class="btn ghost" type="button" id="zip" hidden>Unduh semua (ZIP)</button>
+      </div>
+      <p class="sum" id="sum" hidden></p>
+    </form>
+  </div>
+
+  <div class="tool-notes">
+    <div>
+      <h2>Yang perlu kamu tahu</h2>
+      <ul><li>Diproses di browser kamu. File tidak diunggah ke server.</li><li>Format masuk: JPG, PNG, WEBP, HEIC.</li><li>Isi lebar atau tinggi. Satunya dihitung otomatis dari rasio asli.</li></ul>
+    </div>
+    <div>
+      <h2>Tool lain</h2>
+      <ul class="related"><li><a href="/konversi-gambar/">Konversi gambar</a></li><li><a href="/heic-ke-jpg/">HEIC ke JPG</a></li><li><a href="/jpg-ke-png/">JPG ke PNG</a></li><li><a href="/png-ke-jpg/">PNG ke JPG</a></li><li><a href="/webp-ke-jpg/">WEBP ke JPG</a></li></ul>
+    </div>
+  </div>
+</div>
+<div style="height:72px"></div>
+</main>
+<footer>
+  <div class="wrap">
+    <div>konvertin. &middot; Konverter file untuk pemakaian sehari-hari.</div>
+    <ul>
+      <li><a href="/privasi.html">Kebijakan privasi</a></li>
+      <li><a href="/syarat.html">Syarat penggunaan</a></li>
+      <li><a href="mailto:halo@konvertin.example">Kontak</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="/js/config.js"></script>
+<script src="/js/app.js" defer></script>
+
+</body>
+</html>

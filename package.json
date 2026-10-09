@@ -1,0 +1,10 @@
+{
+  "name": "konvertin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Konvertin: konverter file serbaguna. Frontend statis, backend FastAPI.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "serve": "python3 -m http.server 8080"
+  }
+}

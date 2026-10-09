@@ -1,0 +1,174 @@
+{
+  "categories": [
+    { "id": "gambar", "label": "Gambar" },
+    { "id": "audio", "label": "Audio" },
+    { "id": "kompres", "label": "Kompres" },
+    { "id": "dokumen", "label": "Dokumen" }
+  ],
+  "tools": [
+    {
+      "slug": "konversi-gambar", "cat": "gambar", "op": "image-convert", "side": "browser",
+      "name": "Konversi gambar", "short": "JPG, PNG, WEBP, HEIC ke JPG, PNG, atau WEBP",
+      "title": "Konversi Gambar Online: JPG, PNG, WEBP, HEIC",
+      "h1": "Ubah format gambar",
+      "desc": "Ubah gambar antar JPG, PNG, WEBP, dan HEIC langsung di browser. File tidak diunggah ke server.",
+      "accept": ".jpg,.jpeg,.png,.webp,.heic,.heif", "inputs": "JPG, PNG, WEBP, HEIC",
+      "formats": ["jpg", "png", "webp"], "defaultFormat": "webp", "quality": true,
+      "notes": ["Konversi ke PNG tidak memakai slider kualitas, karena PNG tanpa kehilangan data.", "Gambar transparan yang diubah ke JPG diberi latar putih."]
+    },
+    {
+      "slug": "heic-ke-jpg", "cat": "gambar", "op": "image-convert", "side": "browser",
+      "name": "HEIC ke JPG", "short": "Foto iPhone jadi JPG",
+      "title": "HEIC ke JPG Online: Ubah Foto iPhone",
+      "h1": "HEIC ke JPG",
+      "desc": "Ubah foto HEIC dari iPhone jadi JPG di browser. Tanpa unggah, tanpa daftar.",
+      "accept": ".heic,.heif", "inputs": "HEIC, HEIF",
+      "formats": ["jpg"], "defaultFormat": "jpg", "quality": true,
+      "notes": ["Foto HEIC besar bisa butuh beberapa detik per file di HP."]
+    },
+    {
+      "slug": "jpg-ke-png", "cat": "gambar", "op": "image-convert", "side": "browser",
+      "name": "JPG ke PNG", "short": "Ubah JPG jadi PNG",
+      "title": "JPG ke PNG Online", "h1": "JPG ke PNG",
+      "desc": "Ubah JPG jadi PNG di browser. File tidak diunggah.",
+      "accept": ".jpg,.jpeg", "inputs": "JPG", "formats": ["png"], "defaultFormat": "png", "quality": false,
+      "notes": ["PNG hasil konversi biasanya lebih besar dari JPG asli."]
+    },
+    {
+      "slug": "png-ke-jpg", "cat": "gambar", "op": "image-convert", "side": "browser",
+      "name": "PNG ke JPG", "short": "Ubah PNG jadi JPG",
+      "title": "PNG ke JPG Online", "h1": "PNG ke JPG",
+      "desc": "Ubah PNG jadi JPG di browser. File tidak diunggah.",
+      "accept": ".png", "inputs": "PNG", "formats": ["jpg"], "defaultFormat": "jpg", "quality": true,
+      "notes": ["Bagian transparan PNG jadi putih di JPG."]
+    },
+    {
+      "slug": "webp-ke-jpg", "cat": "gambar", "op": "image-convert", "side": "browser",
+      "name": "WEBP ke JPG", "short": "Ubah WEBP jadi JPG",
+      "title": "WEBP ke JPG Online", "h1": "WEBP ke JPG",
+      "desc": "Ubah WEBP jadi JPG di browser. File tidak diunggah.",
+      "accept": ".webp", "inputs": "WEBP", "formats": ["jpg"], "defaultFormat": "jpg", "quality": true,
+      "notes": ["Bagian transparan WEBP jadi putih di JPG."]
+    },
+    {
+      "slug": "jpg-ke-webp", "cat": "gambar", "op": "image-convert", "side": "browser",
+      "name": "JPG ke WEBP", "short": "Ubah JPG jadi WEBP",
+      "title": "JPG ke WEBP Online", "h1": "JPG ke WEBP",
+      "desc": "Ubah JPG jadi WEBP di browser. Ukuran file biasanya lebih kecil.",
+      "accept": ".jpg,.jpeg", "inputs": "JPG", "formats": ["webp"], "defaultFormat": "webp", "quality": true,
+      "notes": []
+    },
+    {
+      "slug": "ubah-ukuran-gambar", "cat": "gambar", "op": "image-resize", "side": "browser",
+      "name": "Ubah ukuran gambar", "short": "Resize dengan rasio terkunci",
+      "title": "Ubah Ukuran Gambar Online (Resize)", "h1": "Ubah ukuran gambar",
+      "desc": "Perkecil atau perbesar gambar dengan rasio terkunci. Jalan di browser.",
+      "accept": ".jpg,.jpeg,.png,.webp,.heic,.heif", "inputs": "JPG, PNG, WEBP, HEIC",
+      "formats": ["jpg", "png", "webp"], "defaultFormat": "jpg", "quality": true, "resize": true,
+      "notes": ["Isi lebar atau tinggi. Satunya dihitung otomatis dari rasio asli."]
+    },
+    {
+      "slug": "kompres-gambar", "cat": "kompres", "op": "image-compress", "side": "browser",
+      "name": "Kompres gambar", "short": "Kecilkan JPG, PNG, WEBP",
+      "title": "Kompres Gambar Online: Kecilkan Ukuran JPG, PNG, WEBP",
+      "h1": "Kompres gambar",
+      "desc": "Kecilkan ukuran JPG, PNG, WEBP dengan slider kualitas atau target ukuran, misalnya di bawah 200 KB. Jalan di browser.",
+      "accept": ".jpg,.jpeg,.png,.webp", "inputs": "JPG, PNG, WEBP",
+      "quality": true, "target": true,
+      "notes": ["PNG tanpa kehilangan data, jadi hemat ukurannya kecil. Untuk hemat lebih besar, ubah ke WEBP atau JPG.", "Kalau hasil malah lebih besar dari file asli, file asli yang dikembalikan."]
+    },
+    {
+      "slug": "konversi-audio", "cat": "audio", "op": "audio-convert", "side": "browser",
+      "name": "Konversi audio", "short": "MP3, WAV, M4A, OGG, FLAC",
+      "title": "Konversi Audio Online: MP3, WAV, M4A, OGG, FLAC",
+      "h1": "Ubah format audio",
+      "desc": "Ubah audio antar MP3, WAV, M4A, OGG, dan FLAC di browser. File tidak diunggah.",
+      "accept": ".mp3,.wav,.m4a,.aac,.ogg,.flac", "inputs": "MP3, WAV, M4A, OGG, FLAC",
+      "formats": ["mp3", "wav", "m4a", "ogg", "flac"], "defaultFormat": "mp3", "bitrate": true, "trim": true,
+      "notes": ["Batas gratis: 50 MB atau 10 menit per file.", "Pemuat audio sekitar 30 MB diunduh sekali, lalu disimpan browser."]
+    },
+    {
+      "slug": "wav-ke-mp3", "cat": "audio", "op": "audio-convert", "side": "browser",
+      "name": "WAV ke MP3", "short": "Kecilkan WAV jadi MP3",
+      "title": "WAV ke MP3 Online", "h1": "WAV ke MP3",
+      "desc": "Ubah WAV jadi MP3 di browser. File tidak diunggah.",
+      "accept": ".wav", "inputs": "WAV", "formats": ["mp3"], "defaultFormat": "mp3", "bitrate": true,
+      "notes": ["Batas gratis: 50 MB atau 10 menit per file."]
+    },
+    {
+      "slug": "m4a-ke-mp3", "cat": "audio", "op": "audio-convert", "side": "browser",
+      "name": "M4A ke MP3", "short": "Ubah M4A jadi MP3",
+      "title": "M4A ke MP3 Online", "h1": "M4A ke MP3",
+      "desc": "Ubah M4A jadi MP3 di browser. File tidak diunggah.",
+      "accept": ".m4a,.aac", "inputs": "M4A, AAC", "formats": ["mp3"], "defaultFormat": "mp3", "bitrate": true,
+      "notes": ["Batas gratis: 50 MB atau 10 menit per file."]
+    },
+    {
+      "slug": "flac-ke-mp3", "cat": "audio", "op": "audio-convert", "side": "browser",
+      "name": "FLAC ke MP3", "short": "Ubah FLAC jadi MP3",
+      "title": "FLAC ke MP3 Online", "h1": "FLAC ke MP3",
+      "desc": "Ubah FLAC jadi MP3 di browser. File tidak diunggah.",
+      "accept": ".flac", "inputs": "FLAC", "formats": ["mp3"], "defaultFormat": "mp3", "bitrate": true,
+      "notes": ["Batas gratis: 50 MB atau 10 menit per file."]
+    },
+    {
+      "slug": "pdf-ke-word", "cat": "dokumen", "op": "server", "side": "server", "job": "pdf_to_docx",
+      "name": "PDF ke Word", "short": "PDF jadi DOCX yang bisa diedit",
+      "title": "PDF ke Word Online (DOCX)", "h1": "PDF ke Word",
+      "desc": "Ubah PDF jadi DOCX. File diproses di server dan dihapus otomatis maksimal 1 jam.",
+      "accept": ".pdf", "inputs": "PDF", "outExt": "docx", "maxMB": 25,
+      "warning": "Layout hasil bisa berubah dari PDF asli. PDF hasil scan (berupa gambar) belum didukung, karena butuh OCR.",
+      "notes": ["PDF dengan password ditolak."]
+    },
+    {
+      "slug": "word-ke-pdf", "cat": "dokumen", "op": "server", "side": "server", "job": "docx_to_pdf",
+      "name": "Word ke PDF", "short": "DOCX jadi PDF",
+      "title": "Word ke PDF Online (DOCX ke PDF)", "h1": "Word ke PDF",
+      "desc": "Ubah DOCX jadi PDF. File diproses di server dan dihapus otomatis maksimal 1 jam.",
+      "accept": ".docx", "inputs": "DOCX", "outExt": "pdf", "maxMB": 25,
+      "notes": ["Font yang tidak ada di server diganti font mirip, jadi tampilan bisa sedikit bergeser."]
+    },
+    {
+      "slug": "pptx-ke-pdf", "cat": "dokumen", "op": "server", "side": "server", "job": "pptx_to_pdf",
+      "name": "PPTX ke PDF", "short": "Slide PowerPoint jadi PDF",
+      "title": "PPTX ke PDF Online", "h1": "PowerPoint ke PDF",
+      "desc": "Ubah PPTX jadi PDF. File diproses di server dan dihapus otomatis maksimal 1 jam.",
+      "accept": ".pptx", "inputs": "PPTX", "outExt": "pdf", "maxMB": 25,
+      "notes": ["Animasi dan transisi tidak ikut ke PDF."]
+    },
+    {
+      "slug": "excel-ke-pdf", "cat": "dokumen", "op": "server", "side": "server", "job": "xlsx_to_pdf",
+      "name": "Excel ke PDF", "short": "XLSX jadi PDF",
+      "title": "Excel ke PDF Online (XLSX ke PDF)", "h1": "Excel ke PDF",
+      "desc": "Ubah XLSX jadi PDF. File diproses di server dan dihapus otomatis maksimal 1 jam.",
+      "accept": ".xlsx", "inputs": "XLSX", "outExt": "pdf", "maxMB": 25,
+      "notes": ["Lembar yang lebar bisa terpotong ke beberapa halaman."]
+    },
+    {
+      "slug": "pdf-ke-txt", "cat": "dokumen", "op": "server", "side": "server", "job": "pdf_to_txt",
+      "name": "PDF ke TXT", "short": "Ambil teks dari PDF",
+      "title": "PDF ke TXT Online", "h1": "PDF ke TXT",
+      "desc": "Ambil teks dari PDF jadi file TXT. File diproses di server dan dihapus otomatis maksimal 1 jam.",
+      "accept": ".pdf", "inputs": "PDF", "outExt": "txt", "maxMB": 25,
+      "warning": "PDF hasil scan (berupa gambar) belum didukung, karena butuh OCR.",
+      "notes": []
+    },
+    {
+      "slug": "word-ke-txt", "cat": "dokumen", "op": "server", "side": "server", "job": "docx_to_txt",
+      "name": "Word ke TXT", "short": "Ambil teks dari DOCX",
+      "title": "Word ke TXT Online", "h1": "Word ke TXT",
+      "desc": "Ambil teks dari DOCX jadi file TXT. File diproses di server dan dihapus otomatis maksimal 1 jam.",
+      "accept": ".docx", "inputs": "DOCX", "outExt": "txt", "maxMB": 25,
+      "notes": []
+    },
+    {
+      "slug": "kompres-pdf", "cat": "kompres", "op": "server", "side": "server", "job": "compress_pdf",
+      "name": "Kompres PDF", "short": "Kecilkan PDF, 3 level",
+      "title": "Kompres PDF Online: Kecilkan Ukuran PDF",
+      "h1": "Kompres PDF",
+      "desc": "Kecilkan ukuran PDF dengan 3 level: ringan, sedang, maksimal. File dihapus otomatis maksimal 1 jam.",
+      "accept": ".pdf", "inputs": "PDF", "outExt": "pdf", "maxMB": 25, "level": true, "compare": true,
+      "notes": ["Level maksimal menurunkan kualitas gambar di dalam PDF.", "Kalau hasil malah lebih besar, file asli yang dikembalikan."]
+    }
+  ]
+}
