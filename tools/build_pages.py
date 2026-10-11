@@ -58,6 +58,8 @@ e = html.escape
 
 
 def head(title, desc, path, extra=""):
+    path_depth = len(path.strip("/").split("/")) if path.endswith("/") and path.strip("/") else 0
+    stylesheet = "../" * path_depth + "assets/style.css" if path_depth else "./assets/style.css"
     return f"""<!doctype html>
 <html lang="id">
 <head>
@@ -68,7 +70,7 @@ def head(title, desc, path, extra=""):
 <link rel="canonical" href="{SITE_URL}{path}">
 <meta name="konvertin-api" content="{e(API_BASE)}">
 <meta name="theme-color" content="#1a1816">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="{stylesheet}">
 {extra}</head>
 <body>
 <a class="skip" href="#main">Lompat ke konten</a>

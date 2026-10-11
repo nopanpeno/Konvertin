@@ -25,6 +25,8 @@ const byCat = (id) => tools.filter((t) => t.cat === id);
 
 // ---------- layout ----------
 function layout({ title, desc, body, path, bodyClass = "", scripts = "" }) {
+  const pathDepth = path.endsWith("/") ? path.split("/").filter(Boolean).length : 0;
+  const stylesheet = `${pathDepth ? "../".repeat(pathDepth) : "./"}css/style.css`;
   return `<!doctype html>
 <html lang="id">
 <head>
@@ -38,7 +40,7 @@ ${SITE_URL ? `<link rel="canonical" href="${SITE_URL}${path}">` : ""}
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:type" content="website">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="${stylesheet}">
 </head>
 <body class="${bodyClass}${ADS ? " ads-on" : ""}">
 <a class="skip" href="#main">Lewati ke isi</a>
