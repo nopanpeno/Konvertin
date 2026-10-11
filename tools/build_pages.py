@@ -83,17 +83,18 @@ def head(title, desc, path, extra=""):
 
 
 def nav(base):
+    home = f"{base}index.html"
     return f"""<header class="nav"><div class="wrap">
-<a class="logo" href="{base}">konvertin<i>.</i></a>
-<a href="{base}#tool">Tool</a><a href="{base}#cara-kerja">Cara kerja</a><a href="{base}#privasi">Privasi</a><a href="{base}#faq">FAQ</a>
-<a class="btn sm" href="{base}#tool">Mulai konversi</a>
+<a class="logo" href="{home}">konvertin<i>.</i></a>
+<a href="{home}#tool">Tool</a><a href="{home}#cara-kerja">Cara kerja</a><a href="{home}#privasi">Privasi</a><a href="{home}#faq">FAQ</a>
+<a class="btn sm" href="{home}#tool">Mulai konversi</a>
 </div></header>
 """
 
 
 def footer(base):
     contact = f'<a href="mailto:{e(CONTACT_EMAIL)}">Kontak</a>' if CONTACT_EMAIL else ""
-    return f"""<footer><div class="wrap"><span>konvertin.</span><a href="{base}privasi/">Kebijakan privasi</a><a href="{base}syarat/">Syarat penggunaan</a>{contact}</div></footer>
+    return f"""<footer><div class="wrap"><span>konvertin.</span><a href="{base}privasi/index.html">Kebijakan privasi</a><a href="{base}syarat/index.html">Syarat penggunaan</a>{contact}</div></footer>
 """
 
 
@@ -110,16 +111,17 @@ def write(rel, content):
 
 def tool_page(t):
     base = root_href(f"/{t['slug']}/")
-    others = "".join(f'<a class="tool" href="{base}{o["slug"]}/"><strong>{e(o["title"])}</strong><small>{e(o["short"])}</small></a>' for o in TOOLS if o is not t)
+    home = f"{base}index.html"
+    others = "".join(f'<a class="tool" href="{base}{o["slug"]}/index.html"><strong>{e(o["title"])}</strong><small>{e(o["short"])}</small></a>' for o in TOOLS if o is not t)
     warn = "".join(f"<p style='margin:0 0 6px'>{e(w)}</p>" for w in t["warn"])
     faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in t["faq"])
     ld = json.dumps({"@context": "https://schema.org", "@type": "WebApplication", "name": f"Konvertin {t['title']}", "applicationCategory": "UtilitiesApplication",
                      "operatingSystem": "Web", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "IDR"}, "inLanguage": "id"}, ensure_ascii=False)
-    tools_js = json.dumps([{"kind": o["kind"], "title": o["title"], "href": f"{base}{o['slug']}/"} for o in TOOLS], ensure_ascii=False)
+    tools_js = json.dumps([{"kind": o["kind"], "title": o["title"], "href": f"{base}{o['slug']}/index.html"} for o in TOOLS], ensure_ascii=False)
     s = head(f"{t['title']} Online Gratis | Konvertin", t["desc"], f"/{t['slug']}/", f'<script type="application/ld+json">{ld}</script>\n')
     s += nav(base) + f"""<main id="main" class="wrap">
 <div class="tool-head">
-<div class="crumb"><a href="{base}">Beranda</a> / Dokumen / {e(t['title'])}</div>
+<div class="crumb"><a href="{home}">Beranda</a> / Dokumen / {e(t['title'])}</div>
 <h1>{e(t['title'])}</h1>
 <p>{e(t['desc'])}</p>
 </div>
@@ -155,7 +157,7 @@ def tool_page(t):
 def home():
     base = "./"
     doc_cards = "".join(
-        f'<a class="tool" data-tool="{e(t["title"] + " " + t["short"] + " dokumen")}" href="{base}{t["slug"]}/"><strong>{e(t["title"])}</strong><small>{e(t["short"])}</small></a>' for t in TOOLS)
+        f'<a class="tool" data-tool="{e(t["title"] + " " + t["short"] + " dokumen")}" href="{base}{t["slug"]}/index.html"><strong>{e(t["title"])}</strong><small>{e(t["short"])}</small></a>' for t in TOOLS)
     soon = ""
     for cat, tools in FUTURE.items():
         cards = "".join(f'<div class="tool soon" data-tool="{e(n + " " + cat)}"><strong>{e(n)}<span class="tag">Segera</span></strong><small>{e(d)}</small></div>' for n, d in tools)
@@ -188,7 +190,7 @@ def home():
 <div class="two">
 <div><h3>Lewat server kami</h3><p>Konversi dokumen (PDF, Word, PowerPoint, Excel) butuh LibreOffice dan tool lain di server, jadi file <b>diunggah</b> ke server kami. Diproses di wadah terisolasi tanpa akses internet, nama file di penyimpanan diacak, dan tidak ada orang yang membaca isinya.</p></div>
 <div><h3>Kapan dihapus</h3><p>File asli dihapus segera setelah diproses. Hasil konversi dihapus otomatis maksimal {TTL} setelah dibuat. Tool gambar dan audio yang menyusul akan diproses di browser Anda.</p></div>
-</div><p><a href="{base}privasi/">Baca kebijakan privasi lengkap</a></p></section>
+</div><p><a href="{base}privasi/index.html">Baca kebijakan privasi lengkap</a></p></section>
 <section class="block wrap"><h2>Batas pemakaian gratis</h2>
 <table><thead><tr><th>Jenis</th><th>Batas</th></tr></thead><tbody>
 <tr><td>Ukuran dokumen</td><td class="mono">maks {MAX_MB} MB per file</td></tr>
@@ -251,7 +253,7 @@ def legal():
     s = head("Halaman tidak ditemukan | Konvertin", "Halaman tidak ditemukan.", "/404.html") + nav(base) + """<main id="main" class="wrap prose" style="padding:80px 0">
 <span class="label">404</span><h1>Halaman tidak ditemukan</h1>
 <p>Alamat yang Anda buka tidak ada, atau sudah pindah. Kembali ke daftar tool dan pilih konversi yang Anda butuhkan.</p>
-<a class="btn" href="./#tool">Lihat tool</a>
+<a class="btn" href="./index.html#tool">Lihat tool</a>
 </main>
 """ + footer(base) + tail(base, script=False)
     write("404.html", s)

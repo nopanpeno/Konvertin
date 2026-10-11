@@ -27,6 +27,7 @@ const byCat = (id) => tools.filter((t) => t.cat === id);
 function layout({ title, desc, body, path, bodyClass = "", scripts = "" }) {
   const pathDepth = path.endsWith("/") ? path.split("/").filter(Boolean).length : 0;
   const rootHref = pathDepth ? "../".repeat(pathDepth) : "./";
+  const homeHref = `${rootHref}index.html`;
   const stylesheet = `${rootHref}css/style.css`;
   return `<!doctype html>
 <html lang="id">
@@ -47,14 +48,14 @@ ${SITE_URL ? `<link rel="canonical" href="${SITE_URL}${path}">` : ""}
 <a class="skip" href="#main">Lewati ke isi</a>
 <header class="nav">
   <div class="wrap">
-    <a class="logo" href="${rootHref}" aria-label="Konvertin, beranda">konvertin<i>.</i></a>
+    <a class="logo" href="${homeHref}" aria-label="Konvertin, beranda">konvertin<i>.</i></a>
     <nav aria-label="Utama">
       <ul>
-        <li><a href="${rootHref}#tool">Tool</a></li>
-        <li><a href="${rootHref}#cara-kerja">Cara kerja</a></li>
-        <li><a href="${rootHref}#privasi">Privasi</a></li>
-        <li><a href="${rootHref}#faq">FAQ</a></li>
-        <li><a class="btn small" href="${rootHref}#tool">Mulai konversi</a></li>
+        <li><a href="${homeHref}#tool">Tool</a></li>
+        <li><a href="${homeHref}#cara-kerja">Cara kerja</a></li>
+        <li><a href="${homeHref}#privasi">Privasi</a></li>
+        <li><a href="${homeHref}#faq">FAQ</a></li>
+        <li><a class="btn small" href="${homeHref}#tool">Mulai konversi</a></li>
       </ul>
     </nav>
   </div>
@@ -87,7 +88,7 @@ function toolCard(t) {
   const search = esc((t.name + " " + t.short + " " + t.inputs + " " + t.slug).toLowerCase());
   return isSoon(t)
     ? `<li data-search="${search}"><div class="soon">${inner}</div></li>`
-    : `<li data-search="${search}"><a href="./${t.slug}/">${inner}</a></li>`;
+    : `<li data-search="${search}"><a href="./${t.slug}/index.html">${inner}</a></li>`;
 }
 
 const catBlocks = cats
@@ -267,7 +268,7 @@ function toolPage(t) {
   const notes = (t.notes || []).map((n) => `<li>${esc(n)}</li>`).join("");
   const body = `
 <div class="wrap">
-  <p class="crumb"><a href="${rootHref}">konvertin.</a> / <a href="${rootHref}#tool">${catLabel[t.cat]}</a> / ${esc(t.name)}</p>
+  <p class="crumb"><a href="${rootHref}index.html">konvertin.</a> / <a href="${rootHref}index.html#tool">${catLabel[t.cat]}</a> / ${esc(t.name)}</p>
   <div class="tool-head">
     <h1>${esc(t.h1)}</h1>
     <p>${esc(t.desc)}</p>
@@ -306,7 +307,7 @@ ${optionsHtml(t)}
     </div>
     <div>
       <h2>Tool lain</h2>
-      <ul class="related">${related.map((r) => `<li><a href="${rootHref}${r.slug}/">${esc(r.name)}</a></li>`).join("")}</ul>
+      <ul class="related">${related.map((r) => `<li><a href="${rootHref}${r.slug}/index.html">${esc(r.name)}</a></li>`).join("")}</ul>
     </div>
   </div>
 </div>
@@ -319,7 +320,7 @@ for (const t of tools) write(`${t.slug}/index.html`, toolPage(t));
 // ---------- halaman statis ----------
 write("404.html", layout({
   title: "Halaman tidak ditemukan | konvertin.", desc: "Halaman tidak ditemukan.", path: "/404.html",
-  body: `<div class="wrap nf"><span class="label">404</span><h1>Halaman tidak ada</h1><p class="muted">Alamat yang kamu buka tidak ditemukan. Mungkin salah ketik, atau tool itu belum dibuat.</p><a class="btn" href="./#tool">Lihat semua tool</a></div>`,
+  body: `<div class="wrap nf"><span class="label">404</span><h1>Halaman tidak ada</h1><p class="muted">Alamat yang kamu buka tidak ditemukan. Mungkin salah ketik, atau tool itu belum dibuat.</p><a class="btn" href="./index.html#tool">Lihat semua tool</a></div>`,
 }));
 
 write("privasi.html", layout({
