@@ -4,6 +4,7 @@
   "use strict";
 
   var CFG = window.KONVERTIN || { apiBase: "", ads: false, ffmpegCoreBase: "" };
+  var APP_ROOT = new URL("../", document.currentScript.src).href;
 
   // ---------- teks (id = Bahasa Indonesia) ----------
   var TEXT = {
@@ -138,7 +139,7 @@
   var IMG_MIME = { jpg: "image/jpeg", png: "image/png", webp: "image/webp" };
 
   function loadHeic() {
-    return window.heic2any ? Promise.resolve() : loadScript("/vendor/heic2any.min.js");
+    return window.heic2any ? Promise.resolve() : loadScript(APP_ROOT + "vendor/heic2any.min.js");
   }
   function heicToBlob(file, type, quality) {
     return loadHeic().then(function () {
@@ -271,8 +272,8 @@
     if (ffState.ff) return Promise.resolve(ffState.ff);
     if (ffState.loading) return ffState.loading;
     notify(t("loadingEngine"));
-    ffState.loading = loadScript("/vendor/ffmpeg-util.js")
-      .then(function () { return loadScript("/vendor/ffmpeg.js"); })
+    ffState.loading = loadScript(APP_ROOT + "vendor/ffmpeg-util.js")
+      .then(function () { return loadScript(APP_ROOT + "vendor/ffmpeg.js"); })
       .then(function () {
         var base = CFG.ffmpegCoreBase;
         return Promise.all([
@@ -594,7 +595,7 @@
 
     els.zip.addEventListener("click", function () {
       var done = items.filter(function (i) { return i.state === "done" && i.result; });
-      var lib = window.JSZip ? Promise.resolve() : loadScript("/vendor/jszip.min.js");
+      var lib = window.JSZip ? Promise.resolve() : loadScript(APP_ROOT + "vendor/jszip.min.js");
       lib.then(function () {
         var zip = new window.JSZip(), used = {};
         done.forEach(function (i) {
