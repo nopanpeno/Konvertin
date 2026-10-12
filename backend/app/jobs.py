@@ -58,6 +58,8 @@ def create(job_type: str, input_path: Path, original_name: str, options: dict | 
     stem = Path(original_name).stem[:80] or "dokumen"
     stem = "".join(ch for ch in stem if ch not in '\\/:*?"<>|\r\n\t') or "dokumen"
     download_name = f"{stem}.{CONVERSIONS[job_type][1]}"
+    if job_type == "compress_pdf":
+        download_name = f"{stem}-kompres.pdf"
     now = time.time()
     import json
 
@@ -102,8 +104,11 @@ def _run(job_id: str) -> None:
     try:
         # LibreOffice butuh memori virtual besar: batas RLIMIT_AS hanya untuk non-soffice
         preexec = os.setsid if row["type"].endswith("_to_pdf") else _limits
+        cmd = [sys.executable, "-m", "app.converters", row["type"], str(in_path), str(out_path)]
+        if row["options"] and row["options"] != "{}":
+            cmd.append(row["options"])
         p = subprocess.Popen(
-            [sys.executable, "-m", "app.converters", row["type"], str(in_path), str(out_path)],
+            cmd,
             cwd=backend_dir, env={**os.environ, "PYTHONPATH": str(backend_dir), "HOME": str(config.DATA_DIR)},
             stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True, preexec_fn=preexec,
         )

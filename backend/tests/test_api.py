@@ -27,7 +27,8 @@ def test_health_and_conversions(client):
 
 def test_detect(client, sample_pdf, sample_docx):
     r = client.post("/api/detect", files={"file": ("x.bin", sample_pdf)}).json()
-    assert r["kind"] == "pdf" and {o["output"] for o in r["options"]} == {"docx", "txt"}
+    # PDF juga menawarkan opsi kompresi (tetap berformat pdf)
+    assert r["kind"] == "pdf" and {o["output"] for o in r["options"]} == {"docx", "txt", "pdf"}
     r = client.post("/api/detect", files={"file": ("x.pdf", sample_docx)}).json()
     assert r["kind"] == "docx"
 

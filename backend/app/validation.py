@@ -7,7 +7,7 @@ from .errors import ConvertError
 
 OLE_MAGIC = b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"  # .doc/.xls/.ppt lama, atau OOXML terenkripsi
 
-# jenis konversi -> (jenis file input, ekstensi output, mime output, label)
+# jenis konversi -> (jenis file input, ekstensi output, mime output)
 CONVERSIONS = {
     "pdf_to_docx": ("pdf", "docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
     "docx_to_pdf": ("docx", "pdf", "application/pdf"),
@@ -15,9 +15,21 @@ CONVERSIONS = {
     "xlsx_to_pdf": ("xlsx", "pdf", "application/pdf"),
     "pdf_to_txt": ("pdf", "txt", "text/plain; charset=utf-8"),
     "docx_to_txt": ("docx", "txt", "text/plain; charset=utf-8"),
+    # kompresi: bukan konversi antarformat, hasilnya tetap PDF
+    "compress_pdf": ("pdf", "pdf", "application/pdf"),
 }
 
 KIND_LABEL = {"pdf": "PDF", "docx": "DOCX", "pptx": "PPTX", "xlsx": "XLSX"}
+
+LEVELS = {"light", "medium", "max"}
+
+
+def check_options(job_type: str, options: dict) -> dict:
+    """Ambil hanya opsi yang dikenal untuk jenis job ini, dengan nilai yang aman."""
+    if job_type == "compress_pdf":
+        level = options.get("level")
+        return {"level": level if level in LEVELS else "medium"}
+    return {}
 
 
 def detect_kind(path: Path) -> str | None:
