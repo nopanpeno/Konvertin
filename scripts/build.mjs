@@ -1,12 +1,12 @@
 // Bangun halaman statis dari tools.json.
 // Pakai: node scripts/build.mjs
-// Env opsional: API_BASE (URL backend), ADS=1 (aktifkan slot iklan), SITE_URL (untuk sitemap)
+// Output: frontend/. Env opsional: API_BASE ("/" = backend satu origin, atau URL backend; kosong = tool server berlabel Segera), ADS=1 (aktifkan slot iklan), SITE_URL (untuk sitemap)
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const data = JSON.parse(readFileSync(join(root, "scripts/tools.json"), "utf8"));
+const root = join(dirname(fileURLToPath(import.meta.url)), "..", "frontend");
+const data = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "tools.json"), "utf8"));
 const API_BASE = process.env.API_BASE || "";
 const ADS = process.env.ADS === "1";
 const SITE_URL = (process.env.SITE_URL || "").replace(/\/$/, "");
