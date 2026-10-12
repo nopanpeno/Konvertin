@@ -25,6 +25,25 @@ npm run build:static  # tanpa backend: tool server berlabel "Segera"
 # env lain: API_BASE=https://api.contoh.id  ADS=1  SITE_URL=https://domain-asli
 ```
 
+## Halaman konversi PDF butuh backend
+Halaman `pdf-ke-word`, `word-ke-pdf`, `pptx-ke-pdf`, `excel-ke-pdf`, `pdf-ke-txt`, `word-ke-txt`, dan `kompres-pdf` memproses file di server. Kalau dibuka tanpa backend (misalnya `npm run serve` saja atau hosting statis), tombol Konversi akan gagal dengan pesan "Server tidak bisa dihubungi" — itu bukan bug frontend, backend memang harus jalan.
+
+Cara mengaktifkan:
+```bash
+# 1. Build frontend dengan API satu origin (API_BASE=/)
+npm run build            # JANGAN pakai build:static untuk halaman ini
+
+# 2. Jalankan backend FastAPI (menyajikan frontend + API di port yang sama)
+cd backend
+pip install -r requirements.txt   # butuh LibreOffice (soffice) & poppler-utils di PATH
+python3 -m uvicorn app.main:app --port 8000
+# buka http://localhost:8000/pdf-ke-word/
+
+# atau sekali jalan lewat Docker:
+docker compose up --build   # lalu buka http://localhost:8000
+```
+Catatan: kalau `API_BASE` dikosongkan saat build, tool server diberi label "Segera" dan upload dinonaktifkan oleh desain (lihat `scripts/build.mjs`).
+
 ## Jalankan lokal
 ```bash
 cd backend
