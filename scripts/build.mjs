@@ -15,6 +15,11 @@ const EMAIL = process.env.EMAIL || "halo@konvertin.example";
 // Mesin audio: default dari repo sendiri (vendor/ffmpeg-core), bukan CDN pihak ketiga.
 const FFMPEG_LOCAL = existsSync(join(root, "vendor", "ffmpeg-core", "ffmpeg-core.wasm"));
 const FFMPEG_CORE_BASE = process.env.FFMPEG_CORE_BASE || (FFMPEG_LOCAL ? "./vendor/ffmpeg-core" : "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd");
+// Teks privasi harus cocok dengan asal mesin audio yang benar-benar dipakai build ini.
+const FFMPEG_HOST = /^https?:\/\//.test(FFMPEG_CORE_BASE) ? new URL(FFMPEG_CORE_BASE).hostname : "";
+const FFMPEG_NOTE = FFMPEG_HOST
+  ? `Untuk konversi audio, browser mengunduh mesin pemroses (ffmpeg.wasm) dari ${FFMPEG_HOST}, layanan pihak ketiga.`
+  : "Untuk konversi audio, browser memuat mesin pemroses (ffmpeg.wasm) dari situs ini sendiri, bukan dari pihak ketiga, lalu menyimpannya di browser.";
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const write = (path, content) => {
@@ -335,7 +340,7 @@ write("privasi.html", layout({
 <h1>Kebijakan privasi</h1>
 <p class="muted">Draft. Terakhir diubah 9 Oktober 2026. Tinjau ulang sebelum rilis publik, terutama bagian iklan dan cookie.</p>
 <h2>Yang diproses di browser</h2>
-<p>Konversi gambar, kompres gambar, ubah ukuran gambar, dan konversi audio berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. Untuk konversi audio, browser mengunduh mesin pemroses (ffmpeg.wasm) dari jaringan pengiriman konten publik (jsDelivr).</p>
+<p>Konversi gambar, kompres gambar, ubah ukuran gambar, dan konversi audio berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. ${FFMPEG_NOTE}</p>
 <h2>Yang lewat server</h2>
 <p>Konversi dokumen (PDF, Word, PowerPoint, Excel) dan kompres PDF, Word, PowerPoint membutuhkan server. File kamu diunggah, diproses di wadah terisolasi tanpa akses internet, dan hasilnya tersedia untuk kamu unduh.</p>
 <ul>
