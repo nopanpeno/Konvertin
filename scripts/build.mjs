@@ -107,14 +107,14 @@ ${byCat(c.id).map(toolCard).join("\n")}
 
 const index = layout({
   title: "Konvertin: Konverter File Gambar, Audio, dan Dokumen",
-  desc: "Ubah format gambar dan audio, kompres gambar dan PDF, ubah PDF dan Word. Tanpa daftar. Gambar dan audio diproses di browser, tidak diunggah.",
+  desc: "Ubah format gambar dan audio, kompres gambar, PDF, Word, dan PowerPoint, ubah PDF dan Word. Tanpa daftar. Gambar dan audio diproses di browser, tidak diunggah.",
   path: "/",
   body: `
 <section class="hero">
   <div class="wrap">
     <span class="label">Konverter file</span>
     <h1>Ubah file. Tanpa ribet.</h1>
-    <p class="lead">Ubah format gambar dan audio, kecilkan ukuran gambar dan PDF, ubah PDF dan Word. Gambar dan audio diproses di browser kamu.</p>
+    <p class="lead">Ubah format gambar dan audio, kecilkan ukuran gambar, PDF, Word, dan PowerPoint, ubah PDF dan Word. Gambar dan audio diproses di browser kamu.</p>
     <ul class="points">
       <li>Tanpa daftar</li>
       <li>Gambar dan audio tidak diunggah</li>
@@ -165,7 +165,7 @@ ${catBlocks}
     <h2>Apa yang pergi ke mana</h2>
     <div class="cols">
       <div><h3>Di browser kamu</h3><p>Konversi dan kompres gambar, ubah ukuran gambar, dan konversi audio. File tidak keluar dari perangkat. Kamu bisa putus internet setelah halaman terbuka, kecuali pemuat audio belum pernah diunduh.</p></div>
-      <div><h3>Lewat server</h3><p>Konversi dokumen (PDF, Word, PowerPoint, Excel) dan kompres PDF. File diunggah, diproses di wadah terisolasi tanpa akses internet, namanya diacak, dan tidak dibaca manusia.</p></div>
+      <div><h3>Lewat server</h3><p>Konversi dokumen (PDF, Word, PowerPoint, Excel) dan kompres PDF, Word, PowerPoint. File diunggah, diproses di wadah terisolasi tanpa akses internet, namanya diacak, dan tidak dibaca manusia.</p></div>
       <div><h3>Kapan dihapus</h3><p>File di server dihapus otomatis paling lama 1 jam setelah selesai. Isi file tidak dicatat di log.</p></div>
     </div>
   </div>
@@ -192,7 +192,7 @@ ${catBlocks}
   <div class="wrap">
     <span class="label">FAQ</span>
     <h2>Pertanyaan yang sering muncul</h2>
-    <details><summary>Apakah file saya diunggah?</summary><p>Tergantung tool. Gambar dan audio diproses di browser, jadi tidak diunggah. Konversi dokumen dan kompres PDF berjalan di server, dan file dihapus otomatis paling lama 1 jam setelah selesai.</p></details>
+    <details><summary>Apakah file saya diunggah?</summary><p>Tergantung tool. Gambar dan audio diproses di browser, jadi tidak diunggah. Konversi dokumen dan kompres PDF, Word, PowerPoint berjalan di server, dan file dihapus otomatis paling lama 1 jam setelah selesai.</p></details>
     <details><summary>Kenapa hasil PDF ke Word layoutnya berubah?</summary><p>PDF menyimpan posisi tiap huruf, bukan struktur paragraf. Mengubahnya ke Word berarti menebak struktur itu, dan tebakan tidak selalu tepat. Tabel rumit dan kolom ganda paling sering bergeser.</p></details>
     <details><summary>Bisa untuk PDF hasil scan?</summary><p>Belum. PDF hasil scan berisi gambar, jadi butuh OCR untuk jadi teks. OCR belum ada di versi ini.</p></details>
     <details><summary>Kenapa konversi audio mengunduh file besar dulu?</summary><p>Mesin konversi audio (sekitar 30 MB) dimuat sekali supaya audio bisa diproses di browser. Setelah itu disimpan oleh browser.</p></details>
@@ -337,7 +337,7 @@ write("privasi.html", layout({
 <h2>Yang diproses di browser</h2>
 <p>Konversi gambar, kompres gambar, ubah ukuran gambar, dan konversi audio berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. Untuk konversi audio, browser mengunduh mesin pemroses (ffmpeg.wasm) dari jaringan pengiriman konten publik (jsDelivr).</p>
 <h2>Yang lewat server</h2>
-<p>Konversi dokumen (PDF, Word, PowerPoint, Excel) dan kompres PDF membutuhkan server. File kamu diunggah, diproses di wadah terisolasi tanpa akses internet, dan hasilnya tersedia untuk kamu unduh.</p>
+<p>Konversi dokumen (PDF, Word, PowerPoint, Excel) dan kompres PDF, Word, PowerPoint membutuhkan server. File kamu diunggah, diproses di wadah terisolasi tanpa akses internet, dan hasilnya tersedia untuk kamu unduh.</p>
 <ul>
 <li>File input dan hasil dihapus otomatis paling lama 1 jam setelah selesai.</li>
 <li>Nama file di penyimpanan diacak.</li>

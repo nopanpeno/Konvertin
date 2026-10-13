@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 
 from . import config, jobs, ratelimit
 from .errors import ConvertError
-from .validation import CONVERSIONS, KIND_LABEL, check_options, detect_kind, validate_upload
+from .validation import COMPRESS_JOB, CONVERSIONS, KIND_LABEL, check_options, detect_kind, validate_upload
 
 _stop = threading.Event()
 
@@ -70,7 +70,7 @@ def conversions():
     """Daftar konversi dokumen yang valid, dikelompokkan per tipe input."""
     out: dict[str, list] = {}
     for jt, (src, dst, _) in CONVERSIONS.items():
-        if jt == "compress_pdf":
+        if jt in COMPRESS_JOB.values():
             continue  # bukan konversi antarformat; tampil sebagai tool kompres
         out.setdefault(src, []).append({"type": jt, "output": dst})
     return {"conversions": out, "max_mb": config.MAX_DOC_BYTES // 1024 // 1024, "max_pages": config.MAX_PDF_PAGES}
@@ -86,9 +86,9 @@ async def detect(file: UploadFile = File(...)):
         tmp.unlink(missing_ok=True)
     if kind is None:
         raise ConvertError("Format file tidak didukung. Saat ini yang bisa: PDF, DOCX, PPTX, XLSX.")
-    options = [{"type": jt, "output": v[1]} for jt, v in CONVERSIONS.items() if v[0] == kind and jt != "compress_pdf"]
-    if kind == "pdf":
-        options.append({"type": "compress_pdf", "output": "pdf"})
+    options = [{"type": jt, "output": v[1]} for jt, v in CONVERSIONS.items() if v[0] == kind and jt not in COMPRESS_JOB.values()]
+    if kind in COMPRESS_JOB:
+        options.append({"type": COMPRESS_JOB[kind], "output": kind})
     return {"kind": kind, "label": KIND_LABEL[kind], "options": options}
 
 

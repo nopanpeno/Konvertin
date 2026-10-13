@@ -9,12 +9,12 @@ Konverter file serbaguna (PRD v1.2). Status: Modul A, B, C, dan D sudah ada vers
 | B | B1-B5 | JPG/PNG/WEBP, HEIC ke JPG, slider kualitas, resize, batch ZIP | browser | jadi, dites |
 | C | C1, C3, C4 | Kompres gambar, ukuran sebelum/sesudah, target KB | browser | jadi, dites |
 | C | C2 | Kompres PDF 3 level | server | jadi |
-| C | C5 | Kompres DOCX/PPTX | - | belum |
+| C | C5 | Kompres DOCX/PPTX (gambar di dalamnya diperkecil, 3 level) | server | jadi |
 | D | D1-D4 | Konversi audio, bitrate, trim, batas 10 menit/50 MB | browser (ffmpeg.wasm) | jadi, belum dites otomatis |
 
 ## Struktur
 - `frontend/`: situs statis (HTML/CSS/JS polos). Semua halaman HTML dihasilkan dari `scripts/tools.json` oleh `scripts/build.mjs`. `frontend/css/style.css` dan `frontend/js/app.js` ditulis tangan. `frontend/vendor/` berisi heic2any, jszip, ffmpeg.
-- `backend/app/`: FastAPI. `validation.py` (magic bytes, anti zip-bomb), `converters.py` (proses terpisah, timeout 120 dtk), `jobs.py` (SQLite + thread pool, hapus otomatis 1 jam), `ratelimit.py`.
+- `backend/app/`: FastAPI. `validation.py` (magic bytes, anti zip-bomb), `converters.py` (proses terpisah, timeout 120 dtk; kompres DOCX/PPTX memakai Pillow), `jobs.py` (SQLite + thread pool, hapus otomatis 1 jam), `ratelimit.py`.
 - `docker-compose.yml`: satu wadah API yang juga menyajikan `frontend/`.
 
 ## Ubah atau tambah tool
@@ -26,7 +26,7 @@ npm run build:static  # tanpa backend: tool server berlabel "Segera"
 ```
 
 ## Halaman konversi PDF butuh backend
-Halaman `pdf-ke-word`, `word-ke-pdf`, `pptx-ke-pdf`, `excel-ke-pdf`, `pdf-ke-txt`, `word-ke-txt`, dan `kompres-pdf` memproses file di server. Kalau dibuka tanpa backend (misalnya `npm run serve` saja atau hosting statis), tombol Konversi akan gagal dengan pesan "Server tidak bisa dihubungi" — itu bukan bug frontend, backend memang harus jalan.
+Halaman `pdf-ke-word`, `word-ke-pdf`, `pptx-ke-pdf`, `excel-ke-pdf`, `pdf-ke-txt`, `word-ke-txt`, `kompres-pdf`, `kompres-word`, dan `kompres-pptx` memproses file di server. Kalau dibuka tanpa backend (misalnya `npm run serve` saja atau hosting statis), tombol Konversi akan gagal dengan pesan "Server tidak bisa dihubungi" — itu bukan bug frontend, backend memang harus jalan.
 
 Cara mengaktifkan:
 ```bash
@@ -49,7 +49,7 @@ Catatan: kalau `API_BASE` dikosongkan saat build, tool server diberi label "Sege
 cd backend
 pip install -r requirements.txt      # butuh LibreOffice (soffice) dan poppler-utils (pdftotext) di PATH
 python3 -m uvicorn app.main:app --port 8000   # buka http://localhost:8000
-python3 -m pytest -q                 # 19 tes, pakai konversi asli
+python3 -m pytest -q                 # 29 tes, pakai konversi asli
 ```
 Docker: `docker compose up --build`. Hanya frontend (tool browser): `npm run build:static && npm run serve`.
 
