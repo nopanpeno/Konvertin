@@ -17,7 +17,12 @@ CONVERSIONS = {
     "docx_to_txt": ("docx", "txt", "text/plain; charset=utf-8"),
     # kompresi: bukan konversi antarformat, hasilnya tetap PDF
     "compress_pdf": ("pdf", "pdf", "application/pdf"),
+    "compress_docx": ("docx", "docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
+    "compress_pptx": ("pptx", "pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation"),
 }
+
+# jenis job kompres per jenis file input
+COMPRESS_JOB = {"pdf": "compress_pdf", "docx": "compress_docx", "pptx": "compress_pptx"}
 
 KIND_LABEL = {"pdf": "PDF", "docx": "DOCX", "pptx": "PPTX", "xlsx": "XLSX"}
 
@@ -26,7 +31,7 @@ LEVELS = {"light", "medium", "max"}
 
 def check_options(job_type: str, options: dict) -> dict:
     """Ambil hanya opsi yang dikenal untuk jenis job ini, dengan nilai yang aman."""
-    if job_type == "compress_pdf":
+    if job_type in COMPRESS_JOB.values():
         level = options.get("level")
         return {"level": level if level in LEVELS else "medium"}
     return {}

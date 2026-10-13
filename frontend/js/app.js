@@ -374,7 +374,7 @@
                 if (!r.ok) throw KError(t("serverDown"));
                 return r.blob();
               }).then(function (blob) {
-                var name = baseName(item.file.name) + (cfg.job === "compress_pdf" ? "-kompres" : "") + "." + cfg.out;
+                var name = baseName(item.file.name) + (/^compress_/.test(cfg.job) ? "-kompres" : "") + "." + cfg.out;
                 var out = { blob: blob, name: name, compare: !!cfg.compare };
                 if (cfg.compare && blob.size >= item.file.size) { out.blob = item.file; out.name = item.file.name; out.note = t("alreadySmall"); }
                 resolve(out);

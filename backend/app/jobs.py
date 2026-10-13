@@ -58,8 +58,8 @@ def create(job_type: str, input_path: Path, original_name: str, options: dict | 
     stem = Path(original_name).stem[:80] or "dokumen"
     stem = "".join(ch for ch in stem if ch not in '\\/:*?"<>|\r\n\t') or "dokumen"
     download_name = f"{stem}.{CONVERSIONS[job_type][1]}"
-    if job_type == "compress_pdf":
-        download_name = f"{stem}-kompres.pdf"
+    if job_type.startswith("compress_"):
+        download_name = f"{stem}-kompres.{CONVERSIONS[job_type][1]}"
     now = time.time()
     import json
 

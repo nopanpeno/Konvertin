@@ -76,6 +76,64 @@ def sample_docx() -> bytes:
     return b.getvalue()
 
 
+def _noise_jpeg(w: int, h: int) -> bytes:
+    """JPEG besar yang sulit dikompres (derau acak), meniru foto resolusi tinggi."""
+    from PIL import Image
+
+    img = Image.frombytes("RGB", (w, h), os.urandom(w * h * 3))
+    b = io.BytesIO()
+    img.save(b, "JPEG", quality=95)
+    return b.getvalue()
+
+
+@pytest.fixture(scope="session")
+def big_jpeg() -> bytes:
+    return _noise_jpeg(2000, 1500)
+
+
+@pytest.fixture(scope="session")
+def alpha_png() -> bytes:
+    """PNG RGBA 1800x1200: derau acak (besar, seperti tangkapan layar/foto) dengan sisi kiri transparan."""
+    from PIL import Image
+
+    w, h = 1800, 1200
+    img = Image.frombytes("RGB", (w, h), os.urandom(w * h * 3))
+    alpha = Image.new("L", (w, h), 255)
+    alpha.paste(0, (0, 0, 500, h))
+    img.putalpha(alpha)
+    b = io.BytesIO()
+    img.save(b, "PNG")
+    return b.getvalue()
+
+
+@pytest.fixture(scope="session")
+def docx_with_image(big_jpeg) -> bytes:
+    from docx import Document
+    from docx.shared import Inches
+
+    d = Document()
+    d.add_paragraph("Dokumen dengan foto besar.")
+    d.add_picture(io.BytesIO(big_jpeg), width=Inches(4))
+    b = io.BytesIO()
+    d.save(b)
+    return b.getvalue()
+
+
+@pytest.fixture(scope="session")
+def pptx_with_image(big_jpeg, alpha_png) -> bytes:
+    """pptx minimal (cukup untuk deteksi dan kompres): dua gambar di ppt/media."""
+    import zipfile
+
+    b = io.BytesIO()
+    with zipfile.ZipFile(b, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("[Content_Types].xml", '<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="xml" ContentType="application/xml"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="png" ContentType="image/png"/></Types>')
+        z.writestr("ppt/presentation.xml", "<p:presentation xmlns:p='http://schemas.openxmlformats.org/presentationml/2006/main'/>")
+        z.writestr("ppt/media/image1.jpeg", big_jpeg)
+        z.writestr("ppt/media/image2.png", alpha_png)
+        z.writestr("ppt/media/clip1.mp4", b"\x00\x00\x00\x18ftypmp42" + b"\x01" * 4096)  # bukan gambar: tidak boleh disentuh
+    return b.getvalue()
+
+
 @pytest.fixture(scope="session")
 def sample_xlsx() -> bytes:
     import zipfile
