@@ -47,7 +47,8 @@ function layout({ title, desc, body, path, bodyClass = "", scripts = "" }) {
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 ${SITE_URL ? `<link rel="canonical" href="${SITE_URL}${path}">` : ""}
-<meta name="theme-color" content="#1a1714">
+<script>try{var th=localStorage.getItem("konvertin-tema");if(th==="dark"||th==="light")document.documentElement.dataset.theme=th}catch(e){}</script>
+<meta name="color-scheme" content="light dark">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:type" content="website">
@@ -61,10 +62,11 @@ ${SITE_URL ? `<link rel="canonical" href="${SITE_URL}${path}">` : ""}
     <a class="logo" href="${homeHref}" aria-label="Konvertin, beranda">konvertin<i>.</i></a>
     <nav aria-label="Utama">
       <ul>
-        <li><a href="${homeHref}#tool">Tool</a></li>
-        <li><a href="${homeHref}#cara-kerja">Cara kerja</a></li>
-        <li><a href="${homeHref}#privasi">Privasi</a></li>
-        <li><a href="${homeHref}#faq">FAQ</a></li>
+        <li class="nl"><a href="${homeHref}#tool">Tool</a></li>
+        <li class="nl"><a href="${homeHref}#cara-kerja">Cara kerja</a></li>
+        <li class="nl"><a href="${homeHref}#privasi">Privasi</a></li>
+        <li class="nl"><a href="${homeHref}#faq">FAQ</a></li>
+        <li><button class="theme" type="button" id="theme" aria-label="Ganti tema terang atau gelap">Gelap</button></li>
         <li><a class="btn small" href="${homeHref}#tool">Mulai konversi</a></li>
       </ul>
     </nav>
