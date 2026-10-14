@@ -275,7 +275,8 @@
     ffState.loading = loadScript(APP_ROOT + "vendor/ffmpeg-util.js")
       .then(function () { return loadScript(APP_ROOT + "vendor/ffmpeg.js"); })
       .then(function () {
-        var base = CFG.ffmpegCoreBase;
+        var raw = CFG.ffmpegCoreBase || "";
+        var base = raw.indexOf("./") === 0 ? new URL(raw.slice(2), APP_ROOT).href.replace(/\/$/, "") : raw.replace(/\/$/, "");
         return Promise.all([
           window.FFmpegUtil.toBlobURL(base + "/ffmpeg-core.js", "text/javascript"),
           window.FFmpegUtil.toBlobURL(base + "/ffmpeg-core.wasm", "application/wasm")
@@ -360,7 +361,7 @@
       xhr.onload = function () {
         var body = {}; try { body = JSON.parse(xhr.responseText); } catch (e) {}
         if (xhr.status === 429) return reject(KError(t("rateLimit")));
-        if (xhr.status >= 400) return reject(KError(body.detail || t("serverDown")));
+        if (xhr.status >= 400) return reject(KError(body.error || body.detail || t("serverDown")));
         jobId = body.job_id;
         var started = Date.now();
         (function poll() {
@@ -373,7 +374,7 @@
                 if (!r.ok) throw KError(t("serverDown"));
                 return r.blob();
               }).then(function (blob) {
-                var name = baseName(item.file.name) + (cfg.job === "compress_pdf" ? "-kompres" : "") + "." + cfg.out;
+                var name = baseName(item.file.name) + (/^compress_/.test(cfg.job) ? "-kompres" : "") + "." + cfg.out;
                 var out = { blob: blob, name: name, compare: !!cfg.compare };
                 if (cfg.compare && blob.size >= item.file.size) { out.blob = item.file; out.name = item.file.name; out.note = t("alreadySmall"); }
                 resolve(out);

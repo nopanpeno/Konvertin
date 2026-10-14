@@ -1,7 +1,8 @@
 // Bangun halaman statis dari tools.json.
 // Pakai: node scripts/build.mjs
-// Output: frontend/. Env opsional: API_BASE ("/" = backend satu origin, atau URL backend; kosong = tool server berlabel Segera), ADS=1 (aktifkan slot iklan), SITE_URL (untuk sitemap)
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+// Output: frontend/. Env opsional: API_BASE ("/" = backend satu origin, atau URL backend; kosong = tool server berlabel Segera), ADS=1 (aktifkan slot iklan), SITE_URL (untuk sitemap), EMAIL (email kontak asli; default halo@konvertin.example = placeholder)
+// FFMPEG_CORE_BASE: URL unduhan mesin audio. Kosong/tidak diisi = pakai salinan lokal di vendor/ffmpeg-core/ (tanpa CDN pihak ketiga).
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -10,6 +11,15 @@ const data = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)
 const API_BASE = process.env.API_BASE || "";
 const ADS = process.env.ADS === "1";
 const SITE_URL = (process.env.SITE_URL || "").replace(/\/$/, "");
+const EMAIL = process.env.EMAIL || "halo@konvertin.example";
+// Mesin audio: default dari repo sendiri (vendor/ffmpeg-core), bukan CDN pihak ketiga.
+const FFMPEG_LOCAL = existsSync(join(root, "vendor", "ffmpeg-core", "ffmpeg-core.wasm"));
+const FFMPEG_CORE_BASE = process.env.FFMPEG_CORE_BASE || (FFMPEG_LOCAL ? "./vendor/ffmpeg-core" : "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd");
+// Teks privasi harus cocok dengan asal mesin audio yang benar-benar dipakai build ini.
+const FFMPEG_HOST = /^https?:\/\//.test(FFMPEG_CORE_BASE) ? new URL(FFMPEG_CORE_BASE).hostname : "";
+const FFMPEG_NOTE = FFMPEG_HOST
+  ? `Untuk konversi audio, browser mengunduh mesin pemroses (ffmpeg.wasm) dari ${FFMPEG_HOST}, layanan pihak ketiga.`
+  : "Untuk konversi audio, browser memuat mesin pemroses (ffmpeg.wasm) dari situs ini sendiri, bukan dari pihak ketiga, lalu menyimpannya di browser.";
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const write = (path, content) => {
@@ -69,7 +79,7 @@ ${body}
     <ul>
       <li><a href="${rootHref}privasi.html">Kebijakan privasi</a></li>
       <li><a href="${rootHref}syarat.html">Syarat penggunaan</a></li>
-      <li><a href="mailto:halo@konvertin.example">Kontak</a></li>
+      <li><a href="mailto:${EMAIL}">Kontak</a></li>
     </ul>
   </div>
 </footer>
@@ -115,7 +125,7 @@ const firstHref = toList.length ? `./${toList[0][2]}/index.html` : "#tool";
 
 const index = layout({
   title: "Konvertin: Konverter File Gambar, Audio, dan Dokumen",
-  desc: "Ubah format gambar dan audio, kompres gambar dan PDF, ubah PDF dan Word. Tanpa daftar. Gambar dan audio diproses di browser, tidak diunggah.",
+  desc: "Ubah format gambar dan audio, kompres gambar, PDF, Word, dan PowerPoint, ubah PDF dan Word. Tanpa daftar. Gambar dan audio diproses di browser, tidak diunggah.",
   path: "/",
   body: `
 <section class="hero">
@@ -177,7 +187,7 @@ ${catBlocks}
     <h2>Apa yang pergi ke mana</h2>
     <div class="cols">
       <div><h3>Di browser kamu</h3><p>Konversi dan kompres gambar, ubah ukuran gambar, dan konversi audio. File tidak keluar dari perangkat. Kamu bisa putus internet setelah halaman terbuka, kecuali pemuat audio belum pernah diunduh.</p></div>
-      <div><h3>Lewat server</h3><p>Konversi dokumen (PDF, Word, PowerPoint, Excel) dan kompres PDF. File diunggah, diproses di wadah terisolasi tanpa akses internet, namanya diacak, dan tidak dibaca manusia.</p></div>
+      <div><h3>Lewat server</h3><p>Konversi dokumen (PDF, Word, PowerPoint, Excel) dan kompres PDF, Word, PowerPoint. File diunggah, diproses di wadah terisolasi tanpa akses internet, namanya diacak, dan tidak dibaca manusia.</p></div>
       <div><h3>Kapan dihapus</h3><p>File di server dihapus otomatis paling lama 1 jam setelah selesai. Isi file tidak dicatat di log.</p></div>
     </div>
   </div>
@@ -202,7 +212,7 @@ ${catBlocks}
 <section class="block" id="faq">
   <div class="wrap">
     <h2>Pertanyaan yang sering muncul</h2>
-    <details><summary>Apakah file saya diunggah?</summary><p>Tergantung tool. Gambar dan audio diproses di browser, jadi tidak diunggah. Konversi dokumen dan kompres PDF berjalan di server, dan file dihapus otomatis paling lama 1 jam setelah selesai.</p></details>
+    <details><summary>Apakah file saya diunggah?</summary><p>Tergantung tool. Gambar dan audio diproses di browser, jadi tidak diunggah. Konversi dokumen dan kompres PDF, Word, PowerPoint berjalan di server, dan file dihapus otomatis paling lama 1 jam setelah selesai.</p></details>
     <details><summary>Kenapa hasil PDF ke Word layoutnya berubah?</summary><p>PDF menyimpan posisi tiap huruf, bukan struktur paragraf. Mengubahnya ke Word berarti menebak struktur itu, dan tebakan tidak selalu tepat. Tabel rumit dan kolom ganda paling sering bergeser.</p></details>
     <details><summary>Bisa untuk PDF hasil scan?</summary><p>Belum. PDF hasil scan berisi gambar, jadi butuh OCR untuk jadi teks. OCR belum ada di versi ini.</p></details>
     <details><summary>Kenapa konversi audio mengunduh file besar dulu?</summary><p>Mesin konversi audio (sekitar 30 MB) dimuat sekali supaya audio bisa diproses di browser. Setelah itu disimpan oleh browser.</p></details>
@@ -282,7 +292,7 @@ function toolPage(t) {
     <p>${esc(t.desc)}</p>
   </div>
   ${t.warning ? `<div class="notice"><b>Perlu diketahui</b>${esc(t.warning)}</div>` : ""}
-  ${soon ? `<div class="notice"><b>Segera</b>Tool ini butuh server dan belum aktif. Tool gambar dan audio di beranda sudah bisa dipakai.</div>` : ""}
+  ${soon ? `<div class="notice"><b>Segera</b>Tool ini butuh server dan belum aktif. Tool gambar dan audio di beranda sudah bisa dipakai.${SITE_URL ? ` <a href="${rootHref}index.html#tool">Lihat tool yang sudah aktif</a>.` : ""}</div>` : ""}
   <div class="notice err" id="alert" role="alert" hidden><b>Ada masalah</b><span id="alert-text"></span></div>
 
   <div class="tool-grid" id="tool" ${dataAttrs}>
@@ -337,9 +347,9 @@ write("privasi.html", layout({
 <h1>Kebijakan privasi</h1>
 <p class="muted">Draft. Terakhir diubah 9 Oktober 2026. Tinjau ulang sebelum rilis publik, terutama bagian iklan dan cookie.</p>
 <h2>Yang diproses di browser</h2>
-<p>Konversi gambar, kompres gambar, ubah ukuran gambar, dan konversi audio berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. Untuk konversi audio, browser mengunduh mesin pemroses (ffmpeg.wasm) dari jaringan pengiriman konten publik (jsDelivr).</p>
+<p>Konversi gambar, kompres gambar, ubah ukuran gambar, dan konversi audio berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. ${FFMPEG_NOTE}</p>
 <h2>Yang lewat server</h2>
-<p>Konversi dokumen (PDF, Word, PowerPoint, Excel) dan kompres PDF membutuhkan server. File kamu diunggah, diproses di wadah terisolasi tanpa akses internet, dan hasilnya tersedia untuk kamu unduh.</p>
+<p>Konversi dokumen (PDF, Word, PowerPoint, Excel) dan kompres PDF, Word, PowerPoint membutuhkan server. File kamu diunggah, diproses di wadah terisolasi tanpa akses internet, dan hasilnya tersedia untuk kamu unduh.</p>
 <ul>
 <li>File input dan hasil dihapus otomatis paling lama 1 jam setelah selesai.</li>
 <li>Nama file di penyimpanan diacak.</li>
@@ -351,7 +361,7 @@ write("privasi.html", layout({
 <h2>Iklan dan cookie</h2>
 <p>Situs ini direncanakan menampilkan iklan lewat Google AdSense. Saat iklan aktif, Google dapat memakai cookie untuk menampilkan iklan, dan kami akan menampilkan banner persetujuan cookie. Bagian ini harus diperbarui saat iklan dipasang.</p>
 <h2>Kontak</h2>
-<p>Pertanyaan soal privasi: halo@konvertin.example (ganti dengan alamat asli sebelum rilis).</p>
+<p>Pertanyaan soal privasi: ${EMAIL}.</p>
 </div>`,
 }));
 
@@ -376,7 +386,7 @@ write("js/config.js", `// Dibuat oleh scripts/build.mjs. Ubah lewat env API_BASE
 window.KONVERTIN = {
   apiBase: ${JSON.stringify(API_BASE)},
   ads: ${ADS},
-  ffmpegCoreBase: "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd"
+  ffmpegCoreBase: ${JSON.stringify(FFMPEG_CORE_BASE)}
 };
 `);
 
@@ -386,6 +396,6 @@ if (SITE_URL) {
 }
 write("robots.txt", `User-agent: *\nAllow: /\n${SITE_URL ? `Sitemap: ${SITE_URL}/sitemap.xml\n` : ""}`);
 write("favicon.svg", `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1a1714"/><circle cx="16" cy="16" r="6" fill="#ff7a2f"/></svg>\n`);
-write("_headers", `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n`);
+write("_headers", `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/vendor/ffmpeg-core/*\n  Cache-Control: public, max-age=31536000, immutable\n`);
 
 console.log(`Selesai: ${tools.length} halaman tool + beranda. API_BASE=${API_BASE || "(kosong)"} ADS=${ADS}`);

@@ -169,6 +169,24 @@
       "desc": "Kecilkan ukuran PDF dengan 3 level: ringan, sedang, maksimal. File dihapus otomatis maksimal 1 jam.",
       "accept": ".pdf", "inputs": "PDF", "outExt": "pdf", "maxMB": 25, "level": true, "compare": true,
       "notes": ["Level maksimal menurunkan kualitas gambar di dalam PDF.", "Kalau hasil malah lebih besar, file asli yang dikembalikan."]
+    },
+    {
+      "slug": "kompres-word", "cat": "kompres", "op": "server", "side": "server", "job": "compress_docx",
+      "name": "Kompres Word", "short": "Kecilkan DOCX, 3 level",
+      "title": "Kompres Word Online: Kecilkan Ukuran DOCX",
+      "h1": "Kompres Word",
+      "desc": "Kecilkan ukuran dokumen Word (DOCX) dengan memperkecil gambar di dalamnya. 3 level: ringan, sedang, maksimal. File dihapus otomatis maksimal 1 jam.",
+      "accept": ".docx", "inputs": "DOCX", "outExt": "docx", "maxMB": 25, "level": true, "compare": true,
+      "notes": ["Yang diperkecil hanya gambar JPG dan PNG di dalam dokumen. Teks, tabel, dan tata letak tidak berubah.", "Dokumen tanpa gambar hampir tidak berkurang ukurannya.", "Level maksimal membatasi sisi terpanjang gambar sekitar 1024 px. Kalau hasil malah lebih besar, file asli yang dikembalikan."]
+    },
+    {
+      "slug": "kompres-pptx", "cat": "kompres", "op": "server", "side": "server", "job": "compress_pptx",
+      "name": "Kompres PowerPoint", "short": "Kecilkan PPTX, 3 level",
+      "title": "Kompres PowerPoint Online: Kecilkan Ukuran PPTX",
+      "h1": "Kompres PowerPoint",
+      "desc": "Kecilkan ukuran presentasi PowerPoint (PPTX) dengan memperkecil gambar di dalamnya. 3 level: ringan, sedang, maksimal. File dihapus otomatis maksimal 1 jam.",
+      "accept": ".pptx", "inputs": "PPTX", "outExt": "pptx", "maxMB": 25, "level": true, "compare": true,
+      "notes": ["Yang diperkecil hanya gambar JPG dan PNG di dalam slide. Teks, animasi, dan tata letak tidak berubah.", "Video dan audio di dalam presentasi tidak disentuh, jadi PPTX yang besarnya karena video tidak banyak berkurang.", "Level maksimal membatasi sisi terpanjang gambar sekitar 1024 px. Kalau hasil malah lebih besar, file asli yang dikembalikan."]
     }
   ]
 }
