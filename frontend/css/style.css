@@ -81,14 +81,10 @@ p { margin: 0 0 1em; }
   border: 2px solid var(--ink); background: var(--ink); color: var(--paper);
   cursor: pointer; text-decoration: none;
 }
-.btn:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .btn:active { background: var(--accent-hover); border-color: var(--accent-hover); }
 .btn.ghost { background: var(--paper); color: var(--ink); }
-.btn.ghost:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .btn.small { padding: 10px 16px; font-size: 0.9rem; }
 .btn[disabled] { opacity: 0.35; cursor: not-allowed; }
-.btn[disabled]:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-.btn.ghost[disabled]:hover { background: var(--paper); color: var(--ink); }
 
 /* ---------- navigasi ---------- */
 .nav { background: var(--paper); border-bottom: 2px solid var(--ink); position: sticky; top: 0; z-index: 100; }
@@ -99,7 +95,6 @@ p { margin: 0 0 1em; }
 .nav ul { display: flex; gap: 6px 22px; list-style: none; margin: 0; padding: 0; align-items: center; flex-wrap: wrap; }
 .nav ul a { font-size: 0.95rem; font-weight: 600; text-decoration: none; }
 .nav ul a.btn { color: var(--paper); }
-.nav ul a.btn:hover { color: var(--on-accent); }
 
 
 
