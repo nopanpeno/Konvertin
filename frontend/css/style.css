@@ -227,6 +227,9 @@ footer a:hover { color: var(--ink); }
 .file[data-state="done"] .state { color: var(--ok); }
 .file[data-state="error"] .state { color: var(--err); }
 .file[data-state="working"] .state { color: var(--ink); }
+.file .state.delta { font: 800 0.95rem var(--mono); padding: 2px 8px; color: var(--ink); }
+.file .state.delta.down { background: var(--mark); }
+.file .state.delta.up { background: #fbeceb; color: var(--err); }
 .file .msg { grid-column: 1 / -1; font-size: 0.9rem; color: var(--err); margin: 0; }
 .file .msg.ok { color: var(--muted); }
 .file .rm, .file .dl {
