@@ -22,14 +22,14 @@
   --paper: #ffffff;
   --wash: #eef0f3;          /* panel sekunder */
   --rule: #cdd2da;          /* garis tipis */
-  --accent: #086442;        /* hijau petrol */
-  --accent-hover: #065036;  /* hijau petrol lebih gelap */
+  --accent: #e85d04;        /* oren */
+  --accent-hover: #ca6702;  /* oren gelap */
   --muted: #565e6a;
   --ok: #0d7a40;
   --err: #b3261e;
   --err-bg: #fbeceb;
   --on-accent: #ffffff;       /* teks di atas aksen */
-  --accent-soft: #e8f1ed;
+  --accent-soft: #fef3e8;
   --foot-bg: #101418;
   --foot-fg: #d9dde3;
   --foot-link: #ffffff;
