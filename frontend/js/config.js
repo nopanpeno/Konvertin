@@ -1,6 +1,6 @@
 // Dibuat oleh scripts/build.mjs. Ubah lewat env API_BASE dan ADS, lalu build ulang.
 window.KONVERTIN = {
-  apiBase: "/",
+  apiBase: "",
   ads: false,
   ffmpegCoreBase: "./vendor/ffmpeg-core"
 };

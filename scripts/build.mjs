@@ -110,6 +110,19 @@ ${byCat(c.id).map(toolCard).join("\n")}
     </div>`)
   .join("\n");
 
+// pasangan format untuk kalimat di hero
+const NAMA = { word: "Word", excel: "Excel", pptx: "PowerPoint" };
+const nama = (x) => NAMA[x] || x.toUpperCase();
+const pairs = tools
+  .filter((t) => !isSoon(t) && /^[a-z0-9]+-ke-[a-z0-9]+$/.test(t.slug))
+  .map((t) => { const [a, b] = t.slug.split("-ke-"); return [a, b, t.slug, nama(b)]; });
+const froms = [...new Set(pairs.map((p) => p[0]))];
+const defFrom = froms.includes("jpg") ? "jpg" : froms[0];
+const fromOpts = froms.map((f) => `<option value="${f}"${f === defFrom ? " selected" : ""}>${nama(f)}</option>`).join("");
+const toList = pairs.filter((p) => p[0] === defFrom);
+const toOpts = toList.map((p) => `<option value="${p[1]}">${p[3]}</option>`).join("");
+const firstHref = toList.length ? `./${toList[0][2]}/index.html` : "#tool";
+
 const index = layout({
   title: "Konvertin: Konverter File Gambar, Audio, dan Dokumen",
   desc: "Ubah format gambar dan audio, kompres gambar, PDF, Word, dan PowerPoint, ubah PDF dan Word. Tanpa daftar. Gambar dan audio diproses di browser, tidak diunggah.",
@@ -117,30 +130,36 @@ const index = layout({
   body: `
 <section class="hero">
   <div class="wrap">
-    <span class="label">Konverter file</span>
-    <h1>Ubah file. Tanpa ribet.</h1>
-    <p class="lead">Ubah format gambar dan audio, kecilkan ukuran gambar, PDF, Word, dan PowerPoint, ubah PDF dan Word. Gambar dan audio diproses di browser kamu.</p>
-    <ul class="points">
-      <li>Tanpa daftar</li>
-      <li>Gambar dan audio tidak diunggah</li>
-      <li>Gratis</li>
-    </ul>
-    <a class="btn" href="#tool">Pilih tool</a>
+    <h1 class="swap">Ubah <select id="from" aria-label="Dari format">${fromOpts}</select> ke <select id="to" aria-label="Ke format">${toOpts}</select></h1>
+    <p class="lead">Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Tanpa akun.</p>
+    <div class="hero-go">
+      <a class="btn" id="go-pair" href="${firstHref}">Buka tool</a>
+      <a class="plain" href="#tool">Lihat semua tool</a>
+    </div>
   </div>
 </section>
-
-<div class="facts">
-  <div class="wrap">
-    <div class="fact"><b>${cats.length}</b><span>kategori: gambar, audio, kompres, dokumen</span></div>
-    <div class="fact"><b>10</b><span>file maksimal per proses</span></div>
-    <div class="fact"><b>0</b><span>akun yang perlu dibuat</span></div>
-    <div class="fact"><b>1 jam</b><span>batas file tersimpan di server</span></div>
-  </div>
-</div>
+<script>
+(function () {
+  var pairs = ${JSON.stringify(pairs)};
+  var from = document.getElementById("from"), to = document.getElementById("to"), go = document.getElementById("go-pair");
+  function fill() {
+    var cur = to.value;
+    var list = pairs.filter(function (p) { return p[0] === from.value; });
+    to.innerHTML = list.map(function (p) { return '<option value="' + p[1] + '"' + (p[1] === cur ? " selected" : "") + ">" + p[3] + "</option>"; }).join("");
+    set();
+  }
+  function set() {
+    var hit = pairs.filter(function (p) { return p[0] === from.value && p[1] === to.value; })[0];
+    if (hit) go.href = "./" + hit[2] + "/index.html";
+  }
+  from.addEventListener("change", fill);
+  to.addEventListener("change", set);
+  set();
+})();
+</script>
 
 <section class="block" id="tool">
   <div class="wrap">
-    <span class="label">Tool</span>
     <h2>Pilih konversi</h2>
     <div class="search">
       <label class="sr-only" for="q">Cari tool</label>
@@ -154,7 +173,6 @@ ${catBlocks}
 
 <section class="block" id="cara-kerja">
   <div class="wrap">
-    <span class="label">Cara kerja</span>
     <h2>Tiga langkah</h2>
     <ol class="steps">
       <li><h3>Upload</h3><p>Tarik file ke kotak, atau klik untuk memilih. Sampai 10 file sekaligus.</p></li>
@@ -166,7 +184,6 @@ ${catBlocks}
 
 <section class="block" id="privasi">
   <div class="wrap">
-    <span class="label">Privasi</span>
     <h2>Apa yang pergi ke mana</h2>
     <div class="cols">
       <div><h3>Di browser kamu</h3><p>Konversi dan kompres gambar, ubah ukuran gambar, dan konversi audio. File tidak keluar dari perangkat. Kamu bisa putus internet setelah halaman terbuka, kecuali pemuat audio belum pernah diunduh.</p></div>
@@ -178,7 +195,6 @@ ${catBlocks}
 
 <section class="block" id="batas">
   <div class="wrap">
-    <span class="label">Batas pemakaian gratis</span>
     <h2>Batas awal</h2>
     <div class="table-scroll">
     <table>
@@ -195,7 +211,6 @@ ${catBlocks}
 
 <section class="block" id="faq">
   <div class="wrap">
-    <span class="label">FAQ</span>
     <h2>Pertanyaan yang sering muncul</h2>
     <details><summary>Apakah file saya diunggah?</summary><p>Tergantung tool. Gambar dan audio diproses di browser, jadi tidak diunggah. Konversi dokumen dan kompres PDF, Word, PowerPoint berjalan di server, dan file dihapus otomatis paling lama 1 jam setelah selesai.</p></details>
     <details><summary>Kenapa hasil PDF ke Word layoutnya berubah?</summary><p>PDF menyimpan posisi tiap huruf, bukan struktur paragraf. Mengubahnya ke Word berarti menebak struktur itu, dan tebakan tidak selalu tepat. Tabel rumit dan kolom ganda paling sering bergeser.</p></details>
@@ -203,13 +218,6 @@ ${catBlocks}
     <details><summary>Kenapa konversi audio mengunduh file besar dulu?</summary><p>Mesin konversi audio (sekitar 30 MB) dimuat sekali supaya audio bisa diproses di browser. Setelah itu disimpan oleh browser.</p></details>
     <details><summary>Kenapa kompres PNG hematnya kecil?</summary><p>PNG menyimpan gambar tanpa kehilangan data. Untuk hemat lebih besar, ubah ke WEBP atau JPG, atau kecilkan resolusinya.</p></details>
     <details><summary>Apakah ada batas jumlah konversi?</summary><p>Tool di browser tidak dibatasi. Tool server dibatasi sekitar 20 proses per jam per alamat IP untuk mencegah penyalahgunaan.</p></details>
-  </div>
-</section>
-
-<section class="block cta">
-  <div class="wrap">
-    <h2>File kamu sudah siap?</h2>
-    <a class="btn" href="#tool">Pilih tool</a>
   </div>
 </section>`,
 });
@@ -330,13 +338,12 @@ for (const t of tools) write(`${t.slug}/index.html`, toolPage(t));
 // ---------- halaman statis ----------
 write("404.html", layout({
   title: "Halaman tidak ditemukan | konvertin.", desc: "Halaman tidak ditemukan.", path: "/404.html",
-  body: `<div class="wrap nf"><span class="label">404</span><h1>Halaman tidak ada</h1><p class="muted">Alamat yang kamu buka tidak ditemukan. Mungkin salah ketik, atau tool itu belum dibuat.</p><a class="btn" href="./index.html#tool">Lihat semua tool</a></div>`,
+  body: `<div class="wrap nf"><h1>Halaman tidak ada</h1><p class="muted">Alamat yang kamu buka tidak ditemukan. Mungkin salah ketik, atau tool itu belum dibuat.</p><a class="btn" href="./index.html#tool">Lihat semua tool</a></div>`,
 }));
 
 write("privasi.html", layout({
   title: "Kebijakan Privasi | konvertin.", desc: "Apa yang diproses di browser, apa yang lewat server, dan kapan file dihapus.", path: "/privasi.html",
   body: `<div class="wrap prose">
-<span class="label">Kebijakan privasi</span>
 <h1>Kebijakan privasi</h1>
 <p class="muted">Draft. Terakhir diubah 9 Oktober 2026. Tinjau ulang sebelum rilis publik, terutama bagian iklan dan cookie.</p>
 <h2>Yang diproses di browser</h2>
@@ -361,7 +368,6 @@ write("privasi.html", layout({
 write("syarat.html", layout({
   title: "Syarat Penggunaan | konvertin.", desc: "Syarat memakai Konvertin.", path: "/syarat.html",
   body: `<div class="wrap prose">
-<span class="label">Syarat penggunaan</span>
 <h1>Syarat penggunaan</h1>
 <p class="muted">Draft. Terakhir diubah 9 Oktober 2026. Tinjau ulang sebelum rilis publik.</p>
 <h2>Pemakaian</h2>
