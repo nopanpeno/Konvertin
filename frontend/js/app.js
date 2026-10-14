@@ -627,22 +627,6 @@
     render();
   }
 
-  function initTheme() {
-    var btn = $("#theme"); if (!btn) return;
-    var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
-    function current() { return document.documentElement.dataset.theme || (mq && mq.matches ? "dark" : "light"); }
-    function label() { btn.textContent = current() === "dark" ? "Terang" : "Gelap"; }
-    btn.addEventListener("click", function () {
-      var next = current() === "dark" ? "light" : "dark";
-      document.documentElement.dataset.theme = next;
-      try { localStorage.setItem("konvertin-tema", next); } catch (e) {}
-      label();
-    });
-    if (mq && mq.addEventListener) mq.addEventListener("change", label);
-    label();
-  }
-
-  initTheme();
   initHome();
   initTool();
 })();
