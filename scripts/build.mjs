@@ -300,7 +300,7 @@ function toolPage(t) {
       <label class="dropzone" id="drop">
         <input type="file" id="file" accept="${esc(t.accept)}" multiple>
         <strong>Tarik file ke sini</strong>
-        <span>atau klik untuk memilih. Sampai ${maxFiles} file.</span>
+        <span>atau klik untuk memilih, atau tempel dengan Ctrl+V. Sampai ${maxFiles} file.</span>
         <span class="formats">${esc(t.inputs)} &middot; ${limit}</span>
       </label>
       <ul class="files" id="files" aria-live="polite"></ul>

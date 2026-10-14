@@ -433,6 +433,12 @@
         li.className = "file"; li.dataset.state = it.state; li.id = "f" + it.id;
         var name = document.createElement("span"); name.className = "name"; name.textContent = it.file.name; name.title = it.file.name;
         var state = document.createElement("span"); state.className = "state"; state.textContent = t(it.state === "idle" ? "ready" : it.state);
+        if (it.state === "done" && it.result && cfg.compare && it.result.blob !== it.file && it.file.size > 0) {
+          var pct = Math.round((1 - it.result.blob.size / it.file.size) * 100);
+          state.textContent = (pct >= 0 ? "\u2212" : "+") + Math.abs(pct) + "%";
+          state.className = "state delta " + (pct >= 0 ? "down" : "up");
+          state.title = pct >= 0 ? t("saved", { p: pct }) : t("bigger", { p: -pct });
+        }
         var acts = document.createElement("span"); acts.className = "acts";
         if (it.state === "done" && it.result) {
           var a = document.createElement("a"); a.className = "dl"; a.textContent = t("download");
@@ -535,6 +541,14 @@
     els.drop.addEventListener("drop", function (e) { if (e.dataTransfer && e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
     ["dragover", "drop"].forEach(function (ev) { window.addEventListener(ev, function (e) { e.preventDefault(); }); });
 
+    // tempel (Ctrl+V)
+    document.addEventListener("paste", function (e) {
+      var tag = e.target && e.target.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || running) return;
+      var files = e.clipboardData && e.clipboardData.files;
+      if (files && files.length) { e.preventDefault(); addFiles(files); }
+    });
+
     // opsi
     var q = $("#o-quality"), qv = $("#o-quality-v");
     if (q) q.addEventListener("input", function () { qv.textContent = q.value; });
@@ -575,9 +589,6 @@
             it.result = r; it.url = URL.createObjectURL(r.blob); it.state = "done";
             it.note = r.note || "";
             if (cfg.compare && r.compare && r.blob !== it.file) {
-              var p = Math.round((1 - r.blob.size / it.file.size) * 100);
-              var s = p >= 0 ? t("saved", { p: p }) : t("bigger", { p: -p });
-              it.note = (it.note ? it.note + " " : "") + s.charAt(0).toUpperCase() + s.slice(1) + ".";
             }
           }).catch(function (e) {
             it.state = "error";
