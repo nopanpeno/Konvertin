@@ -1,6 +1,6 @@
 // Bangun halaman statis dari tools.json.
 // Pakai: node scripts/build.mjs
-// Output: frontend/. Env opsional: API_BASE ("/" = backend satu origin, atau URL backend; kosong = tool server berlabel Segera), ADS=1 (aktifkan slot iklan), SITE_URL (untuk sitemap), EMAIL (email kontak asli; default halo@konvertin.example = placeholder)
+// Output: frontend/. Env opsional: API_BASE ("/" = backend satu origin, atau URL backend; kosong = tool server berlabel Segera), ADS=1 (aktifkan slot iklan), SITE_URL (untuk sitemap), EMAIL (email kontak asli; default novankaresa@students.amikom.ac.id)
 // FFMPEG_CORE_BASE: URL unduhan mesin audio. Kosong/tidak diisi = pakai salinan lokal di vendor/ffmpeg-core/ (tanpa CDN pihak ketiga).
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -11,7 +11,7 @@ const data = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)
 const API_BASE = process.env.API_BASE || "";
 const ADS = process.env.ADS === "1";
 const SITE_URL = (process.env.SITE_URL || "").replace(/\/$/, "");
-const EMAIL = process.env.EMAIL || "halo@konvertin.example";
+const EMAIL = process.env.EMAIL || "novankaresa@students.amikom.ac.id";
 // Mesin audio: default dari repo sendiri (vendor/ffmpeg-core), bukan CDN pihak ketiga.
 const FFMPEG_LOCAL = existsSync(join(root, "vendor", "ffmpeg-core", "ffmpeg-core.wasm"));
 const FFMPEG_CORE_BASE = process.env.FFMPEG_CORE_BASE || (FFMPEG_LOCAL ? "./vendor/ffmpeg-core" : "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd");
@@ -117,13 +117,6 @@ const nama = (x) => NAMA[x] || x.toUpperCase();
 const pairs = tools
   .filter((t) => !isSoon(t) && /^[a-z0-9]+-ke-[a-z0-9]+$/.test(t.slug))
   .map((t) => { const [a, b] = t.slug.split("-ke-"); return [a, b, t.slug, nama(b)]; });
-const froms = [...new Set(pairs.map((p) => p[0]))];
-const defFrom = froms.includes("jpg") ? "jpg" : froms[0];
-const fromOpts = froms.map((f) => `<option value="${f}"${f === defFrom ? " selected" : ""}>${nama(f)}</option>`).join("");
-const toList = pairs.filter((p) => p[0] === defFrom);
-const toOpts = toList.map((p) => `<option value="${p[1]}">${p[3]}</option>`).join("");
-const firstHref = toList.length ? `./${toList[0][2]}/index.html` : "#tool";
-
 const index = layout({
   title: "Konvertin: Konverter File Gambar, Audio, dan Dokumen",
   desc: "Ubah format gambar dan audio, kompres gambar, PDF, Word, dan PowerPoint, ubah PDF dan Word. Tanpa daftar. Gambar dan audio diproses di browser, tidak diunggah.",
@@ -131,31 +124,25 @@ const index = layout({
   body: `
 <section class="hero">
   <div class="wrap">
-    <h1 class="swap">Ubah <select id="from" aria-label="Dari format">${fromOpts}</select> ke <select id="to" aria-label="Ke format">${toOpts}</select></h1>
+    <h1><span class="sr-only">Ubah format file</span><span class="swap" aria-hidden="true">Ubah <b id="swap-from">${nama(pairs[0] ? pairs[0][0] : "jpg")}</b> ke <b id="swap-to">${pairs[0] ? pairs[0][3] : "PNG"}</b></span></h1>
     <p class="lead">Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Tanpa akun.</p>
     <div class="hero-go">
-      <a class="btn" id="go-pair" href="${firstHref}">Buka tool</a>
-      <a class="plain" href="#tool">Lihat semua tool</a>
+      <a class="btn" href="#tool">Lihat semua tool</a>
     </div>
   </div>
 </section>
 <script>
 (function () {
-  var pairs = ${JSON.stringify(pairs)};
-  var from = document.getElementById("from"), to = document.getElementById("to"), go = document.getElementById("go-pair");
-  function fill() {
-    var cur = to.value;
-    var list = pairs.filter(function (p) { return p[0] === from.value; });
-    to.innerHTML = list.map(function (p) { return '<option value="' + p[1] + '"' + (p[1] === cur ? " selected" : "") + ">" + p[3] + "</option>"; }).join("");
-    set();
-  }
-  function set() {
-    var hit = pairs.filter(function (p) { return p[0] === from.value && p[1] === to.value; })[0];
-    if (hit) go.href = "./" + hit[2] + "/index.html";
-  }
-  from.addEventListener("change", fill);
-  to.addEventListener("change", set);
-  set();
+  var pairs = ${JSON.stringify(pairs.map((p) => [nama(p[0]), p[3]]))};
+  var a = document.getElementById("swap-from"), b = document.getElementById("swap-to");
+  if (!a || !b || pairs.length < 2) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var i = 0;
+  setInterval(function () {
+    i = (i + 1) % pairs.length;
+    a.textContent = pairs[i][0];
+    b.textContent = pairs[i][1];
+  }, 1000);
 })();
 </script>
 
