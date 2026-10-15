@@ -34,31 +34,25 @@
 
 <section class="hero">
   <div class="wrap">
-    <h1 class="swap">Ubah <select id="from" aria-label="Dari format"><option value="heic">HEIC</option><option value="jpg" selected>JPG</option><option value="png">PNG</option><option value="webp">WEBP</option><option value="wav">WAV</option><option value="m4a">M4A</option><option value="flac">FLAC</option></select> ke <select id="to" aria-label="Ke format"><option value="png">PNG</option><option value="webp">WEBP</option></select></h1>
+    <h1><span class="sr-only">Ubah format file</span><span class="swap" aria-hidden="true">Ubah <b id="swap-from">HEIC</b> ke <b id="swap-to">JPG</b></span></h1>
     <p class="lead">Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Tanpa akun.</p>
     <div class="hero-go">
-      <a class="btn" id="go-pair" href="./jpg-ke-png/index.html">Buka tool</a>
-      <a class="plain" href="#tool">Lihat semua tool</a>
+      <a class="btn" href="#tool">Lihat semua tool</a>
     </div>
   </div>
 </section>
 <script>
 (function () {
-  var pairs = [["heic","jpg","heic-ke-jpg","JPG"],["jpg","png","jpg-ke-png","PNG"],["png","jpg","png-ke-jpg","JPG"],["webp","jpg","webp-ke-jpg","JPG"],["jpg","webp","jpg-ke-webp","WEBP"],["wav","mp3","wav-ke-mp3","MP3"],["m4a","mp3","m4a-ke-mp3","MP3"],["flac","mp3","flac-ke-mp3","MP3"]];
-  var from = document.getElementById("from"), to = document.getElementById("to"), go = document.getElementById("go-pair");
-  function fill() {
-    var cur = to.value;
-    var list = pairs.filter(function (p) { return p[0] === from.value; });
-    to.innerHTML = list.map(function (p) { return '<option value="' + p[1] + '"' + (p[1] === cur ? " selected" : "") + ">" + p[3] + "</option>"; }).join("");
-    set();
-  }
-  function set() {
-    var hit = pairs.filter(function (p) { return p[0] === from.value && p[1] === to.value; })[0];
-    if (hit) go.href = "./" + hit[2] + "/index.html";
-  }
-  from.addEventListener("change", fill);
-  to.addEventListener("change", set);
-  set();
+  var pairs = [["HEIC","JPG"],["JPG","PNG"],["PNG","JPG"],["WEBP","JPG"],["JPG","WEBP"],["WAV","MP3"],["M4A","MP3"],["FLAC","MP3"]];
+  var a = document.getElementById("swap-from"), b = document.getElementById("swap-to");
+  if (!a || !b || pairs.length < 2) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var i = 0;
+  setInterval(function () {
+    i = (i + 1) % pairs.length;
+    a.textContent = pairs[i][0];
+    b.textContent = pairs[i][1];
+  }, 1000);
 })();
 </script>
 
@@ -171,7 +165,7 @@
     <ul>
       <li><a href="./privasi.html">Kebijakan privasi</a></li>
       <li><a href="./syarat.html">Syarat penggunaan</a></li>
-      <li><a href="mailto:halo@konvertin.example">Kontak</a></li>
+      <li><a href="mailto:novankaresa@students.amikom.ac.id">Kontak</a></li>
     </ul>
   </div>
 </footer>
