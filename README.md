@@ -21,7 +21,7 @@ Konverter file serbaguna (PRD v1.2). Status: Modul A, B, C, dan D sudah ada vers
 Edit `scripts/tools.json`, lalu build ulang dan commit hasilnya di `frontend/`:
 ```bash
 npm run build         # tool server aktif, API satu origin (dipakai backend)
-npm run build:static  # tanpa backend: tool server berlabel "Segera"
+npm run build:static  # GitHub Pages: tool server "Segera", halaman akun disembunyikan
 # env lain: API_BASE=https://api.contoh.id  ADS=1  SITE_URL=https://domain-asli
 ```
 
@@ -43,6 +43,8 @@ python3 -m uvicorn app.main:app --port 8000
 docker compose up --build   # lalu buka http://localhost:8000
 ```
 Catatan: kalau `API_BASE` dikosongkan saat build, tool server diberi label "Segera" dan upload dinonaktifkan oleh desain (lihat `scripts/build.mjs`).
+
+Workflow `.github/workflows/pages.yml` otomatis membangun mode statis tersebut dari `main` dan menerbitkan folder `frontend/`. Di mode Pages, tool server dan UI akun tidak tersedia; API FastAPI, riwayat akun, dan dashboard admin baru aktif jika frontend disajikan satu origin dengan backend (`API_BASE=/`).
 
 ## Jalankan lokal
 ```bash
