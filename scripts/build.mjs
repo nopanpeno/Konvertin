@@ -52,14 +52,14 @@ ${SITE_URL ? `<link rel="canonical" href="${SITE_URL}${path}">` : ""}
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:type" content="website">
-<link rel="icon" href="${rootHref}favicon.svg" type="image/svg+xml">
+<link rel="icon" href="${rootHref}logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="${stylesheet}">
 </head>
 <body class="${bodyClass}${ADS ? " ads-on" : ""}">
 <a class="skip" href="#main">Lewati ke isi</a>
 <header class="nav">
   <div class="wrap">
-    <a class="logo" href="${homeHref}" aria-label="Konvertin, beranda">konvertin<i>.</i></a>
+    <a class="logo" href="${homeHref}" aria-label="Konvertin, beranda"><img src="${rootHref}logo.svg" alt="" width="159" height="41"></a>
     <nav aria-label="Utama">
       <ul>
         <li class="nl"><a href="${homeHref}#tool">Tool</a></li>
@@ -76,7 +76,7 @@ ${body}
 </main>
 <footer>
   <div class="wrap">
-    <div>konvertin. &middot; Konverter file untuk pemakaian sehari-hari.</div>
+    <div>Konvertin &middot; Konverter file untuk pemakaian sehari-hari.</div>
     <ul>
       <li><a href="${rootHref}privasi.html">Kebijakan privasi</a></li>
       <li><a href="${rootHref}syarat.html">Syarat penggunaan</a></li>
@@ -129,6 +129,7 @@ const index = layout({
   body: `
 <section class="hero">
   <div class="wrap">
+    <img class="hero-mark" src="./logo-mark.svg" alt="" width="200" height="200">
     <h1><span class="sr-only">Ubah format file</span><span class="swap" aria-hidden="true">Ubah ${slot("swap-from", fromLabels)} ke ${slot("swap-to", toLabels)}</span></h1>
     <p class="lead">Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Tanpa akun.</p>
     <div class="hero-go">
@@ -282,7 +283,7 @@ function toolPage(t) {
   const notes = (t.notes || []).map((n) => `<li>${esc(n)}</li>`).join("");
   const body = `
 <div class="wrap">
-  <p class="crumb"><a href="${rootHref}index.html">konvertin.</a> / <a href="${rootHref}index.html#tool">${catLabel[t.cat]}</a> / ${esc(t.name)}</p>
+  <p class="crumb"><a href="${rootHref}index.html">Konvertin</a> / <a href="${rootHref}index.html#tool">${catLabel[t.cat]}</a> / ${esc(t.name)}</p>
   <div class="tool-head">
     <h1>${esc(t.h1)}</h1>
     <p>${esc(t.desc)}</p>
@@ -326,19 +327,19 @@ ${optionsHtml(t)}
   </div>
 </div>
 <div style="height:72px"></div>`;
-  return layout({ title: `${t.title} | konvertin.`, desc: t.desc, path: `/${t.slug}/`, body });
+  return layout({ title: `${t.title} | Konvertin`, desc: t.desc, path: `/${t.slug}/`, body });
 }
 
 for (const t of tools) write(`${t.slug}/index.html`, toolPage(t));
 
 // ---------- halaman statis ----------
 write("404.html", layout({
-  title: "Halaman tidak ditemukan | konvertin.", desc: "Halaman tidak ditemukan.", path: "/404.html",
+  title: "Halaman tidak ditemukan | Konvertin", desc: "Halaman tidak ditemukan.", path: "/404.html",
   body: `<div class="wrap nf"><h1>Halaman tidak ada</h1><p class="muted">Alamat yang kamu buka tidak ditemukan. Mungkin salah ketik, atau tool itu belum dibuat.</p><a class="btn" href="./index.html#tool">Lihat semua tool</a></div>`,
 }));
 
 write("privasi.html", layout({
-  title: "Kebijakan Privasi | konvertin.", desc: "Apa yang diproses di browser, apa yang lewat server, dan kapan file dihapus.", path: "/privasi.html",
+  title: "Kebijakan Privasi | Konvertin", desc: "Apa yang diproses di browser, apa yang lewat server, dan kapan file dihapus.", path: "/privasi.html",
   body: `<div class="wrap prose">
 <h1>Kebijakan privasi</h1>
 <p class="muted">Draft. Terakhir diubah 9 Oktober 2026. Tinjau ulang sebelum rilis publik, terutama bagian iklan dan cookie.</p>
@@ -362,7 +363,7 @@ write("privasi.html", layout({
 }));
 
 write("syarat.html", layout({
-  title: "Syarat Penggunaan | konvertin.", desc: "Syarat memakai Konvertin.", path: "/syarat.html",
+  title: "Syarat Penggunaan | Konvertin", desc: "Syarat memakai Konvertin.", path: "/syarat.html",
   body: `<div class="wrap prose">
 <h1>Syarat penggunaan</h1>
 <p class="muted">Draft. Terakhir diubah 9 Oktober 2026. Tinjau ulang sebelum rilis publik.</p>
@@ -391,7 +392,6 @@ if (SITE_URL) {
   write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${SITE_URL}${u}</loc></url>`).join("\n")}\n</urlset>\n`);
 }
 write("robots.txt", `User-agent: *\nAllow: /\n${SITE_URL ? `Sitemap: ${SITE_URL}/sitemap.xml\n` : ""}`);
-write("favicon.svg", `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1a1714"/><circle cx="16" cy="16" r="6" fill="#ff7a2f"/></svg>\n`);
 write("_headers", `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/vendor/ffmpeg-core/*\n  Cache-Control: public, max-age=31536000, immutable\n`);
 
 console.log(`Selesai: ${tools.length} halaman tool + beranda. API_BASE=${API_BASE || "(kosong)"} ADS=${ADS}`);
