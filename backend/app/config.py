@@ -30,5 +30,10 @@ RATE_LIMIT_WINDOW_SEC = _int("RATE_LIMIT_WINDOW_SEC", 3600)
 
 # CORS: frontend statis di domain lain (mis. Cloudflare Pages), pisahkan dengan koma
 CORS_ORIGINS = [o for o in os.environ.get("KONVERTIN_CORS_ORIGINS", "").split(",") if o]
+SESSION_COOKIE_SECURE = os.environ.get("KONVERTIN_SESSION_COOKIE_SECURE", "1") != "0"
+SESSION_TTL_SEC = _int("SESSION_TTL_SEC", 14 * 24 * 3600)
+HISTORY_TTL_SEC = _int("HISTORY_TTL_SEC", 365 * 24 * 3600)
+ADMIN_EMAIL = os.environ.get("KONVERTIN_ADMIN_EMAIL", "").strip().lower()
+ADMIN_PASSWORD = os.environ.get("KONVERTIN_ADMIN_PASSWORD", "")
 
 FRONTEND_DIR = Path(os.environ.get("KONVERTIN_FRONTEND_DIR", Path(__file__).resolve().parents[2] / "frontend"))

@@ -42,6 +42,7 @@ def init() -> None:
         )
         # job yang tertinggal dari proses sebelumnya tidak akan pernah selesai
         c.execute("UPDATE jobs SET status='failed', error_message='Server dimulai ulang. Coba lagi.' WHERE status IN ('queued','processing')")
+        c.execute("UPDATE conversion_history SET status='failed' WHERE job_id IN (SELECT job_id FROM jobs WHERE status='failed' AND error_message='Server dimulai ulang. Coba lagi.')")
     _executor = ThreadPoolExecutor(max_workers=config.WORKERS, thread_name_prefix="worker")
 
 
@@ -50,7 +51,7 @@ def shutdown() -> None:
         _executor.shutdown(wait=False, cancel_futures=True)
 
 
-def create(job_type: str, input_path: Path, original_name: str, options: dict | None = None) -> str:
+def create(job_type: str, input_path: Path, original_name: str, options: dict | None = None, user_id: int | None = None) -> str:
     """input_path sudah tervalidasi. Pindahkan ke storage dengan nama acak lalu antrekan."""
     job_id = str(uuid.uuid4())
     in_key = f"{uuid.uuid4().hex}.in"
@@ -68,6 +69,11 @@ def create(job_type: str, input_path: Path, original_name: str, options: dict | 
             "INSERT INTO jobs (job_id,type,options,input_key,download_name,status,created_at,expires_at) VALUES (?,?,?,?,?,?,?,?)",
             (job_id, job_type, json.dumps(options or {}), in_key, download_name, "queued", now, now + config.FILE_TTL_SEC),
         )
+        c.execute("INSERT INTO usage_events(user_id,tool_type,source,status,created_at) VALUES(?,?,?,?,?)",
+                  (user_id, job_type, "server", "queued", now))
+        if user_id is not None:
+            c.execute("INSERT INTO conversion_history(user_id,job_id,tool_type,source,status,created_at) VALUES(?,?,?,?,?,?)",
+                      (user_id, job_id, job_type, "server", "queued", now))
     _executor.submit(_run, job_id)
     return job_id
 
@@ -81,6 +87,8 @@ def _set(job_id: str, **fields) -> None:
     cols = ", ".join(f"{k}=?" for k in fields)
     with _lock, _db() as c:
         c.execute(f"UPDATE jobs SET {cols} WHERE job_id=?", (*fields.values(), job_id))
+        if "status" in fields:
+            c.execute("UPDATE conversion_history SET status=? WHERE job_id=?", (fields["status"], job_id))
 
 
 def _limits() -> None:  # dijalankan di child sebelum exec
@@ -188,6 +196,8 @@ def cleanup_expired() -> int:
     for f in config.STORAGE_DIR.iterdir():
         if f.name not in known and now - f.stat().st_mtime > config.FILE_TTL_SEC:
             f.unlink(missing_ok=True)
+    from . import accounts
+    accounts.cleanup_expired_history()
     return len(rows)
 
 

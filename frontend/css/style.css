@@ -237,6 +237,20 @@ footer a { color: var(--foot-link); font-weight: 600; }
 .notice.err { background: var(--err-bg); }
 .notice.err b { color: var(--err); }
 
+/* account pages */
+.account-wrap { max-width: 920px; padding-top: 48px; padding-bottom: 80px; }
+.account-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.account-card { border: var(--bw) solid var(--ink); box-shadow: var(--sh-sm); background: var(--paper, #fff); padding: 24px; margin: 20px 0; }
+.account-card h2 { margin-top: 0; }
+.account-card label { display: grid; gap: 8px; margin: 16px 0; font-weight: 700; }
+.account-card input, .account-card select { width: 100%; padding: 11px; border: var(--bw) solid var(--ink); border-radius: 4px; font: inherit; }
+.account-card input:disabled { background: #eee; }
+.account-card .btn.secondary { background: #fff; color: var(--ink); }
+.usage-total { font-size: 1.25rem; font-weight: 700; }
+#usage-chart { width: 100%; height: auto; border: 1px solid #ddd; }
+.nav [hidden], .account-wrap [hidden] { display: none !important; }
+@media (max-width: 680px) { .account-columns { grid-template-columns: 1fr; gap: 0; } .account-card { padding: 18px; } }
+
 .files { list-style: none; margin: 28px 0 0; padding: 0; }
 .file {
   display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px 16px; align-items: center;
@@ -428,6 +442,7 @@ footer a { color: var(--foot-link); font-weight: 600; }
 @media (max-width: 520px) {
   body { font-size: 16px; }
   .nav ul li.nl { display: none; }
+  .nav ul #profile-link-item, .nav ul #history-link-item, .nav ul #admin-link-item { display: none; }
   .dropzone { padding: 48px 16px; }
 }
 

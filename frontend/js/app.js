@@ -529,7 +529,7 @@
     var root = $("#tool[data-op]");
     if (!root) return;
     var cfg = {
-      op: root.dataset.op, accept: root.dataset.accept, job: root.dataset.job, out: root.dataset.out,
+      op: root.dataset.op, slug: root.dataset.slug, accept: root.dataset.accept, job: root.dataset.job, out: root.dataset.out,
       compare: !!root.dataset.compare || root.dataset.op === "image-compress", soon: !!root.dataset.soon,
       batch: !!batchOps[root.dataset.op], min: root.dataset.min ? +root.dataset.min : 1,
       maxMB: root.dataset.maxMb ? +root.dataset.maxMb : (root.dataset.op.indexOf("audio") === 0 ? 50 : 20)
@@ -739,6 +739,7 @@
       };
       batchOps[cfg.op](queue, o, ctx).then(function (r) {
         queue.forEach(function (i) { i.state = "done"; });
+        if (window.konvertinRecordHistory) window.konvertinRecordHistory(cfg.slug || cfg.op);
         items.push({ id: ++seq, file: { name: r.name, size: r.blob.size }, kind: "", state: "done", result: r, url: URL.createObjectURL(r.blob), note: r.note || "", error: "", synthetic: true });
       }).catch(function (e) {
         queue.forEach(function (i) { i.state = "idle"; });
@@ -762,6 +763,7 @@
           it.state = "working"; it.note = ""; render();
           return runItem(it, o).then(function (r) {
             it.result = r; it.url = URL.createObjectURL(r.blob); it.state = "done";
+            if (window.konvertinRecordHistory) window.konvertinRecordHistory(cfg.slug || cfg.op);
             it.note = r.note || "";
             if (cfg.compare && r.compare && r.blob !== it.file) {
             }

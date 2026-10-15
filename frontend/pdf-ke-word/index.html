@@ -6,7 +6,7 @@
 <title>PDF ke Word Online (DOCX) | Konvertin</title>
 <meta name="description" content="Ubah PDF jadi DOCX. File diproses di server dan dihapus otomatis maksimal 1 jam.">
 
-<meta name="robots" content="noindex">
+
 
 
 <meta name="color-scheme" content="light">
@@ -14,7 +14,7 @@
 <meta property="og:description" content="Ubah PDF jadi DOCX. File diproses di server dan dihapus otomatis maksimal 1 jam.">
 <meta property="og:type" content="website">
 <link rel="icon" href="../logo-mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../css/style.css?v=5ea2a3c0">
+<link rel="stylesheet" href="../css/style.css?v=36e044b1">
 </head>
 <body class="">
 <a class="skip" href="#main">Lewati ke isi</a>
@@ -27,6 +27,10 @@
         <li class="nl"><a href="../index.html#cara-kerja">Cara kerja</a></li>
         <li class="nl"><a href="../index.html#privasi">Privasi</a></li>
         <li class="nl"><a href="../index.html#faq">FAQ</a></li>
+        <li><a id="account-link" href="../akun.html">Masuk</a></li>
+        <li id="profile-link-item" hidden><a href="../profil.html">Profil</a></li>
+        <li id="history-link-item" hidden><a href="../riwayat.html">Riwayat</a></li>
+        <li id="admin-link-item" hidden><a href="../admin.html">Admin</a></li>
         <li><a class="btn small" href="../index.html#tool">Mulai konversi</a></li>
       </ul>
     </nav>
@@ -41,10 +45,9 @@
     <p>Ubah PDF jadi DOCX. File diproses di server dan dihapus otomatis maksimal 1 jam.</p>
   </div>
   <div class="notice"><b>Perlu diketahui</b>Layout hasil bisa berubah dari PDF asli. PDF hasil scan (berupa gambar) belum didukung, karena butuh OCR.</div>
-  <div class="notice"><b>Segera</b>Tool ini butuh server dan belum aktif. Tool gambar, audio, dan PDF dasar di beranda sudah bisa dipakai.</div>
   <div class="notice err" id="alert" role="alert" hidden><b>Ada masalah</b><span id="alert-text"></span></div>
 
-  <div class="tool-grid" id="tool" data-op="server" data-slug="pdf-ke-word" data-accept=".pdf" data-job="pdf_to_docx" data-out="docx" data-max-mb="25" data-soon="1">
+  <div class="tool-grid" id="tool" data-op="server" data-slug="pdf-ke-word" data-accept=".pdf" data-job="pdf_to_docx" data-out="docx" data-max-mb="25">
     <div>
       <label class="dropzone" id="drop">
         <input type="file" id="file" accept=".pdf" multiple>
@@ -74,7 +77,7 @@
     </div>
     <div>
       <h2>Tool lain</h2>
-      <ul class="related"><li><a href="../gabung-pdf/index.html">Gabung PDF</a></li><li><a href="../pisah-pdf/index.html">Pisah PDF</a></li><li><a href="../gambar-ke-pdf/index.html">Gambar ke PDF</a></li></ul>
+      <ul class="related"><li><a href="../word-ke-pdf/index.html">Word ke PDF</a></li><li><a href="../pptx-ke-pdf/index.html">PPTX ke PDF</a></li><li><a href="../excel-ke-pdf/index.html">Excel ke PDF</a></li><li><a href="../pdf-ke-txt/index.html">PDF ke TXT</a></li><li><a href="../word-ke-txt/index.html">Word ke TXT</a></li><li><a href="../kompres-pdf/index.html">Kompres PDF</a></li><li><a href="../kompres-word/index.html">Kompres Word</a></li></ul>
     </div>
   </div>
   <section class="guide">
@@ -100,7 +103,8 @@
   </div>
 </footer>
 <script src="../js/config.js"></script>
-<script src="../js/app.js?v=6fd1ea14" defer></script>
+<script src="../js/accounts.js?v=75c3834d" defer></script>
+<script src="../js/app.js?v=12896d8a" defer></script>
 
 </body>
 </html>
