@@ -297,6 +297,12 @@ footer a { color: var(--foot-link); font-weight: 600; }
 .related li { border-bottom: 2px solid var(--rule); margin: 0 !important; }
 .related a { display: block; padding: 12px 4px; font-weight: 700; text-decoration: none; }
 
+.guide { margin-top: 72px; max-width: 68ch; }
+.guide h2 { font-size: 1.4rem; display: inline-block; background: var(--sky); border: var(--bw) solid var(--ink); box-shadow: var(--sh-sm); padding: 6px 14px; margin: 0 0 16px; }
+.guide h2 ~ h2 { margin-top: 40px; }
+.guide ol { padding-left: 1.3em; }
+.guide li { margin-bottom: 8px; }
+
 .ad-slot { display: none; margin-top: 24px; min-height: 250px; border: var(--bw) dashed var(--ink); background: var(--paper); }
 .ads-on .ad-slot { display: block; }
 
