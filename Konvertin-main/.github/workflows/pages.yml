@@ -1,0 +1,33 @@
+name: Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      # Build untuk hosting statis: tanpa backend, tool dokumen berlabel "Segera".
+      # Halaman yang di-commit di repo ini adalah build server (API_BASE=/); workflow ini membangun ulang versi statis.
+      - run: npm run build:static
+      - name: Verifikasi hasil build
+        run: |
+          test -f frontend/index.html
+          grep -q 'id="tool"' frontend/index.html
+          ! grep -rq 'fonts.googleapis.com' frontend/ || { echo "Masih ada font pihak ketiga"; exit 1; }
+          test -s frontend/vendor/ffmpeg-core/ffmpeg-core.wasm
+          test -s frontend/fonts/schibsted-grotesk-latin-wght-normal.woff2
+          for f in $(find frontend -name '*.html'); do grep -q '</html>' "$f" || { echo "HTML rusak: $f"; exit 1; }; done
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: frontend }
+      - uses: actions/deploy-pages@v4

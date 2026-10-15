@@ -1,0 +1,18 @@
+# Sandbox: tanpa akses jaringan keluar untuk konversi.
+# Catatan: container ini menerima upload dari luar lewat port 8000, tapi tidak punya rute keluar (network internal + proxy masuk).
+services:
+  api:
+    build: { context: ., dockerfile: backend/Dockerfile }
+    ports: ["8000:8000"]
+    volumes: ["konvertin-data:/data"]
+    read_only: true
+    tmpfs: ["/tmp:size=512m"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 3g
+    cpus: 2
+    networks: [internal]
+networks:
+  internal: { internal: true }   # tidak ada akses internet keluar. Pasang reverse proxy (Caddy/Nginx) di jaringan lain untuk HTTPS masuk.
+volumes:
+  konvertin-data:

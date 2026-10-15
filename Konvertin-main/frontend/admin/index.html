@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Admin | Konvertin</title>
+  <meta name="description" content="Dashboard admin untuk melihat performa, aktivitas, dan task konversi Konvertin.">
+  <link rel="icon" href="../logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css?v=admin-1">
+</head>
+<body class="admin-dashboard">
+  <header class="nav">
+    <div class="wrap">
+      <a class="logo" href="../index.html" aria-label="Konvertin, beranda"><img src="../logo.svg" alt="" width="159" height="41"></a>
+      <nav aria-label="Utama">
+        <ul>
+          <li class="nl"><a href="../index.html#tool">Tool</a></li>
+          <li class="nl"><a href="../index.html#cara-kerja">Cara kerja</a></li>
+          <li class="nl"><a href="../index.html#privasi">Privasi</a></li>
+          <li><a class="btn small" href="../index.html">Ke halaman utama</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-shell">
+    <aside class="admin-sidebar" aria-label="Sidebar admin">
+      <div class="admin-brand">
+        <img src="../logo-mark.svg" alt="" width="36" height="36">
+        <div>
+          <strong>Konvertin</strong>
+          <span>Admin Console</span>
+        </div>
+      </div>
+
+      <ul class="admin-nav">
+        <li><a class="active" href="#"><span>Overview</span><span class="count">12</span></a></li>
+        <li><a href="#"><span>Konversi</span><span class="count">84</span></a></li>
+        <li><a href="#"><span>Pengguna</span><span class="count">1.2k</span></a></li>
+        <li><a href="#"><span>Transaksi</span><span class="count">26</span></a></li>
+        <li><a href="#"><span>File</span><span class="count">96</span></a></li>
+        <li><a href="#"><span>Pengaturan</span><span class="count">5</span></a></li>
+      </ul>
+    </aside>
+
+    <section class="admin-main" aria-label="Dashboard admin">
+      <div class="admin-topbar">
+        <div>
+          <h1>Dashboard Admin</h1>
+        </div>
+
+        <div class="admin-header-actions">
+          <label class="admin-search" aria-label="Cari data admin">
+            <input type="search" value="" placeholder="Cari user, task, report..." aria-label="Cari data admin">
+          </label>
+          <button class="admin-icon-btn" type="button" aria-label="Notifikasi">🔔</button>
+          <div class="admin-user" aria-label="Profil admin">
+            <div class="avatar">AD</div>
+            <div>
+              <strong>Admin Dika</strong>
+              <small>Super admin</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-kpis">
+        <article class="kpi-card">
+          <div class="label"><span>Total konversi</span><span>↗</span></div>
+          <div class="value">
+            <strong>24.8k</strong>
+            <span class="trend up">+12.4%</span>
+          </div>
+        </article>
+
+        <article class="kpi-card">
+          <div class="label"><span>File diproses</span><span>◎</span></div>
+          <div class="value">
+            <strong>18.4k</strong>
+            <span class="trend up">+8.1%</span>
+          </div>
+        </article>
+
+        <article class="kpi-card">
+          <div class="label"><span>Aktif hari ini</span><span>◌</span></div>
+          <div class="value">
+            <strong>1,248</strong>
+            <span class="trend down">-2.3%</span>
+          </div>
+        </article>
+
+        <article class="kpi-card">
+          <div class="label"><span>Rata-rata waktu</span><span>⏱</span></div>
+          <div class="value">
+            <strong>2.4m</strong>
+            <span class="trend up">+0.6m</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="admin-grid">
+        <article class="panel-card">
+          <div class="panel-head">
+            <h2>Performa 7 hari terakhir</h2>
+            <span class="badge">Live</span>
+          </div>
+
+          <div class="chart-wrap" aria-label="Grafik performa konversi">
+            <div class="bar-col"><span>Mon</span><div class="bar" style="height: 50%"></div></div>
+            <div class="bar-col"><span>Tue</span><div class="bar alt" style="height: 72%"></div></div>
+            <div class="bar-col"><span>Wed</span><div class="bar" style="height: 62%"></div></div>
+            <div class="bar-col"><span>Thu</span><div class="bar alt" style="height: 88%"></div></div>
+            <div class="bar-col"><span>Fri</span><div class="bar" style="height: 76%"></div></div>
+            <div class="bar-col"><span>Sat</span><div class="bar alt" style="height: 94%"></div></div>
+            <div class="bar-col"><span>Sun</span><div class="bar" style="height: 81%"></div></div>
+          </div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-head">
+            <h2>Aktivitas terbaru</h2>
+          </div>
+
+          <ul class="activity-list">
+            <li class="activity-item">
+              <div class="activity-copy">
+                <strong>Upload batch 24 gambar</strong>
+                <span>oleh Vina • 5 menit lalu</span>
+              </div>
+              <span class="tag-pill success">Selesai</span>
+            </li>
+            <li class="activity-item">
+              <div class="activity-copy">
+                <strong>Konversi PDF ke Word</strong>
+                <span>oleh Arif • 18 menit lalu</span>
+              </div>
+              <span class="tag-pill warning">Proses</span>
+            </li>
+            <li class="activity-item">
+              <div class="activity-copy">
+                <strong>File gagal diproses</strong>
+                <span>oleh Rafi • 42 menit lalu</span>
+              </div>
+              <span class="tag-pill info">Review</span>
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="admin-bottom">
+        <article class="panel-card">
+          <div class="panel-head">
+            <h2>Task yang sedang berjalan</h2>
+          </div>
+
+          <ul class="task-list">
+            <li class="task-item">
+              <div>
+                <div class="task-title">Kompres 120 gambar</div>
+                <div class="task-meta">Queue #A204 • 1.4 GB total</div>
+                <div class="progress"><span style="width: 72%"></span></div>
+              </div>
+              <div class="task-status">
+                <span class="tag-pill">72%</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div>
+                <div class="task-title">Gabung 8 PDF</div>
+                <div class="task-meta">Queue #A198 • 960 MB total</div>
+                <div class="progress"><span style="width: 48%"></span></div>
+              </div>
+              <div class="task-status">
+                <span class="tag-pill">48%</span>
+              </div>
+            </li>
+            <li class="task-item">
+              <div>
+                <div class="task-title">Konversi WAV ke MP3</div>
+                <div class="task-meta">Queue #A180 • 16 file</div>
+                <div class="progress"><span style="width: 91%"></span></div>
+              </div>
+              <div class="task-status">
+                <span class="tag-pill">91%</span>
+              </div>
+            </li>
+          </ul>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-head">
+            <h2>Riwayat terakhir</h2>
+          </div>
+
+          <table class="recent-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>JPG to PNG</td>
+                <td><span class="tag-pill success">Done</span></td>
+                <td>2m</td>
+              </tr>
+              <tr>
+                <td>PDF merge</td>
+                <td><span class="tag-pill warning">Queued</span></td>
+                <td>11m</td>
+              </tr>
+              <tr>
+                <td>MP3 conversion</td>
+                <td><span class="tag-pill info">Running</span></td>
+                <td>19m</td>
+              </tr>
+              <tr>
+                <td>Image resize</td>
+                <td><span class="tag-pill success">Done</span></td>
+                <td>31m</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
