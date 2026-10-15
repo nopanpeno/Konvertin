@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Konversi Gambar Online: JPG, PNG, WEBP, HEIC | Konvertin</title>
+<meta name="description" content="Ubah gambar antar JPG, PNG, WEBP, dan HEIC langsung di browser. File tidak diunggah ke server.">
+
+
+
+
+<meta name="color-scheme" content="light">
+<meta property="og:title" content="Konversi Gambar Online: JPG, PNG, WEBP, HEIC | Konvertin">
+<meta property="og:description" content="Ubah gambar antar JPG, PNG, WEBP, dan HEIC langsung di browser. File tidak diunggah ke server.">
+<meta property="og:type" content="website">
+<link rel="icon" href="../logo-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/style.css?v=36e044b1">
+</head>
+<body class="">
+<a class="skip" href="#main">Lewati ke isi</a>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="../index.html" aria-label="Konvertin, beranda"><img src="../logo.svg" alt="" width="159" height="41"></a>
+    <nav aria-label="Utama">
+      <ul>
+        <li class="nl"><a href="../index.html#tool">Tool</a></li>
+        <li class="nl"><a href="../index.html#cara-kerja">Cara kerja</a></li>
+        <li class="nl"><a href="../index.html#privasi">Privasi</a></li>
+        <li class="nl"><a href="../index.html#faq">FAQ</a></li>
+        <li><a id="account-link" href="../akun.html">Masuk</a></li>
+        <li id="profile-link-item" hidden><a href="../profil.html">Profil</a></li>
+        <li id="history-link-item" hidden><a href="../riwayat.html">Riwayat</a></li>
+        <li id="admin-link-item" hidden><a href="../admin.html">Admin</a></li>
+        <li><a class="btn small" href="../index.html#tool">Mulai konversi</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main id="main">
+
+<div class="wrap">
+  <p class="crumb"><a href="../index.html">Konvertin</a> / <a href="../index.html#tool">Gambar</a> / Konversi gambar</p>
+  <div class="tool-head">
+    <h1>Ubah format gambar</h1>
+    <p>Ubah gambar antar JPG, PNG, WEBP, dan HEIC langsung di browser. File tidak diunggah ke server.</p>
+  </div>
+
+  <div class="notice err" id="alert" role="alert" hidden><b>Ada masalah</b><span id="alert-text"></span></div>
+
+  <div class="tool-grid" id="tool" data-op="image-convert" data-slug="konversi-gambar" data-accept=".jpg,.jpeg,.png,.webp,.heic,.heif">
+    <div>
+      <label class="dropzone" id="drop">
+        <input type="file" id="file" accept=".jpg,.jpeg,.png,.webp,.heic,.heif" multiple>
+        <strong>Tarik file ke sini</strong>
+        <span>atau klik untuk memilih, atau tempel dengan Ctrl+V. Sampai 10 file.</span>
+        <span class="formats">JPG, PNG, WEBP, HEIC &middot; 20 MB per file</span>
+      </label>
+      <ul class="files" id="files" aria-live="polite"></ul>
+      
+    </div>
+    <form class="panel options" id="opts" onsubmit="return false">
+      <h2>Opsi</h2>
+<div class="field"><label for="o-format">Format tujuan</label><select id="o-format" name="format"><option value="jpg">JPG</option><option value="png">PNG</option><option value="webp" selected>WEBP</option></select></div>
+<div class="field" id="f-quality"><label for="o-quality">Kualitas <output id="o-quality-v">80</output></label><input id="o-quality" type="range" min="10" max="100" value="80" step="1"><div class="hint">Makin rendah, makin kecil file.</div></div>
+      <div class="actions">
+        <button class="btn" type="button" id="go" disabled>Konversi</button>
+        <button class="btn ghost" type="button" id="cancel" hidden>Batalkan</button>
+        <button class="btn ghost" type="button" id="zip" hidden>Unduh semua (ZIP)</button>
+      </div>
+      <p class="sum" id="sum" hidden></p>
+    </form>
+  </div>
+
+  <div class="tool-notes">
+    <div>
+      <h2>Yang perlu kamu tahu</h2>
+      <ul><li>Diproses di browser kamu. File tidak diunggah ke server.</li><li>Format masuk: JPG, PNG, WEBP, HEIC.</li><li>Konversi ke PNG tidak memakai slider kualitas, karena PNG tanpa kehilangan data.</li><li>Gambar transparan yang diubah ke JPG diberi latar putih.</li></ul>
+    </div>
+    <div>
+      <h2>Tool lain</h2>
+      <ul class="related"><li><a href="../heic-ke-jpg/index.html">HEIC ke JPG</a></li><li><a href="../jpg-ke-png/index.html">JPG ke PNG</a></li><li><a href="../png-ke-jpg/index.html">PNG ke JPG</a></li><li><a href="../webp-ke-jpg/index.html">WEBP ke JPG</a></li><li><a href="../jpg-ke-webp/index.html">JPG ke WEBP</a></li></ul>
+    </div>
+  </div>
+  <section class="guide">
+    <h2>Cara memakai</h2>
+    <p>Pakai tool ini kalau satu gambar harus berganti format: foto HEIC dari iPhone yang tidak terbuka di komputer lama, PNG besar yang mau dijadikan WEBP untuk situs, atau JPG yang butuh latar transparan. Semua diproses di browser, jadi foto pribadi tidak keluar dari perangkatmu.</p>
+    <ol><li>Tarik gambar ke kotak, atau tempel dengan Ctrl+V. Sampai 10 file sekaligus.</li><li>Pilih format tujuan: JPG, PNG, atau WEBP. Geser kualitas kalau ingin file lebih kecil.</li><li>Klik Konversi, lalu unduh satu file atau semuanya sebagai ZIP.</li></ol>
+    <h2>Pertanyaan umum</h2>
+    <details><summary>Format mana yang sebaiknya saya pilih?</summary><p>JPG cocok untuk foto dan dibuka di mana saja. PNG cocok untuk gambar dengan teks atau bagian transparan. WEBP biasanya paling kecil untuk dipakai di situs web.</p></details>
+    <details><summary>Apakah kualitas gambar turun?</summary><p>Ke PNG tidak ada penurunan, karena PNG tanpa kehilangan data. Ke JPG dan WEBP kualitas bergantung pada slider. Makin rendah angkanya, makin kecil file dan makin terlihat penurunannya.</p></details>
+  </section>
+</div>
+<div style="height:72px"></div>
+</main>
+<footer>
+  <div class="wrap">
+    <div>Konvertin &middot; Konverter file untuk pemakaian sehari-hari.</div>
+    <ul>
+      <li><a href="../tentang.html">Tentang</a></li>
+      <li><a href="../privasi.html">Kebijakan privasi</a></li>
+      <li><a href="../syarat.html">Syarat penggunaan</a></li>
+      <li><a href="../kontak.html">Kontak</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../js/config.js"></script>
+<script src="../js/accounts.js?v=75c3834d" defer></script>
+<script src="../js/app.js?v=12896d8a" defer></script>
+
+</body>
+</html>
