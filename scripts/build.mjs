@@ -124,7 +124,7 @@ ${byCat(c.id).map(toolCard).join("\n")}
   .join("\n");
 
 // pasangan format untuk kalimat di hero
-const NAMA = { word: "Word", excel: "Excel", pptx: "PowerPoint" };
+const NAMA = { word: "Word", excel: "Excel", pptx: "PowerPoint", gambar: "Gambar" };
 const nama = (x) => NAMA[x] || x.toUpperCase();
 const pairs = tools
   .filter((t) => !isSoon(t) && /^[a-z0-9]+-ke-[a-z0-9]+$/.test(t.slug))
@@ -136,7 +136,7 @@ const slot = (id, labels) => `<b class="slot" id="${id}">${labels.map((l, i) => 
 
 const index = layout({
   title: "Konvertin: Konverter File Gambar, Audio, dan Dokumen",
-  desc: "Ubah format gambar dan audio, kompres gambar, PDF, Word, dan PowerPoint, ubah PDF dan Word. Tanpa daftar. Gambar dan audio diproses di browser, tidak diunggah.",
+  desc: "Ubah format gambar dan audio, kompres gambar, gabung dan pisah PDF, gambar ke PDF. Tanpa daftar. Diproses di browser, tidak diunggah.",
   path: "/",
   body: `
 <section class="hero">
@@ -195,8 +195,8 @@ ${catBlocks}
   <div class="wrap">
     <h2>Apa yang pergi ke mana</h2>
     <div class="cols">
-      <div><h3>Di browser kamu</h3><p>Konversi dan kompres gambar, ubah ukuran gambar, dan konversi audio. File tidak keluar dari perangkat. Kamu bisa putus internet setelah halaman terbuka, kecuali pemuat audio belum pernah diunduh.</p></div>
-      <div><h3>Lewat server</h3><p>Konversi dokumen (PDF, Word, PowerPoint, Excel) dan kompres PDF, Word, PowerPoint. File diunggah, diproses di wadah terisolasi tanpa akses internet, namanya diacak, dan tidak dibaca manusia.</p></div>
+      <div><h3>Di browser kamu</h3><p>Konversi dan kompres gambar, ubah ukuran gambar, konversi audio, gabung PDF, pisah PDF, dan gambar ke PDF. File tidak keluar dari perangkat. Kamu bisa putus internet setelah halaman terbuka, kecuali pemuat audio belum pernah diunduh.</p></div>
+      <div><h3>Lewat server</h3><p>Konversi dokumen (PDF ke Word, Word, PowerPoint, Excel ke PDF) dan kompres PDF, Word, PowerPoint. File diunggah, diproses di wadah terisolasi tanpa akses internet, namanya diacak, dan tidak dibaca manusia.</p></div>
       <div><h3>Kapan dihapus</h3><p>File di server dihapus otomatis paling lama 1 jam setelah selesai. Isi file tidak dicatat di log.</p></div>
     </div>
   </div>
@@ -210,6 +210,7 @@ ${catBlocks}
       <thead><tr><th>Jenis</th><th>Ukuran maksimal</th><th>Catatan</th></tr></thead>
       <tbody>
         <tr><td>Dokumen</td><td class="mono">25 MB</td><td>Tidak ada OCR. PDF hasil scan belum didukung.</td></tr>
+        <tr><td>PDF di browser</td><td class="mono">50 MB</td><td>Gabung dan pisah PDF. Sampai 10 file per proses.</td></tr>
         <tr><td>Gambar</td><td class="mono">20 MB</td><td>Sampai 10 file per proses.</td></tr>
         <tr><td>Audio</td><td class="mono">50 MB / 10 menit</td><td>Mana yang lebih dulu tercapai.</td></tr>
       </tbody>
@@ -266,6 +267,15 @@ function optionsHtml(t) {
     f.push(`<div class="field"><label for="o-ts">Potong dari detik (opsional)</label><input id="o-ts" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div>
 <div class="field"><label for="o-te">Sampai detik (opsional)</label><input id="o-te" type="number" min="1" step="1" inputmode="numeric" placeholder="akhir"></div>`);
   }
+  if (t.split) {
+    f.push(`<div class="field"><fieldset><legend>Cara pisah</legend><div class="seg">
+<label><input type="radio" name="splitmode" value="range" checked><span>Ambil halaman</span></label>
+<label><input type="radio" name="splitmode" value="all"><span>Semua halaman</span></label></div></fieldset></div>
+<div class="field" id="f-pages"><label for="o-pages">Halaman yang diambil</label><input id="o-pages" type="text" inputmode="text" autocomplete="off" placeholder="contoh: 1-3, 5"><div class="hint">Angka dan rentang, dipisah koma.</div></div>`);
+  }
+  if (t.pageSize) {
+    f.push(`<div class="field"><label for="o-page">Ukuran halaman</label><select id="o-page" name="page"><option value="a4" selected>A4, dengan margin</option><option value="asli">Ukuran asli gambar</option></select></div>`);
+  }
   if (t.level) {
     f.push(`<div class="field"><fieldset><legend>Level kompres</legend><div class="seg">
 <label><input type="radio" name="level" value="light"><span>Ringan</span></label>
@@ -296,11 +306,11 @@ function toolPage(t) {
     ? "Diproses di browser kamu. File tidak diunggah ke server."
     : "Diproses di server dalam wadah terisolasi. File dihapus otomatis paling lama 1 jam setelah selesai.";
   const maxFiles = t.side === "server" ? 10 : 10;
-  const limit = t.side === "server" ? `${t.maxMB} MB per file` : t.cat === "audio" ? "50 MB atau 10 menit per file" : "20 MB per file";
+  const limit = t.side === "server" || t.maxMB ? `${t.maxMB} MB per file` : t.cat === "audio" ? "50 MB atau 10 menit per file" : "20 MB per file";
   const dataAttrs = [
     `data-op="${t.op}"`, `data-slug="${t.slug}"`, `data-accept="${esc(t.accept)}"`,
     t.job ? `data-job="${t.job}"` : "", t.outExt ? `data-out="${t.outExt}"` : "",
-    t.maxMB ? `data-max-mb="${t.maxMB}"` : "", t.compare ? `data-compare="1"` : "",
+    t.maxMB ? `data-max-mb="${t.maxMB}"` : "", t.min ? `data-min="${t.min}"` : "", t.compare ? `data-compare="1"` : "",
     soon ? `data-soon="1"` : "",
   ].filter(Boolean).join(" ");
 
@@ -313,7 +323,7 @@ function toolPage(t) {
     <p>${esc(t.desc)}</p>
   </div>
   ${t.warning ? `<div class="notice"><b>Perlu diketahui</b>${esc(t.warning)}</div>` : ""}
-  ${soon ? `<div class="notice"><b>Segera</b>Tool ini butuh server dan belum aktif. Tool gambar dan audio di beranda sudah bisa dipakai.${SITE_URL ? ` <a href="${rootHref}index.html#tool">Lihat tool yang sudah aktif</a>.` : ""}</div>` : ""}
+  ${soon ? `<div class="notice"><b>Segera</b>Tool ini butuh server dan belum aktif. Tool gambar, audio, dan PDF dasar di beranda sudah bisa dipakai.${SITE_URL ? ` <a href="${rootHref}index.html#tool">Lihat tool yang sudah aktif</a>.` : ""}</div>` : ""}
   <div class="notice err" id="alert" role="alert" hidden><b>Ada masalah</b><span id="alert-text"></span></div>
 
   <div class="tool-grid" id="tool" ${dataAttrs}>
@@ -369,9 +379,9 @@ write("privasi.html", layout({
 <h1>Kebijakan privasi</h1>
 <p class="muted">Draft. Terakhir diubah 9 Oktober 2026. Tinjau ulang sebelum rilis publik, terutama bagian iklan dan cookie.</p>
 <h2>Yang diproses di browser</h2>
-<p>Konversi gambar, kompres gambar, ubah ukuran gambar, dan konversi audio berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. ${FFMPEG_NOTE}</p>
+<p>Konversi gambar, kompres gambar, ubah ukuran gambar, konversi audio, gabung PDF, pisah PDF, dan gambar ke PDF berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. ${FFMPEG_NOTE}</p>
 <h2>Yang lewat server</h2>
-<p>Konversi dokumen (PDF, Word, PowerPoint, Excel) dan kompres PDF, Word, PowerPoint membutuhkan server. File kamu diunggah, diproses di wadah terisolasi tanpa akses internet, dan hasilnya tersedia untuk kamu unduh.</p>
+<p>Konversi dokumen (PDF ke Word, Word, PowerPoint, Excel ke PDF) dan kompres PDF, Word, PowerPoint membutuhkan server. File kamu diunggah, diproses di wadah terisolasi tanpa akses internet, dan hasilnya tersedia untuk kamu unduh.</p>
 <ul>
 <li>File input dan hasil dihapus otomatis paling lama 1 jam setelah selesai.</li>
 <li>Nama file di penyimpanan diacak.</li>
