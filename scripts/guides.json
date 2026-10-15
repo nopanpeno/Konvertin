@@ -1,0 +1,380 @@
+{
+  "konversi-gambar": {
+    "use": "Pakai tool ini kalau satu gambar harus berganti format: foto HEIC dari iPhone yang tidak terbuka di komputer lama, PNG besar yang mau dijadikan WEBP untuk situs, atau JPG yang butuh latar transparan. Semua diproses di browser, jadi foto pribadi tidak keluar dari perangkatmu.",
+    "steps": [
+      "Tarik gambar ke kotak, atau tempel dengan Ctrl+V. Sampai 10 file sekaligus.",
+      "Pilih format tujuan: JPG, PNG, atau WEBP. Geser kualitas kalau ingin file lebih kecil.",
+      "Klik Konversi, lalu unduh satu file atau semuanya sebagai ZIP."
+    ],
+    "faq": [
+      {
+        "q": "Format mana yang sebaiknya saya pilih?",
+        "a": "JPG cocok untuk foto dan dibuka di mana saja. PNG cocok untuk gambar dengan teks atau bagian transparan. WEBP biasanya paling kecil untuk dipakai di situs web."
+      },
+      {
+        "q": "Apakah kualitas gambar turun?",
+        "a": "Ke PNG tidak ada penurunan, karena PNG tanpa kehilangan data. Ke JPG dan WEBP kualitas bergantung pada slider. Makin rendah angkanya, makin kecil file dan makin terlihat penurunannya."
+      }
+    ]
+  },
+  "heic-ke-jpg": {
+    "use": "iPhone menyimpan foto sebagai HEIC secara bawaan. Format ini sering tidak terbuka di Windows lama, di formulir unggah, atau di aplikasi tertentu. Tool ini mengubahnya jadi JPG yang bisa dibuka di mana saja, langsung di browser tanpa mengunggah foto.",
+    "steps": [
+      "Pindahkan foto HEIC ke komputer atau pilih langsung dari HP.",
+      "Tarik file ke kotak. Sampai 10 foto sekaligus.",
+      "Klik Konversi, lalu unduh JPG hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Kenapa foto saya HEIC?",
+        "a": "Format ini memberi ukuran file lebih kecil dengan kualitas yang mirip. Di iPhone, pengaturan Kamera bisa diubah ke Paling Kompatibel kalau ingin langsung JPG."
+      },
+      {
+        "q": "Berapa lama prosesnya?",
+        "a": "Foto HEIC besar bisa butuh beberapa detik per file, terutama di HP. Tunggu sampai bilah proses selesai."
+      }
+    ]
+  },
+  "jpg-ke-png": {
+    "use": "Ubah JPG jadi PNG kalau gambar akan diedit berulang kali tanpa mau kualitasnya turun lagi, atau kalau aplikasi tujuan meminta PNG. Perlu diingat, JPG yang sudah terkompres tidak akan jadi lebih tajam setelah jadi PNG.",
+    "steps": [
+      "Tarik file JPG ke kotak.",
+      "Format tujuan sudah PNG. Tidak ada slider kualitas karena PNG tanpa kehilangan data.",
+      "Klik Konversi dan unduh hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Kenapa PNG hasilnya lebih besar?",
+        "a": "PNG menyimpan semua piksel tanpa membuang detail, sedangkan JPG membuang sebagian detail untuk menghemat ukuran. Foto biasanya jauh lebih besar sebagai PNG."
+      },
+      {
+        "q": "Apakah latar jadi transparan?",
+        "a": "Tidak. JPG tidak punya transparansi, jadi PNG hasilnya tetap punya latar yang sama dengan gambar asli."
+      }
+    ]
+  },
+  "png-ke-jpg": {
+    "use": "Pakai ini kalau PNG terlalu besar untuk diunggah atau dikirim lewat email. Untuk foto, JPG bisa jauh lebih kecil dari PNG dengan tampilan yang hampir sama.",
+    "steps": [
+      "Tarik file PNG ke kotak.",
+      "Atur kualitas. Nilai sekitar 80 biasanya seimbang antara ukuran dan tampilan.",
+      "Klik Konversi dan unduh JPG hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Bagian transparan PNG jadi apa?",
+        "a": "JPG tidak mendukung transparansi, jadi bagian transparan diberi latar putih."
+      },
+      {
+        "q": "Apakah cocok untuk logo dan tangkapan layar?",
+        "a": "Kurang. Garis tegas dan teks bisa terlihat berbintik pada JPG. Untuk gambar seperti itu, PNG atau WEBP biasanya lebih rapi."
+      }
+    ]
+  },
+  "webp-ke-jpg": {
+    "use": "WEBP sering terunduh dari situs web, tetapi tidak semua aplikasi bisa membukanya. Ubah ke JPG supaya bisa dipakai di editor, dokumen, atau formulir yang hanya menerima JPG.",
+    "steps": [
+      "Tarik file WEBP ke kotak.",
+      "Atur kualitas JPG sesuai kebutuhan.",
+      "Klik Konversi dan unduh hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Bagian transparan WEBP jadi apa?",
+        "a": "JPG tidak mendukung transparansi, jadi bagian transparan diberi latar putih."
+      },
+      {
+        "q": "Apakah WEBP animasi bisa diubah?",
+        "a": "Hasil JPG hanya satu gambar diam, bukan animasi."
+      }
+    ]
+  },
+  "jpg-ke-webp": {
+    "use": "WEBP umumnya memberi file lebih kecil dari JPG pada tampilan yang mirip, jadi cocok untuk mempercepat halaman web atau menghemat ruang penyimpanan.",
+    "steps": [
+      "Tarik file JPG ke kotak.",
+      "Atur kualitas. Turunkan kalau ingin file lebih kecil.",
+      "Klik Konversi dan unduh WEBP hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Apakah semua browser bisa membuka WEBP?",
+        "a": "Browser modern bisa. Beberapa aplikasi lama atau formulir unggah mungkin belum menerimanya. Kalau begitu, simpan juga versi JPG."
+      },
+      {
+        "q": "Seberapa kecil hasilnya?",
+        "a": "Tergantung gambar dan kualitas yang dipilih. Tool menampilkan ukuran sebelum dan sesudah, jadi kamu bisa melihat hasilnya langsung."
+      }
+    ]
+  },
+  "ubah-ukuran-gambar": {
+    "use": "Pakai tool ini untuk memperkecil gambar ke lebar atau tinggi tertentu, misalnya agar muat batas unggah, atau agar foto 4000 piksel jadi ukuran yang pas untuk situs atau media sosial.",
+    "steps": [
+      "Tarik gambar ke kotak.",
+      "Isi lebar atau tinggi dalam piksel. Satunya dihitung otomatis dari rasio asli.",
+      "Pilih format tujuan, klik Konversi, lalu unduh."
+    ],
+    "faq": [
+      {
+        "q": "Apakah rasio gambar terjaga?",
+        "a": "Ya. Rasio terkunci, jadi gambar tidak melar. Cukup isi salah satu sisi."
+      },
+      {
+        "q": "Apakah bisa memperbesar gambar?",
+        "a": "Bisa, tetapi memperbesar tidak menambah detail. Hasilnya bisa terlihat buram."
+      }
+    ]
+  },
+  "kompres-gambar": {
+    "use": "Kompres gambar saat file terlalu besar untuk diunggah atau dikirim. Kamu bisa mengatur kualitas dengan slider, atau mengisi target ukuran dalam KB supaya tool mencari kualitas yang pas.",
+    "steps": [
+      "Tarik gambar ke kotak.",
+      "Atur kualitas, atau isi target ukuran dalam KB.",
+      "Klik Konversi. Tool menampilkan berapa persen file menyusut, lalu unduh hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Kenapa kompres PNG hematnya kecil?",
+        "a": "PNG menyimpan gambar tanpa kehilangan data. Untuk hemat lebih besar, ubah ke WEBP atau JPG, atau kecilkan resolusinya."
+      },
+      {
+        "q": "Bagaimana kalau hasilnya malah lebih besar?",
+        "a": "Kalau itu terjadi, file asli yang dikembalikan, jadi kamu tidak mendapat file yang lebih buruk."
+      }
+    ]
+  },
+  "konversi-audio": {
+    "use": "Ubah audio antar MP3, WAV, M4A, OGG, dan FLAC, sekaligus memilih bitrate atau memotong bagian tertentu. Prosesnya di browser lewat ffmpeg.wasm, jadi rekaman pribadi tidak diunggah.",
+    "steps": [
+      "Tarik file audio ke kotak.",
+      "Pilih format tujuan dan bitrate. Isi detik awal dan akhir kalau ingin memotong.",
+      "Klik Konversi dan unduh hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Kenapa ada unduhan besar saat pertama kali?",
+        "a": "Mesin konversi audio sekitar 30 MB dimuat sekali supaya audio bisa diproses di browser, lalu disimpan browser untuk pemakaian berikutnya."
+      },
+      {
+        "q": "Apakah ada batas durasi?",
+        "a": "Ya, 50 MB atau 10 menit per file, mana yang lebih dulu tercapai."
+      }
+    ]
+  },
+  "wav-ke-mp3": {
+    "use": "WAV tidak terkompres dan ukurannya besar. Ubah ke MP3 untuk mengirim rekaman lewat chat atau email, atau untuk menghemat ruang penyimpanan.",
+    "steps": [
+      "Tarik file WAV ke kotak.",
+      "Pilih bitrate: 128 untuk suara, 192 untuk umum, 320 untuk kualitas tinggi.",
+      "Klik Konversi dan unduh MP3 hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Seberapa kecil hasilnya?",
+        "a": "Jauh lebih kecil. Bitrate 192 kbps biasanya menghasilkan file beberapa kali lebih kecil dari WAV."
+      },
+      {
+        "q": "Apakah kualitasnya turun?",
+        "a": "MP3 membuang sebagian detail. Pada 192 kbps ke atas perbedaannya sulit terdengar untuk pemakaian sehari-hari."
+      }
+    ]
+  },
+  "m4a-ke-mp3": {
+    "use": "Rekaman dari iPhone dan Voice Memos sering berformat M4A. Ubah ke MP3 supaya bisa diputar di perangkat dan aplikasi yang tidak mengenali M4A.",
+    "steps": [
+      "Tarik file M4A atau AAC ke kotak.",
+      "Pilih bitrate.",
+      "Klik Konversi dan unduh MP3 hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Apakah ukuran file berubah banyak?",
+        "a": "Tidak selalu. M4A sudah terkompres, jadi MP3 hasilnya bisa mirip atau sedikit lebih besar."
+      },
+      {
+        "q": "Apakah file diunggah?",
+        "a": "Tidak. Prosesnya berjalan di browser."
+      }
+    ]
+  },
+  "flac-ke-mp3": {
+    "use": "FLAC menjaga kualitas asli tetapi berukuran besar. Ubah ke MP3 untuk dipakai di HP, mobil, atau pemutar yang ruangnya terbatas.",
+    "steps": [
+      "Tarik file FLAC ke kotak.",
+      "Pilih bitrate. 320 kbps paling dekat dengan kualitas asli.",
+      "Klik Konversi dan unduh MP3 hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Apakah kualitas hilang?",
+        "a": "MP3 membuang sebagian detail. Simpan FLAC aslinya kalau kamu masih butuh kualitas penuh."
+      },
+      {
+        "q": "Apakah ada batas ukuran?",
+        "a": "Ya, 50 MB atau 10 menit per file, mana yang lebih dulu tercapai."
+      }
+    ]
+  },
+  "pdf-ke-word": {
+    "use": "Ubah PDF jadi dokumen Word yang bisa diedit. Cocok untuk PDF berisi teks, seperti surat atau laporan. Tool ini butuh server dan saat ini belum aktif.",
+    "steps": [
+      "Unggah file PDF, maksimal 25 MB.",
+      "Klik Konversi dan tunggu prosesnya selesai.",
+      "Unduh file DOCX dan periksa tata letaknya."
+    ],
+    "faq": [
+      {
+        "q": "Kenapa tata letak hasilnya bisa berubah?",
+        "a": "PDF menyimpan posisi tiap huruf, bukan struktur paragraf. Mengubahnya ke Word berarti menebak struktur itu. Tabel rumit dan kolom ganda paling sering bergeser."
+      },
+      {
+        "q": "Apakah PDF hasil scan bisa?",
+        "a": "Belum. PDF hasil scan berisi gambar dan butuh OCR, yang belum tersedia."
+      }
+    ]
+  },
+  "word-ke-pdf": {
+    "use": "Ubah dokumen Word jadi PDF supaya tampilannya sama di semua perangkat, misalnya untuk dikirim sebagai lamaran atau tugas. Tool ini butuh server dan saat ini belum aktif.",
+    "steps": [
+      "Unggah file DOCX, maksimal 25 MB.",
+      "Klik Konversi.",
+      "Unduh PDF hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Kenapa font bisa berbeda?",
+        "a": "Font yang tidak ada di server diganti font yang mirip, jadi tampilan bisa sedikit bergeser."
+      },
+      {
+        "q": "Apakah format DOC lama didukung?",
+        "a": "Saat ini hanya DOCX."
+      }
+    ]
+  },
+  "pptx-ke-pdf": {
+    "use": "Ubah presentasi PowerPoint jadi PDF untuk dibagikan atau dicetak. Tool ini butuh server dan saat ini belum aktif.",
+    "steps": [
+      "Unggah file PPTX, maksimal 25 MB.",
+      "Klik Konversi.",
+      "Unduh PDF hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Apakah animasi ikut?",
+        "a": "Tidak. Animasi dan transisi tidak ikut ke PDF."
+      },
+      {
+        "q": "Apakah font bisa berbeda?",
+        "a": "Bisa. Font yang tidak ada di server diganti font yang mirip, jadi tampilan bisa sedikit bergeser."
+      }
+    ]
+  },
+  "excel-ke-pdf": {
+    "use": "Ubah lembar Excel jadi PDF untuk dibagikan atau dicetak. Tool ini butuh server dan saat ini belum aktif.",
+    "steps": [
+      "Unggah file XLSX, maksimal 25 MB.",
+      "Klik Konversi.",
+      "Unduh PDF hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Kenapa lembar yang lebar terpotong?",
+        "a": "Lembar yang lebar dibagi ke beberapa halaman. Atur area cetak dan orientasi di Excel dulu supaya hasilnya rapi."
+      },
+      {
+        "q": "Apakah rumus ikut?",
+        "a": "PDF hanya menampilkan nilai hasil, bukan rumusnya."
+      }
+    ]
+  },
+  "pdf-ke-txt": {
+    "use": "Ambil teks dari PDF untuk disalin, dicari, atau diolah lagi. Tool ini butuh server dan saat ini belum aktif.",
+    "steps": [
+      "Unggah file PDF, maksimal 25 MB.",
+      "Klik Konversi.",
+      "Unduh file TXT hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Apakah PDF hasil scan bisa?",
+        "a": "Belum. PDF hasil scan berisi gambar, jadi butuh OCR untuk jadi teks."
+      },
+      {
+        "q": "Apakah tabel dan gambar ikut?",
+        "a": "Tidak. Hasilnya hanya teks polos."
+      }
+    ]
+  },
+  "word-ke-txt": {
+    "use": "Ambil teks polos dari dokumen Word tanpa format. Tool ini butuh server dan saat ini belum aktif.",
+    "steps": [
+      "Unggah file DOCX, maksimal 25 MB.",
+      "Klik Konversi.",
+      "Unduh file TXT hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Apakah format seperti tebal dan miring hilang?",
+        "a": "Ya. TXT hanya menyimpan teks polos."
+      },
+      {
+        "q": "Apakah gambar ikut?",
+        "a": "Tidak."
+      }
+    ]
+  },
+  "kompres-pdf": {
+    "use": "Perkecil PDF supaya muat batas unggah atau mudah dikirim lewat email. Tool ini butuh server dan saat ini belum aktif.",
+    "steps": [
+      "Unggah file PDF, maksimal 25 MB.",
+      "Pilih level: Ringan, Sedang, atau Maksimal.",
+      "Klik Konversi, bandingkan ukuran, lalu unduh."
+    ],
+    "faq": [
+      {
+        "q": "Apa bedanya tiap level?",
+        "a": "Level maksimal menghasilkan file paling kecil, tetapi menurunkan kualitas gambar di dalam PDF."
+      },
+      {
+        "q": "Bagaimana kalau hasilnya lebih besar?",
+        "a": "Kalau itu terjadi, file asli yang dikembalikan."
+      }
+    ]
+  },
+  "kompres-word": {
+    "use": "Perkecil dokumen Word yang membengkak karena banyak gambar. Tool ini butuh server dan saat ini belum aktif.",
+    "steps": [
+      "Unggah file DOCX, maksimal 25 MB.",
+      "Pilih level kompres.",
+      "Klik Konversi, bandingkan ukuran, lalu unduh."
+    ],
+    "faq": [
+      {
+        "q": "Apa yang diperkecil?",
+        "a": "Hanya gambar JPG dan PNG di dalam dokumen. Teks, tabel, dan tata letak tidak berubah."
+      },
+      {
+        "q": "Dokumen tanpa gambar bagaimana?",
+        "a": "Ukurannya hampir tidak berkurang."
+      }
+    ]
+  },
+  "kompres-pptx": {
+    "use": "Perkecil presentasi yang terlalu besar untuk dikirim. Tool ini butuh server dan saat ini belum aktif.",
+    "steps": [
+      "Unggah file PPTX, maksimal 25 MB.",
+      "Pilih level kompres.",
+      "Klik Konversi, bandingkan ukuran, lalu unduh."
+    ],
+    "faq": [
+      {
+        "q": "Apa yang diperkecil?",
+        "a": "Hanya gambar JPG dan PNG di dalam slide. Teks, animasi, dan tata letak tidak berubah."
+      },
+      {
+        "q": "Presentasi dengan video bagaimana?",
+        "a": "Video dan audio tidak disentuh, jadi PPTX yang besar karena video tidak banyak berkurang."
+      }
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 // Bangun halaman statis dari tools.json.
 // Pakai: node scripts/build.mjs
-// Output: frontend/. Env opsional: API_BASE ("/" = backend satu origin, atau URL backend; kosong = tool server berlabel Segera), ADS=1 (aktifkan slot iklan), SITE_URL (untuk sitemap), EMAIL (email kontak asli; default novankaresa@students.amikom.ac.id)
+// Output: frontend/. Env opsional: API_BASE ("/" = backend satu origin, atau URL backend; kosong = tool server berlabel Segera), ADS=1 + ADSENSE_ID + ADSENSE_SLOT (iklan), SITE_URL (untuk sitemap), EMAIL (email kontak asli; default novankaresa@students.amikom.ac.id)
 // FFMPEG_CORE_BASE: URL unduhan mesin audio. Kosong/tidak diisi = pakai salinan lokal di vendor/ffmpeg-core/ (tanpa CDN pihak ketiga).
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -15,6 +15,12 @@ const API_BASE = process.env.API_BASE || "";
 const ADS = process.env.ADS === "1";
 const SITE_URL = (process.env.SITE_URL || "").replace(/\/$/, "");
 const EMAIL = process.env.EMAIL || "novankaresa@students.amikom.ac.id";
+// AdSense: ADS=1 + ADSENSE_ID (ca-pub-...) memuat skrip dan menulis ads.txt. ADSENSE_SLOT (angka) menampilkan satu unit iklan di bawah daftar file.
+// Catatan: sebelum iklan benar-benar hidup untuk pengunjung EEA/UK, pasang banner persetujuan cookie.
+const ADSENSE_ID = /^ca-pub-\d+$/.test(process.env.ADSENSE_ID || "") ? process.env.ADSENSE_ID : "";
+const ADSENSE_SLOT = /^\d+$/.test(process.env.ADSENSE_SLOT || "") ? process.env.ADSENSE_SLOT : "";
+const ADS_LIVE = ADS && !!ADSENSE_ID;
+const guides = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "guides.json"), "utf8"));
 // Mesin audio: default dari repo sendiri (vendor/ffmpeg-core), bukan CDN pihak ketiga.
 const FFMPEG_LOCAL = existsSync(join(root, "vendor", "ffmpeg-core", "ffmpeg-core.wasm"));
 const FFMPEG_CORE_BASE = process.env.FFMPEG_CORE_BASE || (FFMPEG_LOCAL ? "./vendor/ffmpeg-core" : "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd");
@@ -37,7 +43,7 @@ const tools = data.tools;
 const byCat = (id) => tools.filter((t) => t.cat === id);
 
 // ---------- layout ----------
-function layout({ title, desc, body, path, bodyClass = "", scripts = "" }) {
+function layout({ title, desc, body, path, bodyClass = "", scripts = "", noindex = false }) {
   const pathDepth = path.endsWith("/") ? path.split("/").filter(Boolean).length : 0;
   const rootHref = pathDepth ? "../".repeat(pathDepth) : "./";
   const homeHref = `${rootHref}index.html`;
@@ -50,6 +56,8 @@ function layout({ title, desc, body, path, bodyClass = "", scripts = "" }) {
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 ${SITE_URL ? `<link rel="canonical" href="${SITE_URL}${path}">` : ""}
+${noindex ? `<meta name="robots" content="noindex">` : ""}
+${ADS_LIVE ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}" crossorigin="anonymous"></script>` : ""}
 
 <meta name="color-scheme" content="light">
 <meta property="og:title" content="${esc(title)}">
@@ -81,9 +89,10 @@ ${body}
   <div class="wrap">
     <div>Konvertin &middot; Konverter file untuk pemakaian sehari-hari.</div>
     <ul>
+      <li><a href="${rootHref}tentang.html">Tentang</a></li>
       <li><a href="${rootHref}privasi.html">Kebijakan privasi</a></li>
       <li><a href="${rootHref}syarat.html">Syarat penggunaan</a></li>
-      <li><a href="mailto:${EMAIL}">Kontak</a></li>
+      <li><a href="${rootHref}kontak.html">Kontak</a></li>
     </ul>
   </div>
 </footer>
@@ -266,6 +275,18 @@ function optionsHtml(t) {
   return f.join("\n");
 }
 
+function guideHtml(t) {
+  const g = guides[t.slug];
+  if (!g) return "";
+  return `  <section class="guide">
+    <h2>Cara memakai</h2>
+    <p>${esc(g.use)}</p>
+    <ol>${g.steps.map((x) => `<li>${esc(x)}</li>`).join("")}</ol>
+    <h2>Pertanyaan umum</h2>
+${g.faq.map((f) => `    <details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n")}
+  </section>`;
+}
+
 function toolPage(t) {
   const rootHref = "../";
   const soon = isSoon(t);
@@ -304,7 +325,7 @@ function toolPage(t) {
         <span class="formats">${esc(t.inputs)} &middot; ${limit}</span>
       </label>
       <ul class="files" id="files" aria-live="polite"></ul>
-      <div class="ad-slot" data-slot="bawah-upload" aria-hidden="true"></div>
+      ${ADS_LIVE && ADSENSE_SLOT ? `<div class="ad-slot" data-slot="bawah-upload"><ins class="adsbygoogle" style="display:block" data-ad-client="${ADSENSE_ID}" data-ad-slot="${ADSENSE_SLOT}" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>` : ""}
     </div>
     <form class="panel options" id="opts" onsubmit="return false">
       <h2>Opsi</h2>
@@ -328,9 +349,10 @@ ${optionsHtml(t)}
       <ul class="related">${related.map((r) => `<li><a href="${rootHref}${r.slug}/index.html">${esc(r.name)}</a></li>`).join("")}</ul>
     </div>
   </div>
+${guideHtml(t)}
 </div>
 <div style="height:72px"></div>`;
-  return layout({ title: `${t.title} | Konvertin`, desc: t.desc, path: `/${t.slug}/`, body });
+  return layout({ title: `${t.title} | Konvertin`, desc: t.desc, path: `/${t.slug}/`, body, noindex: soon });
 }
 
 for (const t of tools) write(`${t.slug}/index.html`, toolPage(t));
@@ -365,6 +387,43 @@ write("privasi.html", layout({
 </div>`,
 }));
 
+write("tentang.html", layout({
+  title: "Tentang Konvertin", desc: "Apa itu Konvertin, siapa yang membuatnya, dan kenapa sebagian besar konversi berjalan di browser.", path: "/tentang.html",
+  body: `<div class="wrap prose">
+<h1>Tentang Konvertin</h1>
+<p>Konvertin adalah konverter file berbahasa Indonesia untuk pekerjaan sehari-hari: mengubah format gambar dan audio, memperkecil ukuran gambar, serta (segera) mengubah dokumen PDF, Word, PowerPoint, dan Excel.</p>
+<h2>Kenapa dibuat</h2>
+<p>Banyak situs konverter meminta kita mengunggah file ke server yang tidak jelas, memasang iklan di sekitar tombol unduh, atau mewajibkan akun. Konvertin dibuat dengan arah sebaliknya: tanpa akun, dan sebisa mungkin file tidak meninggalkan perangkatmu.</p>
+<h2>Cara kerjanya</h2>
+<ul>
+<li><b>Gambar dan audio</b> diproses di browser. File tidak diunggah ke server kami.</li>
+<li><b>Dokumen</b> membutuhkan server. Tool ini belum aktif. Saat aktif, file diproses di wadah terisolasi dan dihapus otomatis paling lama 1 jam setelah selesai.</li>
+</ul>
+<p>Rincian lengkap ada di <a href="./privasi.html">kebijakan privasi</a>.</p>
+<h2>Pembuat</h2>
+<p>Konvertin dibuat oleh seorang mahasiswa sebagai proyek kuliah, dan dikembangkan terbuka di <a href="https://github.com/nopanpeno/konvertin" rel="noopener">GitHub</a>. Masukan dan laporan masalah bisa dikirim lewat halaman <a href="./kontak.html">kontak</a>.</p>
+<h2>Batasan yang jujur</h2>
+<p>Hasil konversi bisa berbeda dari file asli, terutama PDF ke Word. Periksa hasilnya sebelum dipakai untuk hal penting. Tidak ada OCR, jadi PDF hasil scan belum didukung.</p>
+</div>`,
+}));
+
+write("kontak.html", layout({
+  title: "Kontak | Konvertin", desc: "Cara menghubungi Konvertin untuk laporan masalah, saran, atau pertanyaan.", path: "/kontak.html",
+  body: `<div class="wrap prose">
+<h1>Kontak</h1>
+<p>Kirim laporan masalah, saran tool baru, atau pertanyaan ke <a href="mailto:${EMAIL}">${EMAIL}</a>.</p>
+<h2>Supaya laporan cepat ditangani</h2>
+<ul>
+<li>Sebutkan tool yang dipakai, misalnya "JPG ke WEBP".</li>
+<li>Sebutkan jenis dan ukuran file, serta browser dan perangkat yang dipakai.</li>
+<li>Jelaskan pesan yang muncul, atau apa yang kamu harapkan dan apa yang terjadi.</li>
+<li>Jangan melampirkan file yang berisi data pribadi atau rahasia.</li>
+</ul>
+<p>Kami membalas sebisanya. Konvertin dikelola sendirian sebagai proyek kuliah, jadi balasan bisa butuh beberapa hari.</p>
+<p>Kode sumber dan daftar masalah ada di <a href="https://github.com/nopanpeno/konvertin/issues" rel="noopener">GitHub</a>.</p>
+</div>`,
+}));
+
 write("syarat.html", layout({
   title: "Syarat Penggunaan | Konvertin", desc: "Syarat memakai Konvertin.", path: "/syarat.html",
   body: `<div class="wrap prose">
@@ -391,9 +450,10 @@ window.KONVERTIN = {
 `);
 
 if (SITE_URL) {
-  const urls = ["/", ...tools.filter((t) => !isSoon(t)).map((t) => `/${t.slug}/`), "/privasi.html", "/syarat.html"];
+  const urls = ["/", ...tools.filter((t) => !isSoon(t)).map((t) => `/${t.slug}/`), "/tentang.html", "/privasi.html", "/syarat.html", "/kontak.html"];
   write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${SITE_URL}${u}</loc></url>`).join("\n")}\n</urlset>\n`);
 }
+if (ADS_LIVE) write("ads.txt", `google.com, ${ADSENSE_ID.replace("ca-", "")}, DIRECT, f08c47fec0942fa0\n`);
 write("robots.txt", `User-agent: *\nAllow: /\n${SITE_URL ? `Sitemap: ${SITE_URL}/sitemap.xml\n` : ""}`);
 write("_headers", `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/vendor/ffmpeg-core/*\n  Cache-Control: public, max-age=31536000, immutable\n`);
 
