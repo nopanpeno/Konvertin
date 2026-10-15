@@ -5,8 +5,11 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "frontend");
+// versi file lewat isi, supaya browser tidak memakai css/js lama setelah deploy
+const ver = (f) => createHash("md5").update(readFileSync(join(root, f))).digest("hex").slice(0, 8);
 const data = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "tools.json"), "utf8"));
 const API_BASE = process.env.API_BASE || "";
 const ADS = process.env.ADS === "1";
@@ -38,7 +41,7 @@ function layout({ title, desc, body, path, bodyClass = "", scripts = "" }) {
   const pathDepth = path.endsWith("/") ? path.split("/").filter(Boolean).length : 0;
   const rootHref = pathDepth ? "../".repeat(pathDepth) : "./";
   const homeHref = `${rootHref}index.html`;
-  const stylesheet = `${rootHref}css/style.css`;
+  const stylesheet = `${rootHref}css/style.css?v=${ver("css/style.css")}`;
   return `<!doctype html>
 <html lang="id">
 <head>
@@ -85,7 +88,7 @@ ${body}
   </div>
 </footer>
 <script src="${rootHref}js/config.js"></script>
-<script src="${rootHref}js/app.js" defer></script>
+<script src="${rootHref}js/app.js?v=${ver("js/app.js")}" defer></script>
 ${scripts}
 </body>
 </html>
