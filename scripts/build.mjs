@@ -117,6 +117,11 @@ const nama = (x) => NAMA[x] || x.toUpperCase();
 const pairs = tools
   .filter((t) => !isSoon(t) && /^[a-z0-9]+-ke-[a-z0-9]+$/.test(t.slug))
   .map((t) => { const [a, b] = t.slug.split("-ke-"); return [a, b, t.slug, nama(b)]; });
+const fromLabels = [...new Set(pairs.map((p) => nama(p[0])))];
+const toLabels = [...new Set(pairs.map((p) => p[3]))];
+// satu kotak per kata; semua label ditumpuk di sel yang sama supaya lebar kotak tetap
+const slot = (id, labels) => `<b class="slot" id="${id}">${labels.map((l, i) => `<span${i === 0 ? ' class="on"' : ""}>${l}</span>`).join("")}</b>`;
+
 const index = layout({
   title: "Konvertin: Konverter File Gambar, Audio, dan Dokumen",
   desc: "Ubah format gambar dan audio, kompres gambar, PDF, Word, dan PowerPoint, ubah PDF dan Word. Tanpa daftar. Gambar dan audio diproses di browser, tidak diunggah.",
@@ -124,7 +129,7 @@ const index = layout({
   body: `
 <section class="hero">
   <div class="wrap">
-    <h1><span class="sr-only">Ubah format file</span><span class="swap" aria-hidden="true">Ubah <b id="swap-from">${nama(pairs[0] ? pairs[0][0] : "jpg")}</b> ke <b id="swap-to">${pairs[0] ? pairs[0][3] : "PNG"}</b></span></h1>
+    <h1><span class="sr-only">Ubah format file</span><span class="swap" aria-hidden="true">Ubah ${slot("swap-from", fromLabels)} ke ${slot("swap-to", toLabels)}</span></h1>
     <p class="lead">Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Tanpa akun.</p>
     <div class="hero-go">
       <a class="btn" href="#tool">Lihat semua tool</a>
@@ -137,11 +142,14 @@ const index = layout({
   var a = document.getElementById("swap-from"), b = document.getElementById("swap-to");
   if (!a || !b || pairs.length < 2) return;
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  function show(slot, label) {
+    Array.prototype.forEach.call(slot.children, function (s) { s.className = s.textContent === label ? "on" : ""; });
+  }
   var i = 0;
   setInterval(function () {
     i = (i + 1) % pairs.length;
-    a.textContent = pairs[i][0];
-    b.textContent = pairs[i][1];
+    show(a, pairs[i][0]);
+    show(b, pairs[i][1]);
   }, 1000);
 })();
 </script>
