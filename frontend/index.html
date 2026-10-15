@@ -34,7 +34,7 @@
 
 <section class="hero">
   <div class="wrap">
-    <h1><span class="sr-only">Ubah format file</span><span class="swap" aria-hidden="true">Ubah <b id="swap-from">HEIC</b> ke <b id="swap-to">JPG</b></span></h1>
+    <h1><span class="sr-only">Ubah format file</span><span class="swap" aria-hidden="true">Ubah <b class="slot" id="swap-from"><span class="on">HEIC</span><span>JPG</span><span>PNG</span><span>WEBP</span><span>WAV</span><span>M4A</span><span>FLAC</span></b> ke <b class="slot" id="swap-to"><span class="on">JPG</span><span>PNG</span><span>WEBP</span><span>MP3</span></b></span></h1>
     <p class="lead">Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Tanpa akun.</p>
     <div class="hero-go">
       <a class="btn" href="#tool">Lihat semua tool</a>
@@ -47,11 +47,14 @@
   var a = document.getElementById("swap-from"), b = document.getElementById("swap-to");
   if (!a || !b || pairs.length < 2) return;
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  function show(slot, label) {
+    Array.prototype.forEach.call(slot.children, function (s) { s.className = s.textContent === label ? "on" : ""; });
+  }
   var i = 0;
   setInterval(function () {
     i = (i + 1) % pairs.length;
-    a.textContent = pairs[i][0];
-    b.textContent = pairs[i][1];
+    show(a, pairs[i][0]);
+    show(b, pairs[i][1]);
   }, 1000);
 })();
 </script>

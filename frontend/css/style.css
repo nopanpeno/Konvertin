@@ -53,7 +53,6 @@ body {
 
 img, svg { max-width: 100%; display: block; }
 a { color: var(--ink); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
-a:hover { background: var(--accent); color: var(--on-accent); }
 
 h1, h2, h3 { font-weight: 800; line-height: 1.08; letter-spacing: -0.025em; margin: 0 0 0.5em; }
 h1 { font-size: clamp(2.4rem, 6.4vw, 4.6rem); letter-spacing: -0.035em; }
@@ -90,7 +89,6 @@ p { margin: 0 0 1em; }
 .nav { background: var(--paper); border-bottom: 2px solid var(--ink); position: sticky; top: 0; z-index: 100; }
 .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; min-height: 64px; flex-wrap: wrap; }
 .logo { font: 800 1.45rem/1 var(--font); letter-spacing: -0.04em; text-decoration: none; color: var(--ink); }
-.logo:hover { background: none; }
 .logo i { font-size: 0; display: inline-block; width: 11px; height: 11px; background: var(--accent); border: 2px solid var(--ink); margin-left: 4px; vertical-align: 9px; }
 .nav ul { display: flex; gap: 6px 22px; list-style: none; margin: 0; padding: 0; align-items: center; flex-wrap: wrap; }
 .nav ul a { font-size: 0.95rem; font-weight: 600; text-decoration: none; }
@@ -101,7 +99,9 @@ p { margin: 0 0 1em; }
 /* ---------- hero ---------- */
 .hero { padding: clamp(40px, 8vw, 88px) 0 clamp(40px, 6vw, 72px); border-bottom: 2px solid var(--ink); }
 .hero h1 { margin-bottom: 0.45em; font-size: clamp(1.15rem, 6vw, 4.6rem); white-space: nowrap; }
-.swap b { font-weight: inherit; background: var(--accent); color: var(--on-accent); padding: 0.02em 0.16em 0.06em; }
+.swap .slot { display: inline-grid; justify-items: center; font-weight: inherit; background: var(--accent); color: var(--on-accent); padding: 0.02em 0.16em 0.06em; }
+.swap .slot > span { grid-area: 1 / 1; visibility: hidden; }
+.swap .slot > span.on { visibility: visible; }
 .hero .lead { max-width: 54ch; font-size: 1.15rem; color: var(--muted); margin-bottom: 28px; }
 .hero-go { display: flex; align-items: center; gap: 12px 24px; flex-wrap: wrap; }
 .plain { font-weight: 600; }
@@ -133,11 +133,9 @@ section.block + section.block { border-top: 1px solid var(--rule); }
   display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
   padding: 14px 8px; text-decoration: none; color: var(--ink);
 }
-.tool-list a:hover { background: var(--accent-soft); color: var(--ink); }
 .tool-list a > span:first-child, .tool-list .soon > span:first-child { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 16px; }
 .tool-list .t { font-weight: 700; }
 .tool-list .s { color: var(--muted); font-size: 0.92rem; }
-.tool-list a:hover .s { color: var(--ink); }
 .tool-list .soon { color: var(--muted); }
 .tool-list .soon .t { font-weight: 600; }
 
@@ -181,12 +179,10 @@ footer { background: var(--foot-bg); color: var(--foot-fg); border-top: 2px soli
 footer .wrap { display: flex; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; align-items: center; }
 footer ul { list-style: none; display: flex; gap: 8px 24px; margin: 0; padding: 0; flex-wrap: wrap; }
 footer a { color: var(--foot-link); }
-footer a:hover { color: var(--on-accent); }
 
 /* ---------- halaman tool ---------- */
 .crumb { font-size: 0.88rem; color: var(--muted); padding: 22px 0 0; margin: 0; }
 .crumb a { color: var(--muted); }
-.crumb a:hover { color: var(--on-accent); }
 
 .tool-head { padding: 20px 0 32px; }
 .tool-head h1 { font-size: clamp(2rem, 4.6vw, 3.2rem); margin-bottom: 0.3em; }
@@ -234,7 +230,6 @@ footer a:hover { color: var(--on-accent); }
   background: var(--paper); border: 2px solid var(--ink); color: var(--ink);
   padding: 6px 12px; border-radius: var(--r); font: 700 0.82rem var(--font); cursor: pointer; text-decoration: none;
 }
-.file .rm:hover, .file .dl:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .file .acts { display: flex; gap: 8px; }
 .bar { grid-column: 1 / -1; height: 6px; background: var(--wash); display: none; }
 .file[data-state="working"] .bar { display: block; }
@@ -257,7 +252,6 @@ footer a:hover { color: var(--on-accent); }
 .seg label + label { border-left: 2px solid var(--ink); }
 .seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .seg span { display: block; padding: 9px 6px; }
-.seg label:hover span { background: var(--wash); }
 .seg input:checked + span { background: var(--accent); color: var(--on-accent); font-weight: 800; }
 .seg input:focus-visible + span { outline: 3px solid var(--ink); outline-offset: -5px; }
 .field .hint { font-size: 0.83rem; color: var(--muted); margin-top: 6px; font-weight: 400; }
