@@ -41,7 +41,15 @@
       sumSaved: "Total {before} jadi {after}, hemat {p}%.",
       zipName: "konvertin-hasil.zip",
       generic: "Terjadi kesalahan saat memproses file ini. Coba lagi, atau coba file lain.",
-      noMatch: "Tidak ada tool yang cocok. Coba kata lain, misalnya nama format."
+      noMatch: "Tidak ada tool yang cocok. Coba kata lain, misalnya nama format.",
+      needMin: "Pilih minimal {n} file.",
+      pdfLocked: "{name} terkunci password. Buka kuncinya dulu, lalu coba lagi.",
+      pdfBroken: "{name} tidak bisa dibaca. File mungkin rusak.",
+      pagesEmpty: "Isi halaman yang mau diambil, misalnya 1-3, 5.",
+      pagesBad: "Halaman \"{x}\" tidak valid. Pakai angka dan rentang, misalnya 1-3, 5.",
+      pagesRange: "Halaman {x} di luar jangkauan. PDF ini punya {n} halaman.",
+      moveUp: "Naik",
+      moveDown: "Turun"
     }
   };
   var LANG = "id";
@@ -266,6 +274,131 @@
     }
   };
 
+  // ---------- PDF (pdf-lib, di browser) ----------
+  function loadPdfLib() {
+    return window.PDFLib ? Promise.resolve() : loadScript(APP_ROOT + "vendor/pdf-lib.min.js");
+  }
+  function openPdf(file) {
+    return file.arrayBuffer().then(function (buf) {
+      return window.PDFLib.PDFDocument.load(buf);
+    }).then(function (doc) {
+      if (!doc.getPageCount()) throw new Error("kosong");
+      return doc;
+    }).catch(function (e) {
+      var msg = String((e && (e.message || e.name)) || "");
+      throw KError(/encrypt/i.test(msg) || /EncryptedPDF/.test(String(e && e.name)) ? t("pdfLocked", { name: file.name }) : t("pdfBroken", { name: file.name }));
+    });
+  }
+  function pdfBlob(doc) {
+    return doc.save().then(function (bytes) { return new Blob([bytes], { type: "application/pdf" }); });
+  }
+  // "1-3, 5, 7-9" -> [0,1,2,4,6,7,8] (indeks mulai 0)
+  function parsePages(text, n) {
+    var parts = String(text || "").split(/[,;\s]+/).filter(Boolean), out = [];
+    if (!parts.length) throw KError(t("pagesEmpty"));
+    parts.forEach(function (x) {
+      var m = /^(\d+)(?:-(\d+))?$/.exec(x);
+      if (!m) throw KError(t("pagesBad", { x: x }));
+      var a = +m[1], b = m[2] ? +m[2] : a;
+      if (a < 1 || b < a) throw KError(t("pagesBad", { x: x }));
+      if (b > n) throw KError(t("pagesRange", { x: b, n: n }));
+      for (var k = a; k <= b; k++) out.push(k - 1);
+    });
+    return out;
+  }
+  var pdfOps = {
+    "pdf-split": function (item, o, ctx) {
+      return loadPdfLib().then(function () { return openPdf(item.file); }).then(function (src) {
+        var n = src.getPageCount(), base = baseName(item.file.name);
+        ctx.progress(0.2);
+        if (o.splitMode === "all") {
+          var pad = String(n).length;
+          return (window.JSZip ? Promise.resolve() : loadScript(APP_ROOT + "vendor/jszip.min.js")).then(function () {
+            var zip = new window.JSZip(), chain = Promise.resolve();
+            for (var i = 0; i < n; i++) (function (i) {
+              chain = chain.then(function () {
+                return window.PDFLib.PDFDocument.create().then(function (d) {
+                  return d.copyPages(src, [i]).then(function (pg) { d.addPage(pg[0]); return pdfBlob(d); });
+                }).then(function (b) {
+                  var num = String(i + 1); while (num.length < pad) num = "0" + num;
+                  zip.file(base + "-halaman-" + num + ".pdf", b);
+                  ctx.progress(0.2 + 0.7 * (i + 1) / n);
+                });
+              });
+            })(i);
+            return chain.then(function () { return zip.generateAsync({ type: "blob" }); });
+          }).then(function (z) { return { blob: z, name: base + "-halaman.zip", note: n + " halaman jadi " + n + " file PDF di dalam ZIP." }; });
+        }
+        var idx = parsePages(o.pages, n);
+        return window.PDFLib.PDFDocument.create().then(function (d) {
+          return d.copyPages(src, idx).then(function (pgs) {
+            pgs.forEach(function (pg) { d.addPage(pg); });
+            ctx.progress(0.8);
+            return pdfBlob(d);
+          });
+        }).then(function (b) { return { blob: b, name: base + "-halaman.pdf", note: idx.length + " dari " + n + " halaman diambil." }; });
+      });
+    }
+  };
+
+  // Tool batch: semua file masuk, satu file keluar. Urutan daftar = urutan hasil.
+  var A4 = { w: 595.28, h: 841.89, m: 24 };
+  var batchOps = {
+    "pdf-merge": function (queue, o, ctx) {
+      return loadPdfLib().then(function () { return window.PDFLib.PDFDocument.create(); }).then(function (out) {
+        var chain = Promise.resolve(), total = 0;
+        queue.forEach(function (it, k) {
+          chain = chain.then(function () {
+            return openPdf(it.file).then(function (src) {
+              return out.copyPages(src, src.getPageIndices()).then(function (pgs) {
+                pgs.forEach(function (pg) { out.addPage(pg); });
+                total += pgs.length;
+                ctx.progress((k + 1) / (queue.length + 1));
+              });
+            });
+          });
+        });
+        return chain.then(function () { return pdfBlob(out); }).then(function (b) {
+          return { blob: b, name: "gabungan.pdf", note: queue.length + " file jadi satu PDF, " + total + " halaman." };
+        });
+      });
+    },
+    "image-to-pdf": function (queue, o, ctx) {
+      return loadPdfLib().then(function () { return window.PDFLib.PDFDocument.create(); }).then(function (out) {
+        var chain = Promise.resolve();
+        queue.forEach(function (it, k) {
+          chain = chain.then(function () {
+            return decodeImage(it.file, it.kind).then(function (bmp) {
+              // lewat canvas supaya rotasi EXIF ikut benar; PNG tetap PNG supaya transparansi aman
+              var png = it.kind === "png";
+              return encode(bmp, png ? "png" : "jpg", 0.92, 1).then(function (blob) {
+                return blob.arrayBuffer().then(function (buf) {
+                  return png ? out.embedPng(buf) : out.embedJpg(buf);
+                });
+              }).then(function (img) {
+                var iw = img.width, ih = img.height, pw, ph, x, y, w, h;
+                if (o.page === "a4") {
+                  var land = iw > ih;
+                  pw = land ? A4.h : A4.w; ph = land ? A4.w : A4.h;
+                  var r = Math.min((pw - 2 * A4.m) / iw, (ph - 2 * A4.m) / ih);
+                  w = iw * r; h = ih * r; x = (pw - w) / 2; y = (ph - h) / 2;
+                } else {
+                  pw = w = iw * 0.75; ph = h = ih * 0.75; x = 0; y = 0;
+                }
+                var pg = out.addPage([pw, ph]);
+                pg.drawImage(img, { x: x, y: y, width: w, height: h });
+                ctx.progress((k + 1) / (queue.length + 1));
+              });
+            });
+          });
+        });
+        return chain.then(function () { return pdfBlob(out); }).then(function (b) {
+          return { blob: b, name: "gambar.pdf", note: queue.length + " gambar jadi PDF " + queue.length + " halaman." };
+        });
+      });
+    }
+  };
+
   // ---------- audio (ffmpeg.wasm) ----------
   var ffState = { ff: null, loading: null, onProgress: null };
   function getFFmpeg(notify) {
@@ -398,6 +531,7 @@
     var cfg = {
       op: root.dataset.op, accept: root.dataset.accept, job: root.dataset.job, out: root.dataset.out,
       compare: !!root.dataset.compare || root.dataset.op === "image-compress", soon: !!root.dataset.soon,
+      batch: !!batchOps[root.dataset.op], min: root.dataset.min ? +root.dataset.min : 1,
       maxMB: root.dataset.maxMb ? +root.dataset.maxMb : (root.dataset.op.indexOf("audio") === 0 ? 50 : 20)
     };
     var MAX_FILES = 10;
@@ -422,6 +556,7 @@
         format: fmt, quality: q, bitrate: +bitrate || 192,
         targetKB: +v("#o-target") || 0, w: +v("#o-w") || 0, h: +v("#o-h") || 0,
         ts: +v("#o-ts") || 0, te: +v("#o-te") || 0,
+        splitMode: (($("input[name=splitmode]:checked") || {}).value) || "range", pages: v("#o-pages"), page: v("#o-page"),
         server: level ? { level: level } : {}
       };
     }
@@ -443,6 +578,13 @@
         if (it.state === "done" && it.result) {
           var a = document.createElement("a"); a.className = "dl"; a.textContent = t("download");
           a.href = it.url; a.download = it.result.name; acts.appendChild(a);
+        }
+        if (cfg.batch && !running && !it.synthetic && items.filter(function (x) { return !x.synthetic; }).length > 1) {
+          [["up", "\u2191", "moveUp"], ["down", "\u2193", "moveDown"]].forEach(function (d) {
+            var mb = document.createElement("button"); mb.type = "button"; mb.className = "rm mv"; mb.textContent = d[1];
+            mb.setAttribute("aria-label", t(d[2]) + " " + it.file.name);
+            mb.onclick = function () { moveItem(it.id, d[0] === "up" ? -1 : 1); }; acts.appendChild(mb);
+          });
         }
         if (!running) {
           var rm = document.createElement("button"); rm.type = "button"; rm.className = "rm"; rm.textContent = t("remove");
@@ -495,10 +637,19 @@
 
     function removeItem(id) {
       items = items.filter(function (i) { if (i.id === id && i.url) URL.revokeObjectURL(i.url); return i.id !== id; });
-      render();
+      if (cfg.batch) resetDone(); else render();
+    }
+    function moveItem(id, dir) {
+      var src = items.filter(function (x) { return !x.synthetic; });
+      var a = src.findIndex(function (x) { return x.id === id; }), b = a + dir;
+      if (a < 0 || b < 0 || b >= src.length) return;
+      var tmp = src[a]; src[a] = src[b]; src[b] = tmp;
+      items = src.concat(items.filter(function (x) { return x.synthetic; }));
+      if (cfg.batch) resetDone(); else render();
     }
     function resetDone() {
       if (running) return;
+      items = items.filter(function (i) { if (i.synthetic && i.url) URL.revokeObjectURL(i.url); return !i.synthetic; });
       items.forEach(function (i) {
         if (i.state === "done") { if (i.url) URL.revokeObjectURL(i.url); i.state = "idle"; i.result = null; i.url = null; i.note = ""; }
       });
@@ -507,6 +658,7 @@
 
     function addFiles(fileList) {
       showAlert("");
+      if (cfg.batch) resetDone();
       var arr = Array.prototype.slice.call(fileList), notes = [];
       var room = MAX_FILES - items.length;
       if (arr.length > room) { notes.push(t("tooMany", { n: MAX_FILES })); arr = arr.slice(0, Math.max(room, 0)); }
@@ -556,6 +708,7 @@
       var fmt = $("#o-format") ? $("#o-format").value : "";
       var fq = $("#f-quality"); if (fq && (cfg.op === "image-convert" || cfg.op === "image-resize")) fq.hidden = fmt === "png";
       var fb = $("#f-bitrate"); if (fb && AUDIO[fmt]) fb.hidden = !AUDIO[fmt].br;
+      var fp = $("#f-pages"), sm = $("input[name=splitmode]:checked"); if (fp && sm) fp.hidden = sm.value === "all";
     }
     els.opts.addEventListener("input", function () { syncOpts(); resetDone(); });
     syncOpts();
@@ -568,15 +721,37 @@
         setCancel: function (fn) { cancelFn = fn; }
       };
       if (imageOps[cfg.op]) return imageOps[cfg.op](it, o, ctx);
+      if (pdfOps[cfg.op]) return pdfOps[cfg.op](it, o, ctx);
       if (cfg.op === "audio-convert") return audioConvert(it, o, ctx);
       if (cfg.op === "server") return serverJob(it, o, ctx, cfg);
       return Promise.reject(KError("Tool tidak dikenal."));
+    }
+
+    function runBatch(queue, o) {
+      if (queue.length < cfg.min) { showAlert(t("needMin", { n: cfg.min })); return; }
+      running = true; cancelled = false; showAlert("");
+      queue.forEach(function (i) { i.state = "working"; i.error = ""; i.note = ""; });
+      render();
+      var ctx = {
+        progress: function (f) { queue.forEach(function (i) { setProgress(i, f); }); },
+        note: function () {},
+        setCancel: function (fn) { cancelFn = fn; }
+      };
+      batchOps[cfg.op](queue, o, ctx).then(function (r) {
+        queue.forEach(function (i) { i.state = "done"; });
+        items.push({ id: ++seq, file: { name: r.name, size: r.blob.size }, kind: "", state: "done", result: r, url: URL.createObjectURL(r.blob), note: r.note || "", error: "", synthetic: true });
+      }).catch(function (e) {
+        queue.forEach(function (i) { i.state = "idle"; });
+        showAlert(e && e.user ? e.message : t("generic"));
+        if (!(e && e.user)) console.error(e);
+      }).then(function () { cancelFn = null; running = false; render(); });
     }
 
     els.go.addEventListener("click", function () {
       var o = readOpts();
       var queue = items.filter(function (i) { return i.state === "idle" || (i.state === "error" && !i.invalid); });
       if (!queue.length) return;
+      if (cfg.batch) { runBatch(queue, o); return; }
       running = true; cancelled = false; showAlert("");
       queue.forEach(function (i) { i.state = "idle"; i.error = ""; });
       render();

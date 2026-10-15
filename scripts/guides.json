@@ -376,5 +376,59 @@
         "a": "Video dan audio tidak disentuh, jadi PPTX yang besar karena video tidak banyak berkurang."
       }
     ]
+  },
+  "gabung-pdf": {
+    "use": "Gabung PDF berguna saat satu berkas harus terdiri dari beberapa dokumen: lamaran beserta lampiran, bab-bab laporan, atau scan yang terpisah. Semua diproses di browser, jadi dokumen pribadi tidak diunggah.",
+    "steps": [
+      "Tarik dua file PDF atau lebih ke kotak.",
+      "Atur urutannya dengan tombol naik dan turun di tiap baris.",
+      "Klik Konversi, lalu unduh PDF gabungan."
+    ],
+    "faq": [
+      {
+        "q": "Berapa file yang bisa digabung sekaligus?",
+        "a": "Sampai 10 file per proses, masing-masing maksimal 50 MB."
+      },
+      {
+        "q": "Apakah PDF berpassword bisa digabung?",
+        "a": "Tidak. Buka kunci password di aplikasi lain dulu, lalu gabungkan."
+      }
+    ]
+  },
+  "pisah-pdf": {
+    "use": "Pisah PDF dipakai untuk mengambil beberapa halaman saja dari berkas panjang, misalnya satu bab, atau untuk memecah PDF jadi satu file per halaman. Prosesnya di browser, tanpa unggah.",
+    "steps": [
+      "Tarik satu file PDF ke kotak.",
+      "Pilih Ambil halaman lalu tulis nomor halaman, misalnya 1-3, 5. Atau pilih Semua halaman untuk satu file per halaman.",
+      "Klik Konversi, lalu unduh PDF atau ZIP hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Bagaimana cara menulis halaman?",
+        "a": "Pakai angka dan rentang yang dipisah koma, misalnya 1-3, 5, 8-10. Halaman yang diambil muncul sesuai urutan yang kamu tulis."
+      },
+      {
+        "q": "Apa isi ZIP pada mode semua halaman?",
+        "a": "Satu file PDF untuk tiap halaman, dengan nama yang diberi nomor halaman."
+      }
+    ]
+  },
+  "gambar-ke-pdf": {
+    "use": "Ubah foto atau hasil scan jadi satu PDF untuk dikirim sebagai tugas, formulir, atau lampiran. Satu gambar menjadi satu halaman, sesuai urutan di daftar. Prosesnya di browser, tanpa unggah.",
+    "steps": [
+      "Tarik satu gambar atau lebih ke kotak, atau tempel dengan Ctrl+V.",
+      "Pilih ukuran halaman: A4 dengan margin, atau ukuran asli gambar. Atur urutan dengan tombol naik dan turun.",
+      "Klik Konversi, lalu unduh PDF hasilnya."
+    ],
+    "faq": [
+      {
+        "q": "Apa bedanya A4 dan ukuran asli?",
+        "a": "A4 menaruh gambar di tengah halaman A4 dengan margin, dan memutar halaman jadi landscape untuk gambar yang lebar. Ukuran asli membuat halaman setepat gambar, tanpa margin."
+      },
+      {
+        "q": "Apakah kualitas gambar turun?",
+        "a": "JPG dimasukkan ulang dengan kualitas tinggi. PNG tetap PNG. WEBP dan HEIC disimpan sebagai JPG di dalam PDF."
+      }
+    ]
   }
 }
