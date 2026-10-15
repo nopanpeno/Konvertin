@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: konvertin-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: KONVERTIN_DATA_DIR
+        value: /data
+      - key: KONVERTIN_CORS_ORIGINS
+        value: https://nopanpeno.github.io

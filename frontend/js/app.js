@@ -501,7 +501,7 @@
           if (aborted) return;
           fetch(api + "/api/jobs/" + jobId).then(function (r) { return r.json(); }).then(function (j) {
             if (aborted) return;
-            if (j.status === "failed") return reject(KError(j.error_message || t("audioFail")));
+            if (j.status === "failed") return reject(KError(j.error || j.error_message || t("generic")));
             if (j.status === "done") {
               return fetch(api + "/api/jobs/" + jobId + "/download").then(function (r) {
                 if (!r.ok) throw KError(t("serverDown"));

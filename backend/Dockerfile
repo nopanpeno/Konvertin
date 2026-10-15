@@ -12,4 +12,4 @@ RUN useradd -m -u 10001 konvertin && mkdir -p /data && chown konvertin /data
 USER konvertin
 ENV KONVERTIN_DATA_DIR=/data KONVERTIN_FRONTEND_DIR=/srv/frontend
 EXPOSE 8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

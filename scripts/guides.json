@@ -216,7 +216,7 @@
     ]
   },
   "pdf-ke-word": {
-    "use": "Ubah PDF jadi dokumen Word yang bisa diedit. Cocok untuk PDF berisi teks, seperti surat atau laporan. Tool ini butuh server dan saat ini belum aktif.",
+    "use": "Ubah PDF jadi dokumen Word yang bisa diedit. Cocok untuk PDF berisi teks, seperti surat atau laporan. Tool ini membutuhkan backend.",
     "steps": [
       "Unggah file PDF, maksimal 25 MB.",
       "Klik Konversi dan tunggu prosesnya selesai.",
@@ -234,7 +234,7 @@
     ]
   },
   "word-ke-pdf": {
-    "use": "Ubah dokumen Word jadi PDF supaya tampilannya sama di semua perangkat, misalnya untuk dikirim sebagai lamaran atau tugas. Tool ini butuh server dan saat ini belum aktif.",
+    "use": "Ubah dokumen Word jadi PDF supaya tampilannya sama di semua perangkat, misalnya untuk dikirim sebagai lamaran atau tugas. Tool ini membutuhkan backend.",
     "steps": [
       "Unggah file DOCX, maksimal 25 MB.",
       "Klik Konversi.",
@@ -252,7 +252,7 @@
     ]
   },
   "pptx-ke-pdf": {
-    "use": "Ubah presentasi PowerPoint jadi PDF untuk dibagikan atau dicetak. Tool ini butuh server dan saat ini belum aktif.",
+    "use": "Ubah presentasi PowerPoint jadi PDF untuk dibagikan atau dicetak. Tool ini membutuhkan backend.",
     "steps": [
       "Unggah file PPTX, maksimal 25 MB.",
       "Klik Konversi.",
@@ -270,7 +270,7 @@
     ]
   },
   "excel-ke-pdf": {
-    "use": "Ubah lembar Excel jadi PDF untuk dibagikan atau dicetak. Tool ini butuh server dan saat ini belum aktif.",
+    "use": "Ubah lembar Excel jadi PDF untuk dibagikan atau dicetak. Tool ini membutuhkan backend.",
     "steps": [
       "Unggah file XLSX, maksimal 25 MB.",
       "Klik Konversi.",
@@ -288,7 +288,7 @@
     ]
   },
   "pdf-ke-txt": {
-    "use": "Ambil teks dari PDF untuk disalin, dicari, atau diolah lagi. Tool ini butuh server dan saat ini belum aktif.",
+    "use": "Ambil teks dari PDF untuk disalin, dicari, atau diolah lagi. Tool ini membutuhkan backend.",
     "steps": [
       "Unggah file PDF, maksimal 25 MB.",
       "Klik Konversi.",
@@ -306,7 +306,7 @@
     ]
   },
   "word-ke-txt": {
-    "use": "Ambil teks polos dari dokumen Word tanpa format. Tool ini butuh server dan saat ini belum aktif.",
+    "use": "Ambil teks polos dari dokumen Word tanpa format. Tool ini membutuhkan backend.",
     "steps": [
       "Unggah file DOCX, maksimal 25 MB.",
       "Klik Konversi.",
@@ -324,7 +324,7 @@
     ]
   },
   "kompres-pdf": {
-    "use": "Perkecil PDF supaya muat batas unggah atau mudah dikirim lewat email. Tool ini butuh server dan saat ini belum aktif.",
+    "use": "Perkecil PDF supaya muat batas unggah atau mudah dikirim lewat email. Tool ini membutuhkan backend.",
     "steps": [
       "Unggah file PDF, maksimal 25 MB.",
       "Pilih level: Ringan, Sedang, atau Maksimal.",
@@ -342,7 +342,7 @@
     ]
   },
   "kompres-word": {
-    "use": "Perkecil dokumen Word yang membengkak karena banyak gambar. Tool ini butuh server dan saat ini belum aktif.",
+    "use": "Perkecil dokumen Word yang membengkak karena banyak gambar. Tool ini membutuhkan backend.",
     "steps": [
       "Unggah file DOCX, maksimal 25 MB.",
       "Pilih level kompres.",
@@ -360,7 +360,7 @@
     ]
   },
   "kompres-pptx": {
-    "use": "Perkecil presentasi yang terlalu besar untuk dikirim. Tool ini butuh server dan saat ini belum aktif.",
+    "use": "Perkecil presentasi yang terlalu besar untuk dikirim. Tool ini membutuhkan backend.",
     "steps": [
       "Unggah file PPTX, maksimal 25 MB.",
       "Pilih level kompres.",

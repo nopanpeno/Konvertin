@@ -6,6 +6,7 @@ Exit code 0 = sukses. Pada gagal, pesan untuk user ditulis ke stderr dengan awal
 """
 import inspect
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -212,9 +213,19 @@ def pdf_to_docx(src: Path, dst: Path) -> None:
 
 
 def _soffice_to_pdf(src: Path, dst: Path) -> None:
-    exe = shutil.which("soffice") or shutil.which("libreoffice")
+    exe = os.environ.get("KONVERTIN_SOFFICE_PATH") or shutil.which("soffice") or shutil.which("libreoffice")
+    if not exe and os.name == "nt":
+        for variable in ("PROGRAMFILES", "PROGRAMFILES(X86)"):
+            program_files = os.environ.get(variable)
+            candidate = Path(program_files) / "LibreOffice" / "program" / "soffice.exe" if program_files else None
+            if candidate and candidate.is_file():
+                exe = str(candidate)
+                break
     if not exe:
-        raise RuntimeError("LibreOffice tidak terpasang")
+        raise ConvertError(
+            "LibreOffice belum terpasang atau tidak ditemukan di server. Pasang LibreOffice agar konversi Word, PowerPoint, dan Excel ke PDF bisa digunakan.",
+            503,
+        )
     with tempfile.TemporaryDirectory() as td:
         td_p = Path(td)
         outdir = td_p / "out"
@@ -224,7 +235,7 @@ def _soffice_to_pdf(src: Path, dst: Path) -> None:
         shutil.copyfile(src, tmp_in)
         cmd = [
             exe, "--headless", "--norestore", "--nolockcheck", "--nodefault", "--nofirststartwizard",
-            f"-env:UserInstallation=file://{td_p}/profile",
+            f"-env:UserInstallation={(td_p / 'profile').as_uri()}",
             "--convert-to", "pdf:writer_pdf_Export" if src.suffix == ".docx" else "pdf",
             "--outdir", str(outdir), str(tmp_in),
         ]

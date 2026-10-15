@@ -16,26 +16,41 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 24 }
-      # Build Pages tidak menyertakan backend: tool server berlabel "Segera" dan UI akun tidak diterbitkan.
-      - run: npm run build:static
+      # Isi variable repository KONVERTIN_API_BASE dengan URL layanan backend publik.
+      # Tanpa variable tersebut, tool server tetap dinonaktifkan secara jujur.
+      - name: Build situs untuk GitHub Pages
+        run: npm run build:static
+        env:
+          API_BASE: ${{ vars.KONVERTIN_API_BASE }}
       - name: Verifikasi hasil build
         run: |
           test -f frontend/index.html
           grep -q 'id="tool"' frontend/index.html
-          grep -q 'apiBase: ""' frontend/js/config.js
           ! grep -q 'id="account-link"' frontend/index.html
           ! grep -rq --include='*.html' 'id="account-link"' frontend/
           ! grep -rq --include='*.html' 'js/accounts.js' frontend/
-          grep -q 'class="soon"' frontend/index.html
           test ! -e frontend/akun.html
           test ! -e frontend/profil.html
           test ! -e frontend/riwayat.html
           test ! -e frontend/admin.html
           test -f frontend/.nojekyll
+          for page in kompres-pdf kompres-word kompres-pptx pdf-ke-word word-ke-pdf pptx-ke-pdf excel-ke-pdf pdf-ke-txt word-ke-txt; do
+            file="frontend/$page/index.html"
+            if [ -n "$API_BASE" ]; then
+              ! grep -q '<div class="notice"><b>Segera</b>' "$file"
+              grep -q 'data-op="server"' "$file"
+              grep -Fq "apiBase: \"$API_BASE\"" frontend/js/config.js
+            else
+              grep -q '<div class="notice"><b>Segera</b>' "$file"
+              grep -q 'apiBase: ""' frontend/js/config.js
+            fi
+          done
           ! grep -rq 'fonts.googleapis.com' frontend/ || { echo "Masih ada font pihak ketiga"; exit 1; }
           test -s frontend/vendor/ffmpeg-core/ffmpeg-core.wasm
           test -s frontend/fonts/schibsted-grotesk-latin-wght-normal.woff2
           for f in $(find frontend -name '*.html'); do grep -q '</html>' "$f" || { echo "HTML rusak: $f"; exit 1; }; done
+        env:
+          API_BASE: ${{ vars.KONVERTIN_API_BASE }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with: { path: frontend }

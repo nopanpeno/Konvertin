@@ -100,6 +100,13 @@ def _limits() -> None:  # dijalankan di child sebelum exec
     os.setsid()
 
 
+def _process_options(job_type: str, *, windows: bool | None = None) -> dict:
+    is_windows = os.name == "nt" if windows is None else windows
+    if is_windows:
+        return {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP}
+    return {"preexec_fn": os.setsid if job_type.endswith("_to_pdf") else _limits}
+
+
 def _run(job_id: str) -> None:
     row = get(job_id)
     if row is None or row["status"] != "queued":
@@ -110,15 +117,13 @@ def _run(job_id: str) -> None:
     out_path = config.STORAGE_DIR / out_key
     backend_dir = Path(__file__).resolve().parents[1]
     try:
-        # LibreOffice butuh memori virtual besar: batas RLIMIT_AS hanya untuk non-soffice
-        preexec = os.setsid if row["type"].endswith("_to_pdf") else _limits
         cmd = [sys.executable, "-m", "app.converters", row["type"], str(in_path), str(out_path)]
         if row["options"] and row["options"] != "{}":
             cmd.append(row["options"])
         p = subprocess.Popen(
             cmd,
             cwd=backend_dir, env={**os.environ, "PYTHONPATH": str(backend_dir), "HOME": str(config.DATA_DIR)},
-            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True, preexec_fn=preexec,
+            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True, **_process_options(row["type"]),
         )
         with _lock:
             _procs[job_id] = p
@@ -151,6 +156,16 @@ def _run(job_id: str) -> None:
 
 
 def _kill(p: subprocess.Popen) -> None:
+    if os.name == "nt":
+        try:
+            subprocess.run(
+                ["taskkill", "/PID", str(p.pid), "/T", "/F"],
+                capture_output=True, check=False, timeout=10,
+            )
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            p.kill()
+        p.wait()
+        return
     try:
         os.killpg(os.getpgid(p.pid), signal.SIGKILL)
     except (ProcessLookupError, PermissionError):

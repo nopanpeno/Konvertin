@@ -2,6 +2,8 @@ import io
 import time
 import zipfile
 
+import pytest
+
 PDF = "application/pdf"
 
 
@@ -22,7 +24,35 @@ def _wait(client, job_id: str, timeout=90):
 def test_health_and_conversions(client):
     assert client.get("/api/health").json() == {"ok": True}
     c = client.get("/api/conversions").json()
-    assert {x["type"] for x in c["conversions"]["pdf"]} == {"pdf_to_docx", "pdf_to_txt"}
+    assert {
+        kind: {item["type"] for item in conversions}
+        for kind, conversions in c["conversions"].items()
+    } == {
+        "pdf": {"pdf_to_docx", "pdf_to_txt"},
+        "docx": {"docx_to_pdf", "docx_to_txt"},
+        "pptx": {"pptx_to_pdf"},
+        "xlsx": {"xlsx_to_pdf"},
+    }
+    assert c["max_mb"] == 25 and c["max_pages"] == 200
+
+
+def test_windows_worker_uses_supported_process_options(monkeypatch):
+    from app import jobs
+
+    monkeypatch.setattr(jobs.subprocess, "CREATE_NEW_PROCESS_GROUP", 512, raising=False)
+    assert jobs._process_options("docx_to_pdf", windows=True) == {"creationflags": 512}
+
+
+def test_office_conversion_reports_missing_libreoffice(monkeypatch, tmp_path):
+    from app import converters
+    from app.errors import ConvertError
+
+    monkeypatch.setattr(converters.shutil, "which", lambda _: None)
+    monkeypatch.setenv("KONVERTIN_SOFFICE_PATH", "")
+    monkeypatch.setenv("PROGRAMFILES", str(tmp_path))
+    monkeypatch.setenv("PROGRAMFILES(X86)", str(tmp_path))
+    with pytest.raises(ConvertError, match="LibreOffice belum terpasang"):
+        converters._soffice_to_pdf(tmp_path / "in.docx", tmp_path / "out.pdf")
 
 
 def test_detect(client, sample_pdf, sample_docx):
@@ -48,6 +78,31 @@ def test_xlsx_to_pdf(client, sample_xlsx):
     assert s["status"] == "done", s
 
 
+def test_pptx_to_pdf(client):
+    from pptx import Presentation
+    from pptx.util import Inches
+
+    presentation = Presentation()
+    slide = presentation.slides.add_slide(presentation.slide_layouts[6])
+    text_box = slide.shapes.add_textbox(Inches(1), Inches(1), Inches(8), Inches(1))
+    text_box.text = "Konvertin PowerPoint"
+    source = io.BytesIO()
+    presentation.save(source)
+
+    response = _post(client, source.getvalue(), "presentasi.pptx", "pptx_to_pdf")
+    assert response.status_code == 202
+    status = _wait(client, response.json()["job_id"])
+    assert status["status"] == "done", status
+    assert status["download_name"] == "presentasi.pdf"
+    from pypdf import PdfReader
+
+    result = client.get(status["download_url"])
+    assert result.content.startswith(b"%PDF")
+    pdf = PdfReader(io.BytesIO(result.content))
+    assert len(pdf.pages) == 1
+    assert "Konvertin PowerPoint" in pdf.pages[0].extract_text()
+
+
 def test_pdf_to_docx(client, sample_pdf):
     s = _wait(client, _post(client, sample_pdf, "laporan.pdf", "pdf_to_docx").json()["job_id"])
     assert s["status"] == "done", s
@@ -55,6 +110,30 @@ def test_pdf_to_docx(client, sample_pdf):
 
     doc = Document(io.BytesIO(client.get(s["download_url"]).content))
     assert "Laporan Praktikum Konvertin" in "\n".join(p.text for p in doc.paragraphs)
+
+
+def test_compress_pdf_shrinks_embedded_image_and_keeps_text(client, big_jpeg):
+    from reportlab.lib.utils import ImageReader
+    from reportlab.pdfgen import canvas
+
+    source = io.BytesIO()
+    pdf = canvas.Canvas(source)
+    pdf.drawString(72, 780, "Laporan tetap terbaca")
+    pdf.drawImage(ImageReader(io.BytesIO(big_jpeg)), 36, 300, width=520, height=390)
+    pdf.save()
+    original = source.getvalue()
+
+    response = _post(client, original, "laporan.pdf", "compress_pdf")
+    assert response.status_code == 202
+    status = _wait(client, response.json()["job_id"])
+    assert status["status"] == "done", status
+    assert status["download_name"] == "laporan-kompres.pdf"
+    result = client.get(status["download_url"]).content
+
+    from pypdf import PdfReader
+
+    assert len(result) < len(original)
+    assert "Laporan tetap terbaca" in PdfReader(io.BytesIO(result)).pages[0].extract_text()
 
 
 def test_pdf_to_txt(client, sample_pdf):

@@ -21,39 +21,47 @@ Konverter file serbaguna (PRD v1.2). Status: Modul A, B, C, dan D sudah ada vers
 Edit `scripts/tools.json`, lalu build ulang dan commit hasilnya di `frontend/`:
 ```bash
 npm run build         # tool server aktif, API satu origin (dipakai backend)
-npm run build:static  # GitHub Pages: tool server "Segera", halaman akun disembunyikan
+npm run build:static  # situs statis; tool server aktif jika API_BASE diisi
 # env lain: API_BASE=https://api.contoh.id  ADS=1  SITE_URL=https://domain-asli
 ```
 
-## Halaman konversi PDF butuh backend
-Halaman `pdf-ke-word`, `word-ke-pdf`, `pptx-ke-pdf`, `excel-ke-pdf`, `pdf-ke-txt`, `word-ke-txt`, `kompres-pdf`, `kompres-word`, dan `kompres-pptx` memproses file di server. Kalau dibuka tanpa backend (misalnya `npm run serve` saja atau hosting statis), tombol Konversi akan gagal dengan pesan "Server tidak bisa dihubungi" — itu bukan bug frontend, backend memang harus jalan.
+Build di atas mendukung Windows dan macOS/Linux. Untuk memakai URL backend lokal yang berbeda, jalankan `API_BASE=http://localhost:8000 npm run build:static` di macOS/Linux atau `$env:API_BASE='http://localhost:8000'; npm.cmd run build:static` di PowerShell.
 
-Cara mengaktifkan:
+## Aktifkan semua konversi di komputer lokal
+Sembilan tool dokumen—kompres PDF/Word/PowerPoint, PDF ke Word/TXT, Word ke PDF/TXT, PPTX ke PDF, dan Excel ke PDF—memproses file di backend. Backend butuh Python, paket di `backend/requirements.txt`, serta LibreOffice (perintah `soffice`) untuk konversi Office ke PDF.
+
+Cara yang paling konsisten jika Docker tersedia:
 ```bash
-# 1. Build frontend dengan API satu origin (API_BASE=/)
-npm run build            # JANGAN pakai build:static untuk halaman ini
-
-# 2. Jalankan backend FastAPI (menyajikan frontend + API di port yang sama)
-cd backend
-pip install -r requirements.txt   # butuh LibreOffice (soffice) & poppler-utils di PATH
-python3 -m uvicorn app.main:app --port 8000
-# buka http://localhost:8000/pdf-ke-word/
-
-# atau sekali jalan lewat Docker:
-docker compose up --build   # lalu buka http://localhost:8000
+docker compose up --build
+# Buka http://localhost:8000
 ```
-Catatan: kalau `API_BASE` dikosongkan saat build, tool server diberi label "Segera" dan upload dinonaktifkan oleh desain (lihat `scripts/build.mjs`).
 
-Workflow `.github/workflows/pages.yml` otomatis membangun mode statis tersebut dari `main` dan menerbitkan folder `frontend/`. Di mode Pages, tool server dan UI akun tidak tersedia; API FastAPI, riwayat akun, dan dashboard admin baru aktif jika frontend disajikan satu origin dengan backend (`API_BASE=/`).
-
-## Jalankan lokal
+Tanpa Docker, pasang Python dan LibreOffice, lalu jalankan dari PowerShell:
 ```bash
+winget install --id TheDocumentFoundation.LibreOffice -e
 cd backend
-pip install -r requirements.txt      # butuh LibreOffice (soffice) dan poppler-utils (pdftotext) di PATH
-python3 -m uvicorn app.main:app --port 8000   # buka http://localhost:8000
-python3 -m pytest -q                 # 29 tes, pakai konversi asli
+python -m pip install -r requirements.txt
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+# Buka http://localhost:8000
 ```
-Docker: `docker compose up --build`. Hanya frontend (tool browser): `npm run build:static && npm run serve`.
+`npm run build` membuat halaman dengan API satu origin (`/`); FastAPI lokal menyajikan frontend sekaligus API. Backend mencari LibreOffice di PATH atau lokasi instalasi Windows standar. `pdftotext` opsional karena ekstraksi teks PDF punya fallback Python. `python -m pytest -q backend/tests` menjalankan tes backend, termasuk konversi PDF, Word, PowerPoint, dan Excel ke PDF.
+
+Batas lokal default adalah 25 MB per dokumen, 200 halaman PDF, dan waktu proses yang dibatasi. Jika mesinmu mampu memproses file lebih besar, naikkan `KONVERTIN_MAX_DOC_MB`, `KONVERTIN_MAX_PDF_PAGES`, atau `KONVERTIN_JOB_TIMEOUT_SEC` di environment sebelum menyalakan backend. Memproses file tanpa batas tidak aman atau realistis: kebutuhan RAM/waktu bergantung pada isi file dan kapasitas komputer.
+
+Workflow `.github/workflows/pages.yml` membangun situs statis dari `main`. Agar semua tool server aktif di GitHub Pages, atur variable `KONVERTIN_API_BASE` ke URL HTTPS backend publik di GitHub Actions. UI akun memerlukan API satu origin (`API_BASE=/`) dan tidak ditampilkan pada situs statis dengan backend lintas domain.
+
+## Aktifkan tool server di GitHub Pages
+GitHub Pages hanya menyajikan file statis; ia tidak bisa menjalankan API Python. Repo ini menyediakan [Render Blueprint](./render.yaml) untuk menjalankan backend terpisah, sementara frontend tetap dipublikasikan melalui GitHub Pages:
+
+1. Buat layanan dari repo ini di Render dengan **New + → Blueprint**. Blueprint memakai paket gratis, Docker, dan mengatur CORS untuk `https://nopanpeno.github.io`.
+2. Setelah layanan `konvertin-api` selesai dibuat, salin URL HTTPS-nya, misalnya `https://konvertin-api.onrender.com`.
+3. Di GitHub, buka **Settings → Secrets and variables → Actions → Variables**, lalu buat variable `KONVERTIN_API_BASE` dengan URL backend itu (tanpa garis miring di akhir).
+4. Jalankan ulang workflow **Pages** di tab **Actions**. Workflow membangun halaman dengan URL API tersebut dan memublikasikannya ke GitHub Pages.
+5. Buka `https://nopanpeno.github.io/Konvertin/` dan coba tool dokumen. Status kesehatan backend dapat dicek di `<URL-backend>/api/health`.
+
+Kalau memakai domain GitHub Pages kustom, ubah `KONVERTIN_CORS_ORIGINS` di Render agar cocok persis dengan origin domain situs, lalu deploy ulang. Jika variable URL API belum diatur, workflow sengaja menampilkan tool server sebagai **Segera**, bukan berpura-pura konversi aktif.
+
+**Batas layanan publik:** hosting gratis Render dapat tidur saat tidak digunakan, memulai ulang layanan, dan memakai penyimpanan sementara; konversi yang sedang berjalan atau file hasil dapat hilang saat layanan dimulai ulang. Batas default backend adalah 25 MB per dokumen, 200 halaman PDF, 20 job per alamat IP per jam, dan penghapusan file paling lama satu jam. Ini dapat diubah lewat variabel konfigurasi `KONVERTIN_*`, tetapi jangan menghapus batas ukuran, waktu, antrean, atau laju pada layanan publik—pemakaian “tanpa batas” memungkinkan penyalahgunaan dan membuat layanan tidak stabil. Untuk pemakaian kelompok yang lebih andal, gunakan hosting berbayar dengan disk persisten dan batasi akses sesuai kebutuhan.
 
 ## Kompres DOCX/PPTX: apa yang berubah
 Hanya gambar JPG dan PNG di `word/media/` dan `ppt/media/` yang diperkecil (format dan nama file tetap, jadi relasi dokumen tidak putus; EXIF dan transparansi PNG dijaga). Sisi terpanjang dibatasi 2400 / 1600 / 1024 px untuk level ringan / sedang / maksimal, dengan kualitas JPEG 80 / 60 / 40. Teks, tabel, video, audio, dan file lain di dalam paket tidak disentuh, jadi dokumen tanpa gambar atau PPTX yang besar karena video hampir tidak berkurang. Kalau hasil tidak lebih kecil, file asli yang dikembalikan. XLSX belum didukung.

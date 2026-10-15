@@ -12,7 +12,19 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "frontend");
 // versi file lewat isi, supaya browser tidak memakai css/js lama setelah deploy
 const ver = (f) => createHash("md5").update(readFileSync(join(root, f))).digest("hex").slice(0, 8);
 const data = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "tools.json"), "utf8"));
-const API_BASE = process.env.API_BASE || "";
+const apiBaseArg = process.argv.slice(2).find((arg) => arg.startsWith("--api-base="));
+const API_BASE = process.env.API_BASE ?? apiBaseArg?.slice("--api-base=".length) ?? "";
+if (API_BASE && API_BASE !== "/") {
+  let apiUrl;
+  try {
+    apiUrl = new URL(API_BASE);
+  } catch {
+    throw new Error("API_BASE harus berupa URL backend lengkap atau '/'.");
+  }
+  if (!["https:", "http:"].includes(apiUrl.protocol) || (apiUrl.protocol === "http:" && !["localhost", "127.0.0.1"].includes(apiUrl.hostname))) {
+    throw new Error("API_BASE publik harus memakai HTTPS; HTTP hanya diizinkan untuk localhost.");
+  }
+}
 // Akun dan sesi saat ini hanya mendukung API satu origin; jangan tampilkan UI akun pada build statis.
 const ACCOUNT_UI = API_BASE === "/";
 const STATIC_MODE = !API_BASE;
@@ -152,7 +164,7 @@ const index = layout({
   <div class="wrap">
     <img class="hero-mark" src="./logo-mark.svg" alt="" width="200" height="200">
     <h1><span class="sr-only">Ubah format file</span><span class="swap" aria-hidden="true">Ubah ${slot("swap-from", fromLabels)} ke ${slot("swap-to", toLabels)}</span></h1>
-  <p class="lead">${STATIC_MODE ? "Tool yang tersedia di GitHub Pages diproses di browser, jadi file tidak keluar dari perangkatmu. Tool yang membutuhkan server belum aktif di versi ini." : ACCOUNT_UI ? "Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Pakai tanpa akun, atau masuk untuk menyimpan riwayat." : "Gambar dan audio diproses di browser; dokumen yang butuh server akan diunggah dan dihapus otomatis. Versi ini belum menyediakan akun atau riwayat."}</p>
+    <p class="lead">${STATIC_MODE ? "Tool yang tersedia di GitHub Pages diproses di browser, jadi file tidak keluar dari perangkatmu. Tool yang membutuhkan server belum aktif di versi ini." : ACCOUNT_UI ? "Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Pakai tanpa akun, atau masuk untuk menyimpan riwayat." : "Gambar dan audio diproses di browser; dokumen yang butuh server akan diunggah dan dihapus otomatis. Versi ini belum menyediakan akun atau riwayat."}</p>
     <div class="hero-go">
       <a class="btn" href="#tool">Lihat semua tool</a>
     </div>
@@ -427,7 +439,7 @@ write("tentang.html", layout({
 <h2>Cara kerjanya</h2>
 <ul>
 <li><b>Gambar dan audio</b> diproses di browser. File tidak diunggah ke server kami.</li>
-<li><b>Dokumen</b> membutuhkan server. Tool ini belum aktif. Saat aktif, file diproses di wadah terisolasi dan dihapus otomatis paling lama 1 jam setelah selesai.</li>
+<li><b>Dokumen</b> membutuhkan server. Jika backend tersedia, file diproses di wadah terisolasi dan dihapus otomatis paling lama 1 jam setelah selesai.</li>
 </ul>
 <p>Rincian lengkap ada di <a href="./privasi.html">kebijakan privasi</a>.</p>
 <h2>Pembuat</h2>
