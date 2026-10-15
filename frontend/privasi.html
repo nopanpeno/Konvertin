@@ -14,7 +14,7 @@
 <meta property="og:description" content="Apa yang diproses di browser, apa yang lewat server, dan kapan file dihapus.">
 <meta property="og:type" content="website">
 <link rel="icon" href="./logo-mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./css/style.css?v=5ea2a3c0">
+<link rel="stylesheet" href="./css/style.css?v=36e044b1">
 </head>
 <body class="">
 <a class="skip" href="#main">Lewati ke isi</a>
@@ -27,6 +27,10 @@
         <li class="nl"><a href="./index.html#cara-kerja">Cara kerja</a></li>
         <li class="nl"><a href="./index.html#privasi">Privasi</a></li>
         <li class="nl"><a href="./index.html#faq">FAQ</a></li>
+        <li><a id="account-link" href="./akun.html">Masuk</a></li>
+        <li id="profile-link-item" hidden><a href="./profil.html">Profil</a></li>
+        <li id="history-link-item" hidden><a href="./riwayat.html">Riwayat</a></li>
+        <li id="admin-link-item" hidden><a href="./admin.html">Admin</a></li>
         <li><a class="btn small" href="./index.html#tool">Mulai konversi</a></li>
       </ul>
     </nav>
@@ -35,7 +39,7 @@
 <main id="main">
 <div class="wrap prose">
 <h1>Kebijakan privasi</h1>
-<p class="muted">Draft. Terakhir diubah 9 Oktober 2026. Tinjau ulang sebelum rilis publik, terutama bagian iklan dan cookie.</p>
+<p class="muted">Terakhir diubah 15 Oktober 2026. Tinjau ulang sebelum rilis publik, terutama bagian iklan dan cookie.</p>
 <h2>Yang diproses di browser</h2>
 <p>Konversi gambar, kompres gambar, ubah ukuran gambar, konversi audio, gabung PDF, pisah PDF, dan gambar ke PDF berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. Untuk konversi audio, browser memuat mesin pemroses (ffmpeg.wasm) dari situs ini sendiri, bukan dari pihak ketiga, lalu menyimpannya di browser.</p>
 <h2>Yang lewat server</h2>
@@ -44,10 +48,11 @@
 <li>File input dan hasil dihapus otomatis paling lama 1 jam setelah selesai.</li>
 <li>Nama file di penyimpanan diacak.</li>
 <li>Kami tidak membaca isi file, dan isi file tidak dicatat di log.</li>
-<li>Kami mencatat metadata teknis sebatas perlu untuk operasi: jenis konversi, ukuran, status, waktu, dan alamat IP untuk pembatasan laju.</li>
+<li>Kami mencatat jenis konversi, status, dan waktu. Alamat IP dipakai sementara di memori untuk pembatasan laju dan tidak disimpan di database.</li>
 </ul>
 <h2>Akun</h2>
-<p>Tidak ada akun. Kami tidak meminta nama atau email untuk memakai tool.</p>
+<p>Kamu dapat memakai tool tanpa akun. Sistem mencatat jumlah konversi browser dan server secara agregat, termasuk penggunaan tanpa akun. Jika mendaftar, kami menyimpan email, nama tampilan, dan hash password untuk mengelola akun. Sesi masuk disimpan dalam cookie HttpOnly. Untuk akun login, riwayat mencatat jenis tool, sumber proses (browser/server), status, dan waktu; nama file serta isi file tidak dicatat. Riwayat disimpan sampai 1 tahun. File hasil tetap dihapus otomatis paling lama 1 jam setelah selesai.</p>
+<p>Admin hanya dapat melihat jumlah penggunaan agregat per hari dan jenis tool, tanpa akses ke file atau riwayat per pengguna.</p>
 <h2>Iklan dan cookie</h2>
 <p>Situs ini direncanakan menampilkan iklan lewat Google AdSense. Saat iklan aktif, Google dapat memakai cookie untuk menampilkan iklan, dan kami akan menampilkan banner persetujuan cookie. Bagian ini harus diperbarui saat iklan dipasang.</p>
 <h2>Kontak</h2>
@@ -66,7 +71,8 @@
   </div>
 </footer>
 <script src="./js/config.js"></script>
-<script src="./js/app.js?v=6fd1ea14" defer></script>
+<script src="./js/accounts.js?v=75c3834d" defer></script>
+<script src="./js/app.js?v=12896d8a" defer></script>
 
 </body>
 </html>

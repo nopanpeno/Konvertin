@@ -14,7 +14,7 @@
 <meta property="og:description" content="Ubah format gambar dan audio, kompres gambar, gabung dan pisah PDF, gambar ke PDF. Tanpa daftar. Diproses di browser, tidak diunggah.">
 <meta property="og:type" content="website">
 <link rel="icon" href="./logo-mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./css/style.css?v=5ea2a3c0">
+<link rel="stylesheet" href="./css/style.css?v=36e044b1">
 </head>
 <body class="">
 <a class="skip" href="#main">Lewati ke isi</a>
@@ -27,6 +27,10 @@
         <li class="nl"><a href="./index.html#cara-kerja">Cara kerja</a></li>
         <li class="nl"><a href="./index.html#privasi">Privasi</a></li>
         <li class="nl"><a href="./index.html#faq">FAQ</a></li>
+        <li><a id="account-link" href="./akun.html">Masuk</a></li>
+        <li id="profile-link-item" hidden><a href="./profil.html">Profil</a></li>
+        <li id="history-link-item" hidden><a href="./riwayat.html">Riwayat</a></li>
+        <li id="admin-link-item" hidden><a href="./admin.html">Admin</a></li>
         <li><a class="btn small" href="./index.html#tool">Mulai konversi</a></li>
       </ul>
     </nav>
@@ -37,8 +41,8 @@
 <section class="hero">
   <div class="wrap">
     <img class="hero-mark" src="./logo-mark.svg" alt="" width="200" height="200">
-    <h1><span class="sr-only">Ubah format file</span><span class="swap" aria-hidden="true">Ubah <b class="slot" id="swap-from"><span class="on">HEIC</span><span>JPG</span><span>PNG</span><span>WEBP</span><span>WAV</span><span>M4A</span><span>FLAC</span><span>Gambar</span></b> ke <b class="slot" id="swap-to"><span class="on">JPG</span><span>PNG</span><span>WEBP</span><span>MP3</span><span>PDF</span></b></span></h1>
-    <p class="lead">Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Tanpa akun.</p>
+    <h1><span class="sr-only">Ubah format file</span><span class="swap" aria-hidden="true">Ubah <b class="slot" id="swap-from"><span class="on">HEIC</span><span>JPG</span><span>PNG</span><span>WEBP</span><span>WAV</span><span>M4A</span><span>FLAC</span><span>PDF</span><span>Word</span><span>PowerPoint</span><span>Excel</span><span>Gambar</span></b> ke <b class="slot" id="swap-to"><span class="on">JPG</span><span>PNG</span><span>WEBP</span><span>MP3</span><span>Word</span><span>PDF</span><span>TXT</span></b></span></h1>
+  <p class="lead">Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Pakai tanpa akun, atau masuk untuk menyimpan riwayat.</p>
     <div class="hero-go">
       <a class="btn" href="#tool">Lihat semua tool</a>
     </div>
@@ -46,7 +50,7 @@
 </section>
 <script>
 (function () {
-  var pairs = [["HEIC","JPG"],["JPG","PNG"],["PNG","JPG"],["WEBP","JPG"],["JPG","WEBP"],["WAV","MP3"],["M4A","MP3"],["FLAC","MP3"],["Gambar","PDF"]];
+  var pairs = [["HEIC","JPG"],["JPG","PNG"],["PNG","JPG"],["WEBP","JPG"],["JPG","WEBP"],["WAV","MP3"],["M4A","MP3"],["FLAC","MP3"],["PDF","Word"],["Word","PDF"],["PowerPoint","PDF"],["Excel","PDF"],["PDF","TXT"],["Word","TXT"],["Gambar","PDF"]];
   var a = document.getElementById("swap-from"), b = document.getElementById("swap-to");
   if (!a || !b || pairs.length < 2) return;
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -95,20 +99,20 @@
       <h3>Kompres</h3>
       <ul class="tool-list">
 <li data-search="kompres gambar kecilkan jpg, png, webp jpg, png, webp kompres-gambar"><a href="./kompres-gambar/index.html"><span><span class="t">Kompres gambar</span><span class="s">Kecilkan JPG, PNG, WEBP</span></span><span class="tag on">Di browser</span></a></li>
-<li data-search="kompres pdf kecilkan pdf, 3 level pdf kompres-pdf"><div class="soon"><span><span class="t">Kompres PDF</span><span class="s">Kecilkan PDF, 3 level</span></span><span class="tag">Segera</span></div></li>
-<li data-search="kompres word kecilkan docx, 3 level docx kompres-word"><div class="soon"><span><span class="t">Kompres Word</span><span class="s">Kecilkan DOCX, 3 level</span></span><span class="tag">Segera</span></div></li>
-<li data-search="kompres powerpoint kecilkan pptx, 3 level pptx kompres-pptx"><div class="soon"><span><span class="t">Kompres PowerPoint</span><span class="s">Kecilkan PPTX, 3 level</span></span><span class="tag">Segera</span></div></li>
+<li data-search="kompres pdf kecilkan pdf, 3 level pdf kompres-pdf"><a href="./kompres-pdf/index.html"><span><span class="t">Kompres PDF</span><span class="s">Kecilkan PDF, 3 level</span></span><span class="tag on">Server</span></a></li>
+<li data-search="kompres word kecilkan docx, 3 level docx kompres-word"><a href="./kompres-word/index.html"><span><span class="t">Kompres Word</span><span class="s">Kecilkan DOCX, 3 level</span></span><span class="tag on">Server</span></a></li>
+<li data-search="kompres powerpoint kecilkan pptx, 3 level pptx kompres-pptx"><a href="./kompres-pptx/index.html"><span><span class="t">Kompres PowerPoint</span><span class="s">Kecilkan PPTX, 3 level</span></span><span class="tag on">Server</span></a></li>
       </ul>
     </div>
     <div class="cat" data-cat="dokumen">
       <h3>Dokumen</h3>
       <ul class="tool-list">
-<li data-search="pdf ke word pdf jadi docx yang bisa diedit pdf pdf-ke-word"><div class="soon"><span><span class="t">PDF ke Word</span><span class="s">PDF jadi DOCX yang bisa diedit</span></span><span class="tag">Segera</span></div></li>
-<li data-search="word ke pdf docx jadi pdf docx word-ke-pdf"><div class="soon"><span><span class="t">Word ke PDF</span><span class="s">DOCX jadi PDF</span></span><span class="tag">Segera</span></div></li>
-<li data-search="pptx ke pdf slide powerpoint jadi pdf pptx pptx-ke-pdf"><div class="soon"><span><span class="t">PPTX ke PDF</span><span class="s">Slide PowerPoint jadi PDF</span></span><span class="tag">Segera</span></div></li>
-<li data-search="excel ke pdf xlsx jadi pdf xlsx excel-ke-pdf"><div class="soon"><span><span class="t">Excel ke PDF</span><span class="s">XLSX jadi PDF</span></span><span class="tag">Segera</span></div></li>
-<li data-search="pdf ke txt ambil teks dari pdf pdf pdf-ke-txt"><div class="soon"><span><span class="t">PDF ke TXT</span><span class="s">Ambil teks dari PDF</span></span><span class="tag">Segera</span></div></li>
-<li data-search="word ke txt ambil teks dari docx docx word-ke-txt"><div class="soon"><span><span class="t">Word ke TXT</span><span class="s">Ambil teks dari DOCX</span></span><span class="tag">Segera</span></div></li>
+<li data-search="pdf ke word pdf jadi docx yang bisa diedit pdf pdf-ke-word"><a href="./pdf-ke-word/index.html"><span><span class="t">PDF ke Word</span><span class="s">PDF jadi DOCX yang bisa diedit</span></span><span class="tag on">Server</span></a></li>
+<li data-search="word ke pdf docx jadi pdf docx word-ke-pdf"><a href="./word-ke-pdf/index.html"><span><span class="t">Word ke PDF</span><span class="s">DOCX jadi PDF</span></span><span class="tag on">Server</span></a></li>
+<li data-search="pptx ke pdf slide powerpoint jadi pdf pptx pptx-ke-pdf"><a href="./pptx-ke-pdf/index.html"><span><span class="t">PPTX ke PDF</span><span class="s">Slide PowerPoint jadi PDF</span></span><span class="tag on">Server</span></a></li>
+<li data-search="excel ke pdf xlsx jadi pdf xlsx excel-ke-pdf"><a href="./excel-ke-pdf/index.html"><span><span class="t">Excel ke PDF</span><span class="s">XLSX jadi PDF</span></span><span class="tag on">Server</span></a></li>
+<li data-search="pdf ke txt ambil teks dari pdf pdf pdf-ke-txt"><a href="./pdf-ke-txt/index.html"><span><span class="t">PDF ke TXT</span><span class="s">Ambil teks dari PDF</span></span><span class="tag on">Server</span></a></li>
+<li data-search="word ke txt ambil teks dari docx docx word-ke-txt"><a href="./word-ke-txt/index.html"><span><span class="t">Word ke TXT</span><span class="s">Ambil teks dari DOCX</span></span><span class="tag on">Server</span></a></li>
 <li data-search="gabung pdf satukan beberapa pdf jadi satu pdf gabung-pdf"><a href="./gabung-pdf/index.html"><span><span class="t">Gabung PDF</span><span class="s">Satukan beberapa PDF jadi satu</span></span><span class="tag on">Di browser</span></a></li>
 <li data-search="pisah pdf ambil halaman tertentu atau pecah per halaman pdf pisah-pdf"><a href="./pisah-pdf/index.html"><span><span class="t">Pisah PDF</span><span class="s">Ambil halaman tertentu atau pecah per halaman</span></span><span class="tag on">Di browser</span></a></li>
 <li data-search="gambar ke pdf jpg, png, webp, heic jadi satu pdf jpg, png, webp, heic gambar-ke-pdf"><a href="./gambar-ke-pdf/index.html"><span><span class="t">Gambar ke PDF</span><span class="s">JPG, PNG, WEBP, HEIC jadi satu PDF</span></span><span class="tag on">Di browser</span></a></li>
@@ -181,7 +185,8 @@
   </div>
 </footer>
 <script src="./js/config.js"></script>
-<script src="./js/app.js?v=6fd1ea14" defer></script>
+<script src="./js/accounts.js?v=75c3834d" defer></script>
+<script src="./js/app.js?v=12896d8a" defer></script>
 
 </body>
 </html>

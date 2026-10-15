@@ -21,7 +21,7 @@ Konverter file serbaguna (PRD v1.2). Status: Modul A, B, C, dan D sudah ada vers
 Edit `scripts/tools.json`, lalu build ulang dan commit hasilnya di `frontend/`:
 ```bash
 npm run build         # tool server aktif, API satu origin (dipakai backend)
-npm run build:static  # tanpa backend: tool server berlabel "Segera"
+npm run build:static  # GitHub Pages: tool server "Segera", halaman akun disembunyikan
 # env lain: API_BASE=https://api.contoh.id  ADS=1  SITE_URL=https://domain-asli
 ```
 
@@ -44,6 +44,8 @@ docker compose up --build   # lalu buka http://localhost:8000
 ```
 Catatan: kalau `API_BASE` dikosongkan saat build, tool server diberi label "Segera" dan upload dinonaktifkan oleh desain (lihat `scripts/build.mjs`).
 
+Workflow `.github/workflows/pages.yml` otomatis membangun mode statis tersebut dari `main` dan menerbitkan folder `frontend/`. Di mode Pages, tool server dan UI akun tidak tersedia; API FastAPI, riwayat akun, dan dashboard admin baru aktif jika frontend disajikan satu origin dengan backend (`API_BASE=/`).
+
 ## Jalankan lokal
 ```bash
 cd backend
@@ -58,6 +60,17 @@ Hanya gambar JPG dan PNG di `word/media/` dan `ppt/media/` yang diperkecil (form
 
 ## API
 `POST /api/jobs` (file + type) -> 202 `{job_id}` · `GET /api/jobs/{id}` · `GET /api/jobs/{id}/download` · `DELETE /api/jobs/{id}` (batal) · `POST /api/detect` · `GET /api/conversions`
+
+## Akun, riwayat, dan statistik admin
+
+- Pendaftaran/login memakai email dan password (hash PBKDF2); sesi ada di cookie HttpOnly, SameSite=Lax. HTTPS wajib di produksi.
+- Halaman akun: `/akun.html`, profil `/profil.html`, riwayat `/riwayat.html`, dan penggunaan admin `/admin.html`.
+- Riwayat pengguna hanya menyimpan jenis tool, sumber proses, status, dan waktu. File serta nama file tidak disimpan di riwayat. Baris riwayat dan agregat penggunaan dihapus setelah 365 hari; file hasil tetap mengikuti TTL satu jam.
+- Statistik admin menampilkan jumlah penggunaan per hari dan jenis tool secara agregat. Admin tidak mendapat akses ke riwayat pengguna atau file.
+- Salin `.env.example` menjadi `.env`, lalu isi `KONVERTIN_ADMIN_EMAIL` dan `KONVERTIN_ADMIN_PASSWORD` dengan email admin dan password acak minimal 10 karakter sebelum `docker compose up --build`. Jika email itu sudah terdaftar, startup akan memberinya role admin. `.env` sudah diabaikan Git.
+- Untuk HTTP lokal saja, set `KONVERTIN_SESSION_COOKIE_SECURE=0`. Di VPS, biarkan `1` dan pasang HTTPS pada reverse proxy.
+
+Endpoint akun: `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/me`, `PATCH /api/auth/profile`, `GET /api/history`, dan `GET /api/admin/usage?days=7|30|90`.
 
 ## Beda dari PRD (sengaja, untuk tahap awal)
 - Antrean: thread pool + SQLite, bukan Redis/RQ; storage disk lokal, bukan S3/R2 + presigned URL. `jobs.py` sengaja kecil supaya mudah diganti.

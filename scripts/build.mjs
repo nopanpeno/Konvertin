@@ -1,8 +1,9 @@
 // Bangun halaman statis dari tools.json.
 // Pakai: node scripts/build.mjs
-// Output: frontend/. Env opsional: API_BASE ("/" = backend satu origin, atau URL backend; kosong = tool server berlabel Segera), ADS=1 + ADSENSE_ID + ADSENSE_SLOT (iklan), SITE_URL (untuk sitemap), EMAIL (email kontak asli; default novankaresa@students.amikom.ac.id)
+// Output: frontend/. API_BASE="/" mengaktifkan tool server dan UI akun satu origin; kosong = build GitHub Pages tanpa UI akun dan tool server berlabel Segera.
+// Env opsional lain: API_BASE (URL backend), ADS=1 + ADSENSE_ID + ADSENSE_SLOT (iklan), SITE_URL (untuk sitemap), EMAIL (email kontak asli; default novankaresa@students.amikom.ac.id)
 // FFMPEG_CORE_BASE: URL unduhan mesin audio. Kosong/tidak diisi = pakai salinan lokal di vendor/ffmpeg-core/ (tanpa CDN pihak ketiga).
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, unlinkSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
@@ -12,6 +13,9 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "frontend");
 const ver = (f) => createHash("md5").update(readFileSync(join(root, f))).digest("hex").slice(0, 8);
 const data = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "tools.json"), "utf8"));
 const API_BASE = process.env.API_BASE || "";
+// Akun dan sesi saat ini hanya mendukung API satu origin; jangan tampilkan UI akun pada build statis.
+const ACCOUNT_UI = API_BASE === "/";
+const STATIC_MODE = !API_BASE;
 const ADS = process.env.ADS === "1";
 const SITE_URL = (process.env.SITE_URL || "").replace(/\/$/, "");
 const EMAIL = process.env.EMAIL || "novankaresa@students.amikom.ac.id";
@@ -77,6 +81,10 @@ ${ADS_LIVE ? `<script async src="https://pagead2.googlesyndication.com/pagead/js
         <li class="nl"><a href="${homeHref}#cara-kerja">Cara kerja</a></li>
         <li class="nl"><a href="${homeHref}#privasi">Privasi</a></li>
         <li class="nl"><a href="${homeHref}#faq">FAQ</a></li>
+        ${ACCOUNT_UI ? `<li><a id="account-link" href="${rootHref}akun.html">Masuk</a></li>
+        <li id="profile-link-item" hidden><a href="${rootHref}profil.html">Profil</a></li>
+        <li id="history-link-item" hidden><a href="${rootHref}riwayat.html">Riwayat</a></li>
+        <li id="admin-link-item" hidden><a href="${rootHref}admin.html">Admin</a></li>` : ""}
         <li><a class="btn small" href="${homeHref}#tool">Mulai konversi</a></li>
       </ul>
     </nav>
@@ -97,6 +105,7 @@ ${body}
   </div>
 </footer>
 <script src="${rootHref}js/config.js"></script>
+${ACCOUNT_UI ? `<script src="${rootHref}js/accounts.js?v=${ver("js/accounts.js")}" defer></script>` : ""}
 <script src="${rootHref}js/app.js?v=${ver("js/app.js")}" defer></script>
 ${scripts}
 </body>
@@ -143,7 +152,7 @@ const index = layout({
   <div class="wrap">
     <img class="hero-mark" src="./logo-mark.svg" alt="" width="200" height="200">
     <h1><span class="sr-only">Ubah format file</span><span class="swap" aria-hidden="true">Ubah ${slot("swap-from", fromLabels)} ke ${slot("swap-to", toLabels)}</span></h1>
-    <p class="lead">Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Tanpa akun.</p>
+  <p class="lead">${STATIC_MODE ? "Tool yang tersedia di GitHub Pages diproses di browser, jadi file tidak keluar dari perangkatmu. Tool yang membutuhkan server belum aktif di versi ini." : ACCOUNT_UI ? "Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Pakai tanpa akun, atau masuk untuk menyimpan riwayat." : "Gambar dan audio diproses di browser; dokumen yang butuh server akan diunggah dan dihapus otomatis. Versi ini belum menyediakan akun atau riwayat."}</p>
     <div class="hero-go">
       <a class="btn" href="#tool">Lihat semua tool</a>
     </div>
@@ -322,8 +331,7 @@ function toolPage(t) {
     <h1>${esc(t.h1)}</h1>
     <p>${esc(t.desc)}</p>
   </div>
-  ${t.warning ? `<div class="notice"><b>Perlu diketahui</b>${esc(t.warning)}</div>` : ""}
-  ${soon ? `<div class="notice"><b>Segera</b>Tool ini butuh server dan belum aktif. Tool gambar, audio, dan PDF dasar di beranda sudah bisa dipakai.${SITE_URL ? ` <a href="${rootHref}index.html#tool">Lihat tool yang sudah aktif</a>.` : ""}</div>` : ""}
+${[t.warning ? `  <div class="notice"><b>Perlu diketahui</b>${esc(t.warning)}</div>` : "", soon ? `  <div class="notice"><b>Segera</b>Tool ini butuh server dan belum aktif. Tool gambar, audio, dan PDF dasar di beranda sudah bisa dipakai.${SITE_URL ? ` <a href="${rootHref}index.html#tool">Lihat tool yang sudah aktif</a>.` : ""}</div>` : ""].filter(Boolean).join("\n")}
   <div class="notice err" id="alert" role="alert" hidden><b>Ada masalah</b><span id="alert-text"></span></div>
 
   <div class="tool-grid" id="tool" ${dataAttrs}>
@@ -373,23 +381,35 @@ write("404.html", layout({
   body: `<div class="wrap nf"><h1>Halaman tidak ada</h1><p class="muted">Alamat yang kamu buka tidak ditemukan. Mungkin salah ketik, atau tool itu belum dibuat.</p><a class="btn" href="./index.html#tool">Lihat semua tool</a></div>`,
 }));
 
+const accountPages = [
+  ["akun.html", "Akun | Konvertin", `<div class="wrap account-wrap"><h1>Akun Konvertin</h1><p id="account-message" class="notice" hidden></p><section id="account-signed-in" class="account-card" hidden><h2 id="welcome-name"></h2><p>Kamu sudah masuk.</p><p><a class="btn" href="./riwayat.html">Lihat riwayat</a> <button class="btn secondary" id="logout-button" type="button">Keluar</button></p></section><div id="account-forms" class="account-columns"><form id="login-form" class="account-card"><h2>Masuk</h2><label>Email<input type="email" name="email" autocomplete="email" required maxlength="254"></label><label>Password<input type="password" name="password" autocomplete="current-password" required></label><button class="btn" type="submit">Masuk</button></form><form id="register-form" class="account-card"><h2>Buat akun</h2><label>Nama tampilan<input type="text" name="display_name" autocomplete="name" required maxlength="80"></label><label>Email<input type="email" name="email" autocomplete="email" required maxlength="254"></label><label>Password<input type="password" name="password" autocomplete="new-password" required minlength="10" maxlength="256"><span class="hint">Minimal 10 karakter.</span></label><button class="btn" type="submit">Daftar</button></form></div><p class="muted">Riwayat hanya menyimpan jenis tool, waktu, dan status. File hasil tetap sementara dan dihapus otomatis.</p></div>`],
+  ["profil.html", "Profil | Konvertin", `<div class="wrap account-wrap"><h1>Profil</h1><p id="account-message" class="notice" hidden></p><form id="profile-form" class="account-card"><label>Nama tampilan<input type="text" name="display_name" required maxlength="80"></label><label>Email<input type="email" name="email" disabled></label><button class="btn" type="submit">Simpan profil</button></form></div>`],
+  ["riwayat.html", "Riwayat konversi | Konvertin", `<div class="wrap account-wrap"><h1>Riwayat konversi</h1><p id="account-message" class="notice" hidden></p><div id="history-list" class="account-card"><p>Memuat riwayat...</p></div><p class="muted">Riwayat berisi metadata aktivitas. File hasil tidak disimpan bersama riwayat.</p></div>`],
+  ["admin.html", "Penggunaan | Konvertin", `<div class="wrap account-wrap"><h1>Penggunaan layanan</h1><p id="account-message" class="notice" hidden></p><div class="account-card"><label>Rentang waktu<select id="usage-days"><option value="7">7 hari</option><option value="30" selected>30 hari</option><option value="90">90 hari</option></select></label><p id="usage-total" class="usage-total"></p><canvas id="usage-chart" width="900" height="300" aria-label="Grafik konversi per hari"></canvas><h2>Tool paling sering dipakai</h2><div id="usage-types"></div></div></div>`],
+];
+for (const [path, title, body] of accountPages) {
+  if (ACCOUNT_UI) write(path, layout({ title, desc: title, path: `/${path}`, body, noindex: true }));
+  else if (existsSync(join(root, path))) unlinkSync(join(root, path));
+}
+
 write("privasi.html", layout({
   title: "Kebijakan Privasi | Konvertin", desc: "Apa yang diproses di browser, apa yang lewat server, dan kapan file dihapus.", path: "/privasi.html",
   body: `<div class="wrap prose">
 <h1>Kebijakan privasi</h1>
-<p class="muted">Draft. Terakhir diubah 9 Oktober 2026. Tinjau ulang sebelum rilis publik, terutama bagian iklan dan cookie.</p>
+<p class="muted">Terakhir diubah 15 Oktober 2026. Tinjau ulang sebelum rilis publik, terutama bagian iklan dan cookie.</p>
 <h2>Yang diproses di browser</h2>
 <p>Konversi gambar, kompres gambar, ubah ukuran gambar, konversi audio, gabung PDF, pisah PDF, dan gambar ke PDF berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. ${FFMPEG_NOTE}</p>
-<h2>Yang lewat server</h2>
-<p>Konversi dokumen (PDF ke Word, Word, PowerPoint, Excel ke PDF) dan kompres PDF, Word, PowerPoint membutuhkan server. File kamu diunggah, diproses di wadah terisolasi tanpa akses internet, dan hasilnya tersedia untuk kamu unduh.</p>
-<ul>
+<h2>${STATIC_MODE ? "Privasi versi GitHub Pages" : "Yang lewat server"}</h2>
+<p>${STATIC_MODE ? "Versi GitHub Pages ini hanya menyediakan tool yang berjalan di browser. Tool yang memerlukan server belum aktif." : "Konversi dokumen (PDF ke Word, Word, PowerPoint, Excel ke PDF) dan kompres PDF, Word, PowerPoint membutuhkan server. File kamu diunggah, diproses di wadah terisolasi tanpa akses internet, dan hasilnya tersedia untuk kamu unduh."}</p>
+${!STATIC_MODE ? `<ul>
 <li>File input dan hasil dihapus otomatis paling lama 1 jam setelah selesai.</li>
 <li>Nama file di penyimpanan diacak.</li>
 <li>Kami tidak membaca isi file, dan isi file tidak dicatat di log.</li>
-<li>Kami mencatat metadata teknis sebatas perlu untuk operasi: jenis konversi, ukuran, status, waktu, dan alamat IP untuk pembatasan laju.</li>
-</ul>
+<li>Kami mencatat jenis konversi, status, dan waktu. Alamat IP dipakai sementara di memori untuk pembatasan laju dan tidak disimpan di database.</li>
+</ul>` : `<p>Tool browser memproses file di perangkatmu. File tidak dikirim ke server Konvertin.</p>`}
 <h2>Akun</h2>
-<p>Tidak ada akun. Kami tidak meminta nama atau email untuk memakai tool.</p>
+${ACCOUNT_UI ? `<p>Kamu dapat memakai tool tanpa akun. Sistem mencatat jumlah konversi browser dan server secara agregat, termasuk penggunaan tanpa akun. Jika mendaftar, kami menyimpan email, nama tampilan, dan hash password untuk mengelola akun. Sesi masuk disimpan dalam cookie HttpOnly. Untuk akun login, riwayat mencatat jenis tool, sumber proses (browser/server), status, dan waktu; nama file serta isi file tidak dicatat. Riwayat disimpan sampai 1 tahun. File hasil tetap dihapus otomatis paling lama 1 jam setelah selesai.</p>
+<p>Admin hanya dapat melihat jumlah penggunaan agregat per hari dan jenis tool, tanpa akses ke file atau riwayat per pengguna.</p>` : `<p>Fitur akun, riwayat, dan dashboard admin belum tersedia di situs GitHub Pages ini.</p>`}
 <h2>Iklan dan cookie</h2>
 <p>Situs ini direncanakan menampilkan iklan lewat Google AdSense. Saat iklan aktif, Google dapat memakai cookie untuk menampilkan iklan, dan kami akan menampilkan banner persetujuan cookie. Bagian ini harus diperbarui saat iklan dipasang.</p>
 <h2>Kontak</h2>
@@ -401,9 +421,9 @@ write("tentang.html", layout({
   title: "Tentang Konvertin", desc: "Apa itu Konvertin, siapa yang membuatnya, dan kenapa sebagian besar konversi berjalan di browser.", path: "/tentang.html",
   body: `<div class="wrap prose">
 <h1>Tentang Konvertin</h1>
-<p>Konvertin adalah konverter file berbahasa Indonesia untuk pekerjaan sehari-hari: mengubah format gambar dan audio, memperkecil ukuran gambar, serta (segera) mengubah dokumen PDF, Word, PowerPoint, dan Excel.</p>
+<p>Konvertin adalah konverter file berbahasa Indonesia untuk pekerjaan sehari-hari: mengubah format gambar dan audio, memperkecil ukuran gambar, serta mengubah dokumen PDF, Word, PowerPoint, dan Excel.</p>
 <h2>Kenapa dibuat</h2>
-<p>Banyak situs konverter meminta kita mengunggah file ke server yang tidak jelas, memasang iklan di sekitar tombol unduh, atau mewajibkan akun. Konvertin dibuat dengan arah sebaliknya: tanpa akun, dan sebisa mungkin file tidak meninggalkan perangkatmu.</p>
+<p>${ACCOUNT_UI ? "Konvertin bisa dipakai tanpa akun, dan sebisa mungkin file tidak meninggalkan perangkatmu. Akun opsional menyimpan riwayat metadata konversi, bukan file." : STATIC_MODE ? "Versi GitHub Pages ini memakai tool browser dan tidak menyediakan akun. File yang diproses tool browser tidak diunggah ke server." : "Gambar dan audio diproses di browser; dokumen dikirim ke backend untuk diproses. Versi ini belum menyediakan akun."}</p>
 <h2>Cara kerjanya</h2>
 <ul>
 <li><b>Gambar dan audio</b> diproses di browser. File tidak diunggah ke server kami.</li>
@@ -465,6 +485,7 @@ if (SITE_URL) {
 }
 if (ADS_LIVE) write("ads.txt", `google.com, ${ADSENSE_ID.replace("ca-", "")}, DIRECT, f08c47fec0942fa0\n`);
 write("robots.txt", `User-agent: *\nAllow: /\n${SITE_URL ? `Sitemap: ${SITE_URL}/sitemap.xml\n` : ""}`);
+write(".nojekyll", "");
 write("_headers", `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/vendor/ffmpeg-core/*\n  Cache-Control: public, max-age=31536000, immutable\n`);
 
 console.log(`Selesai: ${tools.length} halaman tool + beranda. API_BASE=${API_BASE || "(kosong)"} ADS=${ADS}`);

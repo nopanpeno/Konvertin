@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from . import config, jobs, ratelimit
+from . import accounts, config, jobs, ratelimit
 from .errors import ConvertError
 from .validation import COMPRESS_JOB, CONVERSIONS, KIND_LABEL, check_options, detect_kind, validate_upload
 
@@ -20,6 +20,7 @@ _stop = threading.Event()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     config.DATA_DIR.mkdir(parents=True, exist_ok=True)
+    accounts.init()
     jobs.init()
     t = threading.Thread(target=jobs.cleanup_loop, args=(_stop,), daemon=True)
     t.start()
@@ -60,9 +61,138 @@ def _public(row) -> dict:
     return d
 
 
+def _account_user(request: Request, admin: bool = False):
+    user = accounts.current_user(request)
+    if user is None:
+        raise ConvertError("Silakan masuk untuk melanjutkan.", 401)
+    if admin and user["role"] != "admin":
+        raise ConvertError("Akses admin diperlukan.", 403)
+    return user
+
+
+def _same_origin(request: Request) -> None:
+    origin = request.headers.get("origin")
+    if origin:
+        from urllib.parse import urlsplit
+        parsed = urlsplit(origin)
+        if parsed.netloc.lower() != request.headers.get("host", "").lower():
+            raise ConvertError("Permintaan lintas situs ditolak.", 403)
+
+
+def _user_json(user):
+    return {"id": user["user_id"], "email": user["email"], "display_name": user["display_name"], "role": user["role"]}
+
+
+def _user_by_id(user_id: int):
+    with accounts._db() as c:
+        return c.execute("SELECT user_id,email,display_name,role FROM users WHERE user_id=?", (user_id,)).fetchone()
+
+
+def _set_session(response, token: str):
+    response.set_cookie(accounts.COOKIE, token, max_age=config.SESSION_TTL_SEC,
+                        httponly=True, secure=config.SESSION_COOKIE_SECURE,
+                        samesite="lax", path="/")
+
+
+async def _body(request: Request):
+    try:
+        data = await request.json()
+        if not isinstance(data, dict):
+            raise ValueError
+        return data
+    except (ValueError, json.JSONDecodeError):
+        raise ConvertError("Isi permintaan tidak valid.")
+
+
 @app.get("/api/health")
 def health():
     return {"ok": True}
+
+
+@app.post("/api/auth/register", status_code=201)
+async def register(request: Request):
+    _same_origin(request)
+    if not ratelimit.allow_auth(_client_ip(request)):
+        raise ConvertError("Terlalu banyak percobaan masuk atau daftar. Coba lagi nanti.", 429)
+    data = await _body(request)
+    user_id, error = accounts.create_user(str(data.get("email", "")), str(data.get("password", "")), str(data.get("display_name", "")))
+    if error:
+        raise ConvertError(error, 409 if "terdaftar" in error else 400)
+    token = accounts.new_session(user_id)
+    row = _user_by_id(user_id)
+    response = JSONResponse({"user": _user_json(row)}, status_code=201)
+    _set_session(response, token)
+    return response
+
+
+@app.post("/api/auth/login")
+async def login(request: Request):
+    _same_origin(request)
+    if not ratelimit.allow_auth(_client_ip(request)):
+        raise ConvertError("Terlalu banyak percobaan masuk atau daftar. Coba lagi nanti.", 429)
+    data = await _body(request)
+    row = accounts.authenticate(str(data.get("email", "")), str(data.get("password", "")))
+    if row is None:
+        raise ConvertError("Email atau password salah.", 401)
+    token = accounts.new_session(row["user_id"])
+    response = JSONResponse({"user": _user_json(row)})
+    _set_session(response, token)
+    return response
+
+
+@app.post("/api/auth/logout")
+def logout(request: Request):
+    _same_origin(request)
+    accounts.delete_session(request.cookies.get(accounts.COOKIE))
+    response = JSONResponse({"ok": True})
+    response.delete_cookie(accounts.COOKIE, path="/", httponly=True, secure=config.SESSION_COOKIE_SECURE, samesite="lax")
+    return response
+
+
+@app.get("/api/auth/me")
+def me(request: Request):
+    user = accounts.current_user(request)
+    return {"user": _user_json(user) if user else None}
+
+
+@app.patch("/api/auth/profile")
+async def profile(request: Request):
+    _same_origin(request)
+    user = _account_user(request)
+    data = await _body(request)
+    ok, error = accounts.update_profile(user["user_id"], str(data.get("display_name", "")))
+    if not ok:
+        raise ConvertError(error, 409 if "dipakai" in error else 400)
+    row = _user_by_id(user["user_id"])
+    return {"user": _user_json(row)}
+
+
+@app.get("/api/history")
+def get_history(request: Request):
+    user = _account_user(request)
+    return {"history": [dict(r) for r in accounts.history(user["user_id"])]}
+
+
+@app.post("/api/history/browser", status_code=201)
+async def record_browser_history(request: Request):
+    _same_origin(request)
+    if not ratelimit.allow_usage(_client_ip(request)):
+        raise ConvertError("Terlalu banyak catatan penggunaan.", 429)
+    data = await _body(request)
+    tool_type = str(data.get("tool_type", ""))
+    if tool_type not in accounts.BROWSER_TOOL_TYPES:
+        raise ConvertError("Jenis tool tidak valid.")
+    user = accounts.current_user(request)
+    accounts.record_browser_usage(user["user_id"] if user else None, tool_type)
+    return {"ok": True}
+
+
+@app.get("/api/admin/usage")
+def admin_usage(request: Request, days: int = 30):
+    _account_user(request, admin=True)
+    if days not in (7, 30, 90):
+        raise ConvertError("Rentang waktu harus 7, 30, atau 90 hari.")
+    return accounts.usage(days)
 
 
 @app.get("/api/conversions")
@@ -130,7 +260,8 @@ async def create_job(request: Request, file: UploadFile = File(...), type: str =
     except BaseException:
         tmp.unlink(missing_ok=True)
         raise
-    job_id = jobs.create(type, tmp, file.filename or "dokumen", opts)
+    user = accounts.current_user(request)
+    job_id = jobs.create(type, tmp, file.filename or "dokumen", opts, user["user_id"] if user else None)
     return {"job_id": job_id, "status": "queued", "status_url": f"/api/jobs/{job_id}"}
 
 
