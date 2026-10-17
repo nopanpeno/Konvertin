@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Konvertin: Konverter File Gambar, Audio, dan Dokumen</title>
-<meta name="description" content="Ubah format gambar dan audio, kompres gambar, gabung dan pisah PDF, gambar ke PDF. Tanpa daftar. Diproses di browser, tidak diunggah.">
+<title>Konvertin: Konverter Dokumen, Spreadsheet, Presentasi, Gambar, dan Audio</title>
+<meta name="description" content="Konversi file dokumen, spreadsheet, presentasi, gambar, dan audio di browser atau backend. File server dihapus otomatis.">
 
 
 
 
 <meta name="color-scheme" content="light">
-<meta property="og:title" content="Konvertin: Konverter File Gambar, Audio, dan Dokumen">
-<meta property="og:description" content="Ubah format gambar dan audio, kompres gambar, gabung dan pisah PDF, gambar ke PDF. Tanpa daftar. Diproses di browser, tidak diunggah.">
+<meta property="og:title" content="Konvertin: Konverter Dokumen, Spreadsheet, Presentasi, Gambar, dan Audio">
+<meta property="og:description" content="Konversi file dokumen, spreadsheet, presentasi, gambar, dan audio di browser atau backend. File server dihapus otomatis.">
 <meta property="og:type" content="website">
 <link rel="icon" href="./logo-mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./css/style.css?v=36e044b1">
+<link rel="stylesheet" href="./css/style.css?v=cf36b5cd">
 </head>
-<body class="">
+<body class=" home-page">
 <a class="skip" href="#main">Lewati ke isi</a>
 <header class="nav">
   <div class="wrap">
@@ -27,10 +27,18 @@
         <li class="nl"><a href="./index.html#cara-kerja">Cara kerja</a></li>
         <li class="nl"><a href="./index.html#privasi">Privasi</a></li>
         <li class="nl"><a href="./index.html#faq">FAQ</a></li>
-        <li><a id="account-link" href="./akun.html">Masuk</a></li>
-        <li id="profile-link-item" hidden><a href="./profil.html">Profil</a></li>
-        <li id="history-link-item" hidden><a href="./riwayat.html">Riwayat</a></li>
-        <li id="admin-link-item" hidden><a href="./admin.html">Admin</a></li>
+        <li id="account-login-item"><a id="account-link" href="./akun.html">Masuk</a></li>
+        <li id="account-menu-item" hidden>
+          <details class="account-menu">
+            <summary id="account-menu-name">Akun</summary>
+            <div class="account-menu-panel">
+              <a id="account-dashboard-link" data-user-href="./profil.html" data-admin-href="./admin.html" href="./profil.html">Dashboard</a>
+              <a id="account-settings-link" data-user-href="./profil.html#settings" data-admin-href="./admin.html#admin-tools" href="./profil.html#settings">Pengaturan</a>
+              <a id="account-history-link" href="./riwayat.html">Riwayat konversi</a>
+              <button id="account-menu-logout" data-account-logout type="button">Keluar</button>
+            </div>
+          </details>
+        </li>
         <li><a class="btn small" href="./index.html#tool">Mulai konversi</a></li>
       </ul>
     </nav>
@@ -39,18 +47,54 @@
 <main id="main">
 
 <section class="hero">
-  <div class="wrap">
-    <img class="hero-mark" src="./logo-mark.svg" alt="" width="200" height="200">
-    <h1><span class="sr-only">Ubah format file</span><span class="swap" aria-hidden="true">Ubah <b class="slot" id="swap-from"><span class="on">HEIC</span><span>JPG</span><span>PNG</span><span>WEBP</span><span>WAV</span><span>M4A</span><span>FLAC</span><span>PDF</span><span>Word</span><span>PowerPoint</span><span>Excel</span><span>Gambar</span></b> ke <b class="slot" id="swap-to"><span class="on">JPG</span><span>PNG</span><span>WEBP</span><span>MP3</span><span>Word</span><span>PDF</span><span>TXT</span></b></span></h1>
-    <p class="lead">Gambar dan audio diproses di browser, jadi file tidak keluar dari perangkatmu. Dokumen diproses di server dan dihapus paling lama 1 jam setelah selesai. Pakai tanpa akun, atau masuk untuk menyimpan riwayat.</p>
-    <div class="hero-go">
-      <a class="btn" href="#tool">Lihat semua tool</a>
+  <div class="wrap hero-layout">
+    <div class="hero-copy">
+      <p class="hero-eyebrow"><span aria-hidden="true"></span> Ruang konversi file yang praktis</p>
+      <h1>Ubah file.<br><span>Lebih mudah.</span></h1>
+      <div class="hero-conversion">
+        <span class="hero-conversion-label">PILIHAN FORMAT</span>
+        <div class="swap" aria-label="Contoh format yang didukung">
+          <b class="slot" id="swap-from"><span class="on">HEIC</span><span>JPG</span><span>PNG</span><span>WEBP</span><span>WAV</span><span>M4A</span><span>FLAC</span><span>PDF</span><span>Word</span><span>PowerPoint</span><span>Excel</span><span>Gambar</span><span>TXT</span><span>CSV</span><span>POWERPOINT</span></b>
+          <span class="swap-arrow" aria-hidden="true">→</span>
+          <b class="slot" id="swap-to"><span class="on">JPG</span><span>PNG</span><span>WEBP</span><span>MP3</span><span>Word</span><span>PDF</span><span>TXT</span><span>ODT</span><span>MARKDOWN</span><span>ODS</span><span>CSV</span><span>Excel</span><span>ODP</span></b>
+        </div>
+      </div>
+      <p class="lead">Gambar dan audio diproses di browser. Konversi Office, spreadsheet, dan presentasi tertentu diproses di server lalu file dihapus paling lama 1 jam setelah selesai. Pakai tanpa akun, atau masuk untuk menyimpan riwayat.</p>
+      <div class="hero-go">
+        <a class="btn" href="#tool">Jelajahi semua tool <span aria-hidden="true">→</span></a>
+        <a class="btn ghost" href="#cara-kerja">Lihat cara kerja</a>
+      </div>
+      <ul class="hero-highlights" aria-label="Keunggulan Konvertin">
+        <li><span aria-hidden="true">✓</span> Tanpa instalasi</li>
+        <li><span aria-hidden="true">✓</span> File server dihapus otomatis</li>
+      </ul>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-visual-glow"></div>
+      <div class="hero-orbit hero-orbit-back"></div>
+      <div class="hero-orbit hero-orbit-front"></div>
+      <div class="hero-brand">
+        <img src="./logo-mark.svg" alt="" width="184" height="184">
+      </div>
+      <div class="hero-file-card hero-file-doc">
+        <span class="hero-file-icon">DOC</span>
+        <span><strong>Dokumen</strong><small>Siap dikonversi</small></span>
+        <span class="hero-file-check">✓</span>
+      </div>
+      <div class="hero-file-card hero-file-image">
+        <span class="hero-file-icon">IMG</span>
+        <span><strong>Gambar</strong><small>JPG · PNG · WEBP</small></span>
+      </div>
+      <div class="hero-format-chip hero-chip-top">XLSX <span>→</span> CSV</div>
+      <div class="hero-format-chip hero-chip-bottom">WAV <span>→</span> MP3</div>
+      <span class="hero-spark hero-spark-one"></span>
+      <span class="hero-spark hero-spark-two"></span>
     </div>
   </div>
 </section>
 <script>
 (function () {
-  var pairs = [["HEIC","JPG"],["JPG","PNG"],["PNG","JPG"],["WEBP","JPG"],["JPG","WEBP"],["WAV","MP3"],["M4A","MP3"],["FLAC","MP3"],["PDF","Word"],["Word","PDF"],["PowerPoint","PDF"],["Excel","PDF"],["PDF","TXT"],["Word","TXT"],["Gambar","PDF"]];
+  var pairs = [["HEIC","JPG"],["JPG","PNG"],["PNG","JPG"],["WEBP","JPG"],["JPG","WEBP"],["WAV","MP3"],["M4A","MP3"],["FLAC","MP3"],["PDF","Word"],["Word","PDF"],["PowerPoint","PDF"],["Excel","PDF"],["PDF","TXT"],["Word","TXT"],["Gambar","PDF"],["Word","ODT"],["Word","MARKDOWN"],["TXT","Word"],["Excel","ODS"],["Excel","CSV"],["CSV","Excel"],["POWERPOINT","ODP"],["POWERPOINT","TXT"]];
   var a = document.getElementById("swap-from"), b = document.getElementById("swap-to");
   if (!a || !b || pairs.length < 2) return;
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -62,17 +106,27 @@
     i = (i + 1) % pairs.length;
     show(a, pairs[i][0]);
     show(b, pairs[i][1]);
-  }, 1000);
+  }, 1800);
 })();
 </script>
 
 <section class="block" id="tool">
-  <div class="wrap">
-    <h2>Pilih konversi</h2>
-    <div class="search">
-      <label class="sr-only" for="q">Cari tool</label>
-      <input id="q" type="search" placeholder="Cari: heic, kompres, mp3..." autocomplete="off">
-      <kbd aria-hidden="true">Ctrl K</kbd>
+  <div class="wrap home-section-wrap">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker"><span>01</span> WORKSPACE</p>
+        <h2>Pilih konversi</h2>
+        <p class="section-intro">Temukan tool yang pas, pilih format, lalu lanjutkan dalam beberapa klik.</p>
+      </div>
+      <div class="tool-count"><strong>32</strong><span>tool tersedia</span></div>
+    </div>
+    <div class="tool-browser">
+      <div class="search">
+        <label class="sr-only" for="q">Cari tool</label>
+        <input id="q" type="search" placeholder="Cari format atau tool..." autocomplete="off">
+        <kbd aria-hidden="true">Ctrl K</kbd>
+      </div>
+      <span class="search-hint">Pilih kategori untuk mulai menjelajah</span>
     </div>
     <div class="cat" data-cat="gambar">
       <h3>Gambar</h3>
@@ -109,13 +163,31 @@
       <ul class="tool-list">
 <li data-search="pdf ke word pdf jadi docx yang bisa diedit pdf pdf-ke-word"><a href="./pdf-ke-word/index.html"><span><span class="t">PDF ke Word</span><span class="s">PDF jadi DOCX yang bisa diedit</span></span><span class="tag on">Server</span></a></li>
 <li data-search="word ke pdf docx jadi pdf docx word-ke-pdf"><a href="./word-ke-pdf/index.html"><span><span class="t">Word ke PDF</span><span class="s">DOCX jadi PDF</span></span><span class="tag on">Server</span></a></li>
-<li data-search="pptx ke pdf slide powerpoint jadi pdf pptx pptx-ke-pdf"><a href="./pptx-ke-pdf/index.html"><span><span class="t">PPTX ke PDF</span><span class="s">Slide PowerPoint jadi PDF</span></span><span class="tag on">Server</span></a></li>
-<li data-search="excel ke pdf xlsx jadi pdf xlsx excel-ke-pdf"><a href="./excel-ke-pdf/index.html"><span><span class="t">Excel ke PDF</span><span class="s">XLSX jadi PDF</span></span><span class="tag on">Server</span></a></li>
 <li data-search="pdf ke txt ambil teks dari pdf pdf pdf-ke-txt"><a href="./pdf-ke-txt/index.html"><span><span class="t">PDF ke TXT</span><span class="s">Ambil teks dari PDF</span></span><span class="tag on">Server</span></a></li>
 <li data-search="word ke txt ambil teks dari docx docx word-ke-txt"><a href="./word-ke-txt/index.html"><span><span class="t">Word ke TXT</span><span class="s">Ambil teks dari DOCX</span></span><span class="tag on">Server</span></a></li>
 <li data-search="gabung pdf satukan beberapa pdf jadi satu pdf gabung-pdf"><a href="./gabung-pdf/index.html"><span><span class="t">Gabung PDF</span><span class="s">Satukan beberapa PDF jadi satu</span></span><span class="tag on">Di browser</span></a></li>
 <li data-search="pisah pdf ambil halaman tertentu atau pecah per halaman pdf pisah-pdf"><a href="./pisah-pdf/index.html"><span><span class="t">Pisah PDF</span><span class="s">Ambil halaman tertentu atau pecah per halaman</span></span><span class="tag on">Di browser</span></a></li>
 <li data-search="gambar ke pdf jpg, png, webp, heic jadi satu pdf jpg, png, webp, heic gambar-ke-pdf"><a href="./gambar-ke-pdf/index.html"><span><span class="t">Gambar ke PDF</span><span class="s">JPG, PNG, WEBP, HEIC jadi satu PDF</span></span><span class="tag on">Di browser</span></a></li>
+<li data-search="word ke odt docx jadi odt untuk libreoffice docx word-ke-odt"><a href="./word-ke-odt/index.html"><span><span class="t">Word ke ODT</span><span class="s">DOCX jadi ODT untuk LibreOffice</span></span><span class="tag on">Server</span></a></li>
+<li data-search="word ke markdown ambil judul, paragraf, dan tabel dari docx docx word-ke-markdown"><a href="./word-ke-markdown/index.html"><span><span class="t">Word ke Markdown</span><span class="s">Ambil judul, paragraf, dan tabel dari DOCX</span></span><span class="tag on">Server</span></a></li>
+<li data-search="txt ke word buat docx dari file teks utf-8 txt utf-8 txt-ke-word"><a href="./txt-ke-word/index.html"><span><span class="t">TXT ke Word</span><span class="s">Buat DOCX dari file teks UTF-8</span></span><span class="tag on">Server</span></a></li>
+      </ul>
+    </div>
+    <div class="cat" data-cat="spreadsheet">
+      <h3>Spreadsheet</h3>
+      <ul class="tool-list">
+<li data-search="excel ke pdf xlsx jadi pdf xlsx excel-ke-pdf"><a href="./excel-ke-pdf/index.html"><span><span class="t">Excel ke PDF</span><span class="s">XLSX jadi PDF</span></span><span class="tag on">Server</span></a></li>
+<li data-search="excel ke ods xlsx jadi spreadsheet opendocument xlsx excel-ke-ods"><a href="./excel-ke-ods/index.html"><span><span class="t">Excel ke ODS</span><span class="s">XLSX jadi spreadsheet OpenDocument</span></span><span class="tag on">Server</span></a></li>
+<li data-search="excel ke csv ekspor lembar pertama xlsx ke csv xlsx excel-ke-csv"><a href="./excel-ke-csv/index.html"><span><span class="t">Excel ke CSV</span><span class="s">Ekspor lembar pertama XLSX ke CSV</span></span><span class="tag on">Server</span></a></li>
+<li data-search="csv ke excel buat xlsx dari csv utf-8 csv utf-8 csv-ke-excel"><a href="./csv-ke-excel/index.html"><span><span class="t">CSV ke Excel</span><span class="s">Buat XLSX dari CSV UTF-8</span></span><span class="tag on">Server</span></a></li>
+      </ul>
+    </div>
+    <div class="cat" data-cat="presentasi">
+      <h3>Presentasi</h3>
+      <ul class="tool-list">
+<li data-search="pptx ke pdf slide powerpoint jadi pdf pptx pptx-ke-pdf"><a href="./pptx-ke-pdf/index.html"><span><span class="t">PPTX ke PDF</span><span class="s">Slide PowerPoint jadi PDF</span></span><span class="tag on">Server</span></a></li>
+<li data-search="powerpoint ke odp pptx jadi opendocument presentation pptx powerpoint-ke-odp"><a href="./powerpoint-ke-odp/index.html"><span><span class="t">PowerPoint ke ODP</span><span class="s">PPTX jadi OpenDocument Presentation</span></span><span class="tag on">Server</span></a></li>
+<li data-search="powerpoint ke txt ekstrak teks dari setiap slide pptx pptx powerpoint-ke-txt"><a href="./powerpoint-ke-txt/index.html"><span><span class="t">PowerPoint ke TXT</span><span class="s">Ekstrak teks dari setiap slide PPTX</span></span><span class="tag on">Server</span></a></li>
       </ul>
     </div>
     <p class="empty" id="empty">Tidak ada tool yang cocok. Coba kata lain, misalnya nama format.</p>
@@ -123,33 +195,52 @@
 </section>
 
 <section class="block" id="cara-kerja">
-  <div class="wrap">
-    <h2>Tiga langkah</h2>
+  <div class="wrap home-section-wrap">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker"><span>02</span> ALUR SEDERHANA</p>
+        <h2>Tiga langkah</h2>
+        <p class="section-intro">Dari file awal sampai hasil siap diunduh, tanpa alur yang berbelit.</p>
+      </div>
+    </div>
     <ol class="steps">
-      <li><h3>Upload</h3><p>Tarik file ke kotak, atau klik untuk memilih. Sampai 10 file sekaligus.</p></li>
-      <li><h3>Pilih format</h3><p>Tool menawarkan format tujuan yang cocok dengan file kamu. Atur kualitas kalau perlu.</p></li>
-      <li><h3>Download</h3><p>Unduh satu file, atau semua hasil sebagai ZIP.</p></li>
+      <li><span class="step-icon" aria-hidden="true">↥</span><span class="step-label">LANGKAH 01</span><h3>Masukkan file</h3><p>Tarik file ke area upload atau pilih dari perangkat. Bisa sampai 10 file sekaligus.</p></li>
+      <li><span class="step-icon" aria-hidden="true">⇄</span><span class="step-label">LANGKAH 02</span><h3>Pilih format</h3><p>Pilih hasil yang kamu butuhkan dan sesuaikan opsi yang tersedia.</p></li>
+      <li><span class="step-icon" aria-hidden="true">↓</span><span class="step-label">LANGKAH 03</span><h3>Unduh hasil</h3><p>Ambil file hasil satu per satu atau unduh sekaligus sebagai ZIP.</p></li>
     </ol>
   </div>
 </section>
 
 <section class="block" id="privasi">
-  <div class="wrap">
-    <h2>Apa yang pergi ke mana</h2>
-    <div class="cols">
-      <div><h3>Di browser kamu</h3><p>Konversi dan kompres gambar, ubah ukuran gambar, konversi audio, gabung PDF, pisah PDF, dan gambar ke PDF. File tidak keluar dari perangkat. Kamu bisa putus internet setelah halaman terbuka, kecuali pemuat audio belum pernah diunduh.</p></div>
-      <div><h3>Lewat server</h3><p>Konversi dokumen (PDF ke Word, Word, PowerPoint, Excel ke PDF) dan kompres PDF, Word, PowerPoint. File diunggah, diproses di wadah terisolasi tanpa akses internet, namanya diacak, dan tidak dibaca manusia.</p></div>
-      <div><h3>Kapan dihapus</h3><p>File di server dihapus otomatis paling lama 1 jam setelah selesai. Isi file tidak dicatat di log.</p></div>
+  <div class="wrap home-section-wrap">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker"><span>03</span> KONTROL FILE</p>
+        <h2>File kamu, jelas ke mana</h2>
+        <p class="section-intro">Kami jelaskan lokasi pemrosesan dan masa simpan supaya kamu tahu apa yang terjadi.</p>
+      </div>
+    </div>
+    <div class="cols privacy-cards">
+      <div><span class="privacy-index">A / LOKAL</span><h3>Di browser</h3><p>Gambar, audio, dan beberapa tool PDF diproses langsung di perangkat. File tidak diunggah ke server.</p><span class="privacy-status"><i></i> Tetap di perangkat</span></div>
+      <div><span class="privacy-index">B / SERVER</span><h3>Di server</h3><p>Konversi Office dan spreadsheet tertentu diproses server. Nama file diacak selama proses.</p><span class="privacy-status"><i></i> Pemrosesan sementara</span></div>
+      <div><span class="privacy-index">C / RETENSI</span><h3>Dihapus otomatis</h3><p>File hasil di server dihapus otomatis paling lama satu jam setelah konversi selesai.</p><span class="privacy-status"><i></i> Maks. 1 jam</span></div>
     </div>
   </div>
 </section>
 
 <section class="block" id="batas">
-  <div class="wrap">
-    <h2>Batas awal</h2>
+  <div class="wrap home-section-wrap">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker"><span>04</span> PANDUAN PAKAI</p>
+        <h2>Batas penggunaan</h2>
+        <p class="section-intro">Batas ini membantu menjaga proses tetap andal dan hasil tetap nyaman diunduh.</p>
+      </div>
+      <span class="limit-badge"><span></span> Batas saat ini</span>
+    </div>
     <div class="table-scroll">
     <table>
-      <thead><tr><th>Jenis</th><th>Ukuran maksimal</th><th>Catatan</th></tr></thead>
+      <thead><tr><th>Jenis file</th><th>Ukuran maksimal</th><th>Catatan penggunaan</th></tr></thead>
       <tbody>
         <tr><td>Dokumen</td><td class="mono">25 MB</td><td>Tidak ada OCR. PDF hasil scan belum didukung.</td></tr>
         <tr><td>PDF di browser</td><td class="mono">50 MB</td><td>Gabung dan pisah PDF. Sampai 10 file per proses.</td></tr>
@@ -162,31 +253,55 @@
 </section>
 
 <section class="block" id="faq">
-  <div class="wrap">
-    <h2>Pertanyaan yang sering muncul</h2>
+  <div class="wrap home-section-wrap faq-layout">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker"><span>05</span> PUSAT BANTUAN</p>
+        <h2>Pertanyaan umum</h2>
+        <p class="section-intro">Jawaban singkat untuk membantu kamu mulai menggunakan Konvertin.</p>
+      </div>
+      <a class="faq-contact" href="./kontak.html">Butuh bantuan? <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="faq-list">
     <details><summary>Apakah file saya diunggah?</summary><p>Tergantung tool. Gambar dan audio diproses di browser, jadi tidak diunggah. Konversi dokumen dan kompres PDF, Word, PowerPoint berjalan di server, dan file dihapus otomatis paling lama 1 jam setelah selesai.</p></details>
     <details><summary>Kenapa hasil PDF ke Word layoutnya berubah?</summary><p>PDF menyimpan posisi tiap huruf, bukan struktur paragraf. Mengubahnya ke Word berarti menebak struktur itu, dan tebakan tidak selalu tepat. Tabel rumit dan kolom ganda paling sering bergeser.</p></details>
     <details><summary>Bisa untuk PDF hasil scan?</summary><p>Belum. PDF hasil scan berisi gambar, jadi butuh OCR untuk jadi teks. OCR belum ada di versi ini.</p></details>
     <details><summary>Kenapa konversi audio mengunduh file besar dulu?</summary><p>Mesin konversi audio (sekitar 30 MB) dimuat sekali supaya audio bisa diproses di browser. Setelah itu disimpan oleh browser.</p></details>
     <details><summary>Kenapa kompres PNG hematnya kecil?</summary><p>PNG menyimpan gambar tanpa kehilangan data. Untuk hemat lebih besar, ubah ke WEBP atau JPG, atau kecilkan resolusinya.</p></details>
     <details><summary>Apakah ada batas jumlah konversi?</summary><p>Tool di browser tidak dibatasi. Tool server dibatasi sekitar 20 proses per jam per alamat IP untuk mencegah penyalahgunaan.</p></details>
+    </div>
   </div>
 </section>
 </main>
 <footer>
-  <div class="wrap">
-    <div>Konvertin &middot; Konverter file untuk pemakaian sehari-hari.</div>
-    <ul>
-      <li><a href="./tentang.html">Tentang</a></li>
-      <li><a href="./privasi.html">Kebijakan privasi</a></li>
-      <li><a href="./syarat.html">Syarat penggunaan</a></li>
-      <li><a href="./kontak.html">Kontak</a></li>
-    </ul>
+  <div class="wrap footer-layout">
+    <div class="footer-brand">
+      <a class="footer-logo" href="./index.html" aria-label="Konvertin, kembali ke beranda"><img src="./logo.svg" alt="" width="159" height="41"></a>
+      <p>Ruang kerja file yang simpel, rapi, dan siap membantu.</p>
+    </div>
+    <div class="footer-links">
+      <span class="footer-label">JELAJAHI KONVERTIN</span>
+      <ul>
+        <li><a href="./index.html#tool">Semua tool</a></li>
+        <li><a href="./index.html#cara-kerja">Cara kerja</a></li>
+        <li><a href="./index.html#privasi">Privasi file</a></li>
+        <li><a href="./index.html#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-meta">
+      <ul>
+        <li><a href="./tentang.html">Tentang</a></li>
+        <li><a href="./privasi.html">Kebijakan privasi</a></li>
+        <li><a href="./syarat.html">Syarat penggunaan</a></li>
+        <li><a href="./kontak.html">Kontak</a></li>
+      </ul>
+      <span>© 2026 Konvertin</span>
+    </div>
   </div>
 </footer>
 <script src="./js/config.js"></script>
-<script src="./js/accounts.js?v=88a0edbe" defer></script>
-<script src="./js/app.js?v=6f8b9138" defer></script>
+<script src="./js/accounts.js?v=3105ec9b" defer></script>
+<script src="./js/app.js?v=88f45f0a" defer></script>
 
 </body>
 </html>

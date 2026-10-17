@@ -37,9 +37,12 @@ def init() -> None:
             """CREATE TABLE IF NOT EXISTS jobs (
                 job_id TEXT PRIMARY KEY, type TEXT NOT NULL, options TEXT NOT NULL DEFAULT '{}',
                 input_key TEXT, output_key TEXT, download_name TEXT,
-                status TEXT NOT NULL, error_message TEXT,
+                status TEXT NOT NULL, error_message TEXT, user_id INTEGER,
                 created_at REAL NOT NULL, expires_at REAL NOT NULL)"""
         )
+        columns = {r["name"] for r in c.execute("PRAGMA table_info(jobs)")}
+        if "user_id" not in columns:
+            c.execute("ALTER TABLE jobs ADD COLUMN user_id INTEGER")
         # job yang tertinggal dari proses sebelumnya tidak akan pernah selesai
         c.execute("UPDATE jobs SET status='failed', error_message='Server dimulai ulang. Coba lagi.' WHERE status IN ('queued','processing')")
         c.execute("UPDATE conversion_history SET status='failed' WHERE job_id IN (SELECT job_id FROM jobs WHERE status='failed' AND error_message='Server dimulai ulang. Coba lagi.')")
@@ -66,8 +69,8 @@ def create(job_type: str, input_path: Path, original_name: str, options: dict | 
 
     with _lock, _db() as c:
         c.execute(
-            "INSERT INTO jobs (job_id,type,options,input_key,download_name,status,created_at,expires_at) VALUES (?,?,?,?,?,?,?,?)",
-            (job_id, job_type, json.dumps(options or {}), in_key, download_name, "queued", now, now + config.FILE_TTL_SEC),
+            "INSERT INTO jobs (job_id,type,options,input_key,download_name,status,user_id,created_at,expires_at) VALUES (?,?,?,?,?,?,?,?,?)",
+            (job_id, job_type, json.dumps(options or {}), in_key, download_name, "queued", user_id, now, now + config.FILE_TTL_SEC),
         )
         c.execute("INSERT INTO usage_events(user_id,tool_type,source,status,created_at) VALUES(?,?,?,?,?)",
                   (user_id, job_type, "server", "queued", now))
@@ -213,6 +216,7 @@ def cleanup_expired() -> int:
             f.unlink(missing_ok=True)
     from . import accounts
     accounts.cleanup_expired_history()
+    accounts.expire_subscriptions()
     return len(rows)
 
 

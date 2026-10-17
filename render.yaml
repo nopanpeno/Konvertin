@@ -11,3 +11,31 @@ services:
         value: /data
       - key: KONVERTIN_CORS_ORIGINS
         value: https://nopanpeno.github.io
+      - key: KONVERTIN_PUBLIC_BASE_URL
+        sync: false
+      - key: KONVERTIN_ADMIN_EMAIL
+        value: admin@konvertin.com
+      - key: KONVERTIN_ADMIN_PASSWORD
+        sync: false
+      - key: KONVERTIN_GOOGLE_CLIENT_ID
+        sync: false
+      - key: KONVERTIN_GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: KONVERTIN_MIDTRANS_SERVER_KEY
+        sync: false
+      - key: KONVERTIN_MIDTRANS_CLIENT_KEY
+        sync: false
+      - key: KONVERTIN_MIDTRANS_IS_PRODUCTION
+        value: "0"
+      - key: KONVERTIN_XENDIT_WEBHOOK_TOKEN
+        sync: false
+      - key: KONVERTIN_SMTP_HOST
+        sync: false
+      - key: KONVERTIN_SMTP_PORT
+        value: "587"
+      - key: KONVERTIN_SMTP_USERNAME
+        sync: false
+      - key: KONVERTIN_SMTP_PASSWORD
+        sync: false
+      - key: KONVERTIN_SMTP_FROM_EMAIL
+        sync: false

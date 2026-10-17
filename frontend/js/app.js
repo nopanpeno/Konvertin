@@ -108,6 +108,8 @@
 
   // ---------- deteksi tipe lewat magic bytes ----------
   function sniff(file) {
+    var extension = extOf(file.name);
+    if (extension === "csv" || extension === "txt") return Promise.resolve(extension);
     return file.slice(0, 16).arrayBuffer().then(function (buf) {
       var b = new Uint8Array(buf);
       function at(i, str) { for (var k = 0; k < str.length; k++) if (b[i + k] !== str.charCodeAt(k)) return false; return true; }
@@ -131,7 +133,7 @@
       return "";
     });
   }
-  var KIND_LABEL = { jpg: "JPG", png: "PNG", webp: "WEBP", heic: "HEIC", wav: "WAV", pdf: "PDF", ogg: "OGG", flac: "FLAC", mp3: "MP3", aac: "AAC", m4a: "M4A", zip: "dokumen Office", ole: "dokumen lama atau terenkripsi" };
+  var KIND_LABEL = { jpg: "JPG", png: "PNG", webp: "WEBP", heic: "HEIC", wav: "WAV", pdf: "PDF", ogg: "OGG", flac: "FLAC", mp3: "MP3", aac: "AAC", m4a: "M4A", zip: "dokumen Office", ole: "dokumen lama atau terenkripsi", csv: "CSV", txt: "TXT" };
   function allowedKinds(accept) {
     var out = {};
     accept.split(",").forEach(function (e) {
@@ -730,20 +732,29 @@
     function runBatch(queue, o) {
       if (queue.length < cfg.min) { showAlert(t("needMin", { n: cfg.min })); return; }
       running = true; cancelled = false; showAlert("");
-      queue.forEach(function (i) { i.state = "working"; i.error = ""; i.note = ""; });
-      render();
-      var ctx = {
-        progress: function (f) { queue.forEach(function (i) { setProgress(i, f); }); },
-        note: function () {},
-        setCancel: function (fn) { cancelFn = fn; }
-      };
-      batchOps[cfg.op](queue, o, ctx).then(function (r) {
+      var toolType = cfg.op === "server" ? cfg.job : (cfg.slug || cfg.op);
+      var check = window.konvertinCheckUsage ? window.konvertinCheckUsage(toolType, 1) : Promise.resolve();
+      check.then(function () {
+        queue.forEach(function (i) { i.state = "working"; i.error = ""; i.note = ""; });
+        render();
+        var ctx = {
+          progress: function (f) { queue.forEach(function (i) { setProgress(i, f); }); },
+          note: function () {},
+          setCancel: function (fn) { cancelFn = fn; }
+        };
+        return batchOps[cfg.op](queue, o, ctx);
+      }).then(function (r) {
         queue.forEach(function (i) { i.state = "done"; });
-        if (window.konvertinRecordHistory) window.konvertinRecordHistory(cfg.slug || cfg.op);
-        items.push({ id: ++seq, file: { name: r.name, size: r.blob.size }, kind: "", state: "done", result: r, url: URL.createObjectURL(r.blob), note: r.note || "", error: "", synthetic: true });
+        var addResult = function () {
+          items.push({ id: ++seq, file: { name: r.name, size: r.blob.size }, kind: "", state: "done", result: r, url: URL.createObjectURL(r.blob), note: r.note || "", error: "", synthetic: true });
+        };
+        if (cfg.op !== "server" && window.konvertinRecordHistory) {
+          return window.konvertinRecordHistory(toolType).catch(function (e) { showAlert(e.message); }).then(addResult);
+        }
+        addResult();
       }).catch(function (e) {
-        queue.forEach(function (i) { i.state = "idle"; });
-        showAlert(e && e.user ? e.message : t("generic"));
+        queue.forEach(function (i) { if (i.state === "working") i.state = "idle"; });
+        showAlert(e && e.message ? e.message : t("generic"));
         if (!(e && e.user)) console.error(e);
       }).then(function () { cancelFn = null; running = false; render(); });
     }
@@ -754,27 +765,34 @@
       if (!queue.length) return;
       if (cfg.batch) { runBatch(queue, o); return; }
       running = true; cancelled = false; showAlert("");
-      queue.forEach(function (i) { i.state = "idle"; i.error = ""; });
-      render();
-      var chain = Promise.resolve();
-      queue.forEach(function (it) {
-        chain = chain.then(function () {
-          if (cancelled) { it.note = t("cancelled"); return; }
-          it.state = "working"; it.note = ""; render();
-          return runItem(it, o).then(function (r) {
-            it.result = r; it.url = URL.createObjectURL(r.blob); it.state = "done";
-            if (window.konvertinRecordHistory) window.konvertinRecordHistory(cfg.slug || cfg.op);
-            it.note = r.note || "";
-            if (cfg.compare && r.compare && r.blob !== it.file) {
-            }
-          }).catch(function (e) {
-            it.state = "error";
-            it.error = cancelled ? t("cancelled") : (e && e.user) ? e.message : t("generic");
-            if (!(e && e.user)) console.error(e);
-          }).then(function () { cancelFn = null; render(); });
+      var toolType = cfg.op === "server" ? cfg.job : (cfg.slug || cfg.op);
+      var check = window.konvertinCheckUsage ? window.konvertinCheckUsage(toolType, queue.length) : Promise.resolve();
+      check.then(function () {
+        queue.forEach(function (i) { i.state = "idle"; i.error = ""; });
+        render();
+        var chain = Promise.resolve();
+        queue.forEach(function (it) {
+          chain = chain.then(function () {
+            if (cancelled) { it.note = t("cancelled"); return; }
+            it.state = "working"; it.note = ""; render();
+            return runItem(it, o).then(function (r) {
+              it.result = r; it.url = URL.createObjectURL(r.blob); it.state = "done";
+              it.note = r.note || "";
+              if (cfg.op !== "server" && window.konvertinRecordHistory) {
+                return window.konvertinRecordHistory(toolType).catch(function (e) { showAlert(e.message); });
+              }
+            }).catch(function (e) {
+              it.state = "error";
+              it.error = cancelled ? t("cancelled") : (e && e.message) ? e.message : t("generic");
+              if (!(e && e.user)) console.error(e);
+            }).then(function () { cancelFn = null; render(); });
+          });
         });
-      });
-      chain.then(function () { running = false; render(); });
+        return chain;
+      }).catch(function (e) {
+        if (!(e && e.user)) console.error(e);
+        showAlert(e && e.message ? e.message : t("generic"));
+      }).then(function () { running = false; render(); });
     });
 
     els.cancel.addEventListener("click", function () {

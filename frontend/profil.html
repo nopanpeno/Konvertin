@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Profil | Konvertin</title>
-<meta name="description" content="Profil | Konvertin">
+<title>Dashboard akun | Konvertin</title>
+<meta name="description" content="Dashboard akun | Konvertin">
 
 <meta name="robots" content="noindex">
 
 
 <meta name="color-scheme" content="light">
-<meta property="og:title" content="Profil | Konvertin">
-<meta property="og:description" content="Profil | Konvertin">
+<meta property="og:title" content="Dashboard akun | Konvertin">
+<meta property="og:description" content="Dashboard akun | Konvertin">
 <meta property="og:type" content="website">
 <link rel="icon" href="./logo-mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./css/style.css?v=36e044b1">
+<link rel="stylesheet" href="./css/style.css?v=cf36b5cd">
 </head>
 <body class="">
 <a class="skip" href="#main">Lewati ke isi</a>
@@ -27,32 +27,118 @@
         <li class="nl"><a href="./index.html#cara-kerja">Cara kerja</a></li>
         <li class="nl"><a href="./index.html#privasi">Privasi</a></li>
         <li class="nl"><a href="./index.html#faq">FAQ</a></li>
-        <li><a id="account-link" href="./akun.html">Masuk</a></li>
-        <li id="profile-link-item" hidden><a href="./profil.html">Profil</a></li>
-        <li id="history-link-item" hidden><a href="./riwayat.html">Riwayat</a></li>
-        <li id="admin-link-item" hidden><a href="./admin.html">Admin</a></li>
+        <li id="account-login-item"><a id="account-link" href="./akun.html">Masuk</a></li>
+        <li id="account-menu-item" hidden>
+          <details class="account-menu">
+            <summary id="account-menu-name">Akun</summary>
+            <div class="account-menu-panel">
+              <a id="account-dashboard-link" data-user-href="./profil.html" data-admin-href="./admin.html" href="./profil.html">Dashboard</a>
+              <a id="account-settings-link" data-user-href="./profil.html#settings" data-admin-href="./admin.html#admin-tools" href="./profil.html#settings">Pengaturan</a>
+              <a id="account-history-link" href="./riwayat.html">Riwayat konversi</a>
+              <button id="account-menu-logout" data-account-logout type="button">Keluar</button>
+            </div>
+          </details>
+        </li>
         <li><a class="btn small" href="./index.html#tool">Mulai konversi</a></li>
       </ul>
     </nav>
   </div>
 </header>
 <main id="main">
-<div class="wrap account-wrap"><h1>Profil</h1><p id="account-message" class="notice" hidden></p><form id="profile-form" class="account-card"><label>Nama tampilan<input type="text" name="display_name" required maxlength="80"></label><label>Email<input type="email" name="email" disabled></label><button class="btn" type="submit">Simpan profil</button></form></div>
+
+<div class="wrap account-wrap dashboard-page user-dashboard">
+  <p class="eyebrow">Ruang kerja Konvertin</p><h1>Dashboard pengguna</h1>
+  <p class="muted">Pantau aktivitas, kuota, langganan, dan bantuan dari satu tempat.</p>
+  <p id="account-message" class="notice" role="status" hidden></p>
+  <div id="user-announcements"></div>
+  <div id="user-notifications" aria-live="polite"></div>
+  <section class="account-hero account-card">
+    <div><p class="eyebrow">Akun aktif</p><h2 id="dashboard-welcome">Memuat akun...</h2><p id="dashboard-email" class="muted"></p><span id="dashboard-email-status" class="status-pill pending">Status verifikasi email</span></div>
+    <div class="hero-actions"><a class="btn" href="./index.html#tool">Mulai konversi</a><a class="btn ghost" href="./riwayat.html">Buka riwayat</a></div>
+  </section>
+  <div class="stats-grid user-stats">
+    <article class="stat-card"><span>Paket</span><strong id="account-plan-name">—</strong><small id="account-plan-status"></small></article>
+    <article class="stat-card"><span>Sisa kuota hari ini</span><strong id="account-quota-remaining">—</strong><small id="account-quota-detail"></small></article>
+    <article class="stat-card"><span>Maksimum file</span><strong id="account-file-limit">—</strong><small>Per file · batas server berlaku</small></article>
+  </div>
+  <div class="dashboard-links">
+    <a href="#recent-activity">Riwayat konversi <span>›</span></a><a href="#billing">Paket &amp; tagihan <span>›</span></a><a href="#settings">Profil &amp; preferensi <span>›</span></a><a href="#help">Bantuan &amp; feedback <span>›</span></a>
+  </div>
+  <section id="recent-activity" class="dashboard-section">
+    <div class="section-heading"><div><p class="eyebrow">Aktivitas terbaru</p><h2>Riwayat konversi</h2></div><a class="btn ghost" href="./riwayat.html">Lihat semua</a></div>
+    <div id="recent-history" class="account-card"><p class="muted">Memuat aktivitas...</p></div>
+  </section>
+  <section id="billing" class="dashboard-section">
+    <div class="section-heading"><div><p class="eyebrow">Paket dan pembayaran</p><h2>Kelola langganan</h2></div><p class="muted" id="billing-status"></p></div>
+    <div id="plans-list" class="plan-grid"><p class="muted">Memuat paket...</p></div>
+    <h3>Riwayat pembayaran</h3><div id="payment-list" class="table-scroll"><p class="muted">Memuat pembayaran...</p></div>
+    <p class="hint">Pembayaran baru diproses melalui Midtrans. Langganan hanya aktif atau diperpanjang setelah notifikasi pembayaran tervalidasi. Jika masa aktif berakhir, akun otomatis kembali ke paket Free; pilihan notifikasi tetap mengikuti pengaturan akun.</p>
+  </section>
+  <section id="settings" class="dashboard-section">
+    <div class="section-heading"><div><p class="eyebrow">Pengaturan</p><h2>Profil dan preferensi</h2></div></div>
+    <div class="account-columns">
+      <form id="profile-form" class="account-card"><h3>Profil</h3>
+        <label>Nama lengkap<input type="text" name="display_name" required maxlength="80"></label>
+        <label>Email<input type="email" name="email" disabled></label>
+        <label>Nomor telepon/WhatsApp (opsional)<input type="tel" name="phone" autocomplete="tel" maxlength="30"></label>
+        <button class="btn" type="submit">Simpan profil</button>
+      </form>
+      <form id="password-form" class="account-card"><h3>Keamanan akun</h3>
+        <label>Password saat ini<input type="password" name="current_password" autocomplete="current-password" required maxlength="256"></label>
+        <label>Password baru<input type="password" name="new_password" autocomplete="new-password" required minlength="10" maxlength="256"><span class="hint">Gunakan minimal 10 karakter.</span></label>
+        <button class="btn" type="submit">Perbarui password</button>
+      </form>
+      <form id="preferences-form" class="account-card"><h3>Notifikasi</h3>
+        <label class="check-label"><input type="checkbox" name="email_notifications"> Notifikasi penting melalui email</label>
+        <label class="check-label"><input type="checkbox" name="product_updates"> Informasi produk dan pemeliharaan</label>
+        <p class="hint">Preferensi disimpan pada akun. Pengiriman email memerlukan layanan email yang dikonfigurasi.</p>
+        <button class="btn" type="submit">Simpan preferensi</button>
+      </form>
+    </div>
+  </section>
+  <section id="help" class="dashboard-section">
+    <div class="section-heading"><div><p class="eyebrow">Kami siap membantu</p><h2>Bantuan dan feedback</h2></div></div>
+    <div class="account-columns">
+      <form id="support-form" class="account-card"><h3>Kirim laporan</h3>
+        <label>Jenis laporan<select name="category"><option value="help">Minta bantuan</option><option value="bug">Laporkan masalah</option><option value="feedback">Berikan feedback</option><option value="billing">Masalah pembayaran</option></select></label>
+        <label>Judul<input type="text" name="subject" required maxlength="120"></label>
+        <label>Detail<textarea name="message" rows="5" required maxlength="5000"></textarea></label>
+        <button class="btn" type="submit">Kirim ke tim Konvertin</button>
+      </form>
+      <div class="account-card"><h3>Laporan saya</h3><div id="support-list"><p class="muted">Memuat laporan...</p></div></div>
+    </div>
+  </section>
+</div>
 </main>
 <footer>
-  <div class="wrap">
-    <div>Konvertin &middot; Konverter file untuk pemakaian sehari-hari.</div>
-    <ul>
-      <li><a href="./tentang.html">Tentang</a></li>
-      <li><a href="./privasi.html">Kebijakan privasi</a></li>
-      <li><a href="./syarat.html">Syarat penggunaan</a></li>
-      <li><a href="./kontak.html">Kontak</a></li>
-    </ul>
+  <div class="wrap footer-layout">
+    <div class="footer-brand">
+      <a class="footer-logo" href="./index.html" aria-label="Konvertin, kembali ke beranda"><img src="./logo.svg" alt="" width="159" height="41"></a>
+      <p>Ruang kerja file yang simpel, rapi, dan siap membantu.</p>
+    </div>
+    <div class="footer-links">
+      <span class="footer-label">JELAJAHI KONVERTIN</span>
+      <ul>
+        <li><a href="./index.html#tool">Semua tool</a></li>
+        <li><a href="./index.html#cara-kerja">Cara kerja</a></li>
+        <li><a href="./index.html#privasi">Privasi file</a></li>
+        <li><a href="./index.html#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-meta">
+      <ul>
+        <li><a href="./tentang.html">Tentang</a></li>
+        <li><a href="./privasi.html">Kebijakan privasi</a></li>
+        <li><a href="./syarat.html">Syarat penggunaan</a></li>
+        <li><a href="./kontak.html">Kontak</a></li>
+      </ul>
+      <span>© 2026 Konvertin</span>
+    </div>
   </div>
 </footer>
 <script src="./js/config.js"></script>
-<script src="./js/accounts.js?v=88a0edbe" defer></script>
-<script src="./js/app.js?v=6f8b9138" defer></script>
+<script src="./js/accounts.js?v=3105ec9b" defer></script>
+<script src="./js/app.js?v=88f45f0a" defer></script>
 
 </body>
 </html>

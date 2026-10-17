@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Penggunaan | Konvertin</title>
-<meta name="description" content="Penggunaan | Konvertin">
+<title>Pusat Admin | Konvertin</title>
+<meta name="description" content="Pusat Admin | Konvertin">
 
 <meta name="robots" content="noindex">
 
 
 <meta name="color-scheme" content="light">
-<meta property="og:title" content="Penggunaan | Konvertin">
-<meta property="og:description" content="Penggunaan | Konvertin">
+<meta property="og:title" content="Pusat Admin | Konvertin">
+<meta property="og:description" content="Pusat Admin | Konvertin">
 <meta property="og:type" content="website">
 <link rel="icon" href="./logo-mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./css/style.css?v=36e044b1">
+<link rel="stylesheet" href="./css/style.css?v=cf36b5cd">
 </head>
 <body class="">
 <a class="skip" href="#main">Lewati ke isi</a>
@@ -27,32 +27,134 @@
         <li class="nl"><a href="./index.html#cara-kerja">Cara kerja</a></li>
         <li class="nl"><a href="./index.html#privasi">Privasi</a></li>
         <li class="nl"><a href="./index.html#faq">FAQ</a></li>
-        <li><a id="account-link" href="./akun.html">Masuk</a></li>
-        <li id="profile-link-item" hidden><a href="./profil.html">Profil</a></li>
-        <li id="history-link-item" hidden><a href="./riwayat.html">Riwayat</a></li>
-        <li id="admin-link-item" hidden><a href="./admin.html">Admin</a></li>
+        <li id="account-login-item"><a id="account-link" href="./akun.html">Masuk</a></li>
+        <li id="account-menu-item" hidden>
+          <details class="account-menu">
+            <summary id="account-menu-name">Akun</summary>
+            <div class="account-menu-panel">
+              <a id="account-dashboard-link" data-user-href="./profil.html" data-admin-href="./admin.html" href="./profil.html">Dashboard</a>
+              <a id="account-settings-link" data-user-href="./profil.html#settings" data-admin-href="./admin.html#admin-tools" href="./profil.html#settings">Pengaturan</a>
+              <a id="account-history-link" href="./riwayat.html">Riwayat konversi</a>
+              <button id="account-menu-logout" data-account-logout type="button">Keluar</button>
+            </div>
+          </details>
+        </li>
         <li><a class="btn small" href="./index.html#tool">Mulai konversi</a></li>
       </ul>
     </nav>
   </div>
 </header>
 <main id="main">
-<div class="wrap account-wrap"><h1>Penggunaan layanan</h1><p id="account-message" class="notice" hidden></p><div class="account-card"><label>Rentang waktu<select id="usage-days"><option value="7">7 hari</option><option value="30" selected>30 hari</option><option value="90">90 hari</option></select></label><p id="usage-total" class="usage-total"></p><canvas id="usage-chart" width="900" height="300" aria-label="Grafik konversi per hari"></canvas><h2>Tool paling sering dipakai</h2><div id="usage-types"></div></div></div>
+
+<div class="wrap account-wrap dashboard-page admin-page">
+  <div class="section-heading"><div><p class="eyebrow">Konvertin · Control center</p><h1>Pusat Admin</h1><p id="dashboard-email" class="muted"></p><p id="admin-role-summary" class="role-summary"></p></div><button class="btn ghost" id="admin-logout" data-account-logout type="button">Keluar</button></div>
+  <p id="account-message" class="notice" role="status" hidden></p>
+  <nav class="dashboard-links admin-nav" aria-label="Navigasi admin">
+    <a href="#admin-overview">Ringkasan <span>›</span></a><a href="#admin-users">Akun user <span>›</span></a><a href="#admin-tools">Konverter &amp; batas <span>›</span></a>
+    <a href="#admin-plans">Paket <span>›</span></a><a href="#admin-payments">Pembayaran <span>›</span></a><a href="#admin-jobs">Antrean <span>›</span></a>
+    <a href="#admin-support">Bantuan <span>›</span></a><a href="#admin-announcements">Pengumuman <span>›</span></a><a href="#admin-audit">Log admin <span>›</span></a>
+  </nav>
+  <section id="admin-overview" class="dashboard-section">
+    <div class="section-heading"><div><p class="eyebrow">Ikhtisar layanan</p><h2>Ringkasan operasional</h2></div>
+      <label>Periode<select id="usage-days"><option value="7">7 hari</option><option value="30" selected>30 hari</option><option value="90">90 hari</option></select></label>
+    </div>
+    <div class="stats-grid admin-stats">
+      <article class="stat-card"><span>Total user</span><strong id="admin-users-total">—</strong><small id="admin-users-new"></small></article>
+      <article class="stat-card"><span>Konversi</span><strong id="admin-conversions-total">—</strong><small id="admin-conversions-failed"></small></article>
+      <article id="admin-premium-stat" class="stat-card"><span>Pelanggan Premium</span><strong id="admin-premium-total">—</strong><small>Langganan aktif</small></article>
+      <article id="admin-revenue-stat" class="stat-card"><span>Pendapatan 30 hari</span><strong id="admin-revenue-total">—</strong><small>Dari pembayaran berstatus paid</small></article>
+      <article class="stat-card"><span>Keberhasilan proses</span><strong id="admin-success-rate">—</strong><small>Sesuai rentang waktu pilihan</small></article>
+      <article class="stat-card"><span>Tiket terbuka</span><strong id="admin-open-tickets">—</strong><small>Perlu ditindaklanjuti</small></article>
+    </div>
+    <div class="account-columns">
+      <div class="account-card"><h3>Tren penggunaan harian</h3><p id="usage-total" class="usage-total"></p><canvas id="usage-chart" width="900" height="300" aria-label="Grafik konversi per hari"></canvas><h3>Komposisi penggunaan</h3><div class="usage-mix"><canvas id="usage-mix-chart" width="320" height="260" aria-label="Diagram komposisi tool"></canvas><ul id="usage-mix-legend" class="usage-mix-legend"></ul></div><h3>Tool paling sering dipakai</h3><div id="usage-types"></div><p class="hint">Analitik dihitung dari aktivitas yang tercatat di Konvertin pada periode pilihan; bukan data pihak ketiga.</p></div>
+      <div class="account-card"><h3>Kondisi sistem</h3><div id="system-status" class="system-metrics">Memuat metrik...</div></div>
+    </div>
+  </section>
+  <section id="admin-users" class="dashboard-section"><div class="section-heading"><div><p class="eyebrow">Akses dan pelanggan</p><h2>Kelola akun user</h2></div><input id="users-search" type="search" placeholder="Cari nama atau email" aria-label="Cari akun user"></div>
+    <p class="hint">Admin dapat melihat data profil yang diberikan pengguna, riwayat metadata konversi, pembayaran, preferensi, dan tiket bantuan. Data sensitif yang tidak diperlukan tidak dikumpulkan.</p><div id="users-list" class="table-scroll"><p>Memuat user...</p></div>
+    <dialog id="user-detail-dialog" class="account-dialog">
+      <div class="section-heading"><div><p class="eyebrow">Data akun terpadu</p><h2 id="user-detail-title">Detail pengguna</h2></div><button id="user-detail-close" class="btn ghost" type="button">Tutup</button></div>
+      <div id="user-detail-content"><p class="muted">Pilih akun untuk memuat data.</p></div>
+      <form id="user-notification-form" class="account-card">
+        <h3>Kirim notifikasi atau peringatan</h3><input type="hidden" name="user_id">
+        <label>Jenis<select name="kind"><option value="info">Informasi</option><option value="warning">Peringatan</option><option value="critical">Peringatan keras</option></select></label>
+        <label>Judul<input name="title" required maxlength="120"></label>
+        <label>Pesan<textarea name="message" rows="4" required maxlength="3000"></textarea></label>
+        <p id="user-notification-delivery" class="hint">Notifikasi tersimpan di dashboard user. Email terkirim jika sudah diverifikasi dan notifikasi email aktif.</p>
+        <button class="btn" type="submit">Kirim notifikasi</button>
+      </form>
+    </dialog>
+  </section>
+  <section id="admin-tools" class="dashboard-section"><div class="section-heading"><div><p class="eyebrow">Konfigurasi layanan</p><h2>Konverter, format, dan batas</h2></div></div>
+    <form id="limits-form" class="account-card limits-grid">
+      <label>Kuota Free per hari<input name="free_daily_quota" type="number" min="1" max="100000" required></label>
+      <label>Kuota Premium per hari<input name="premium_daily_quota" type="number" min="1" max="100000" required></label>
+      <label>Maksimum file Free (MB)<input name="free_max_file_mb" type="number" min="1" required></label>
+      <label>Maksimum file Premium (MB)<input name="premium_max_file_mb" type="number" min="1" required></label>
+      <p class="hint">Batas ukuran maksimum ini tidak dapat melewati limit server yang ditetapkan saat deployment. Batas halaman PDF adalah konfigurasi server.</p><button class="btn" type="submit">Simpan batas</button>
+    </form>
+    <h3>Format dan ketersediaan tool</h3><p class="hint">Daftar menunjukkan format yang benar-benar didukung aplikasi. Admin dapat mengaktifkan/nonaktifkan tool; format baru perlu ditambahkan melalui implementasi konverter.</p>
+    <div id="features-list" class="table-scroll"><p>Memuat konverter...</p></div>
+  </section>
+  <section id="admin-plans" class="dashboard-section"><div class="section-heading"><div><p class="eyebrow">Monetisasi</p><h2>Paket Free &amp; Premium</h2></div></div>
+    <div id="admin-plans-list" class="table-scroll"><p>Memuat paket...</p></div>
+  </section>
+  <section id="admin-payments" class="dashboard-section"><div class="section-heading"><div><p class="eyebrow">Midtrans · transaksi baru</p><h2>Pembayaran dan langganan</h2></div></div>
+    <p id="gateway-status" class="notice"></p><div id="admin-payments-list" class="table-scroll"><p>Memuat transaksi...</p></div>
+  </section>
+  <section id="admin-jobs" class="dashboard-section"><div class="section-heading"><div><p class="eyebrow">Kesehatan pemrosesan</p><h2>Antrean dan kegagalan</h2></div></div>
+    <div id="jobs-list" class="table-scroll"><p>Memuat antrean...</p></div>
+  </section>
+  <section id="admin-support" class="dashboard-section"><div class="section-heading"><div><p class="eyebrow">Layanan pelanggan</p><h2>Laporan dan permintaan bantuan</h2></div></div>
+    <div id="admin-support-list" class="support-admin-list"><p>Memuat laporan...</p></div>
+  </section>
+  <section id="admin-announcements" class="dashboard-section"><div class="section-heading"><div><p class="eyebrow">Komunikasi layanan</p><h2>Pengumuman &amp; pemeliharaan</h2></div></div>
+    <form id="announcement-form" class="account-card">
+      <input type="hidden" name="announcement_id">
+      <label>Judul<input name="title" required maxlength="120"></label><label>Pesan<textarea name="message" rows="3" required maxlength="3000"></textarea></label>
+      <div class="limits-grid"><label>Jenis<select name="kind"><option value="info">Informasi</option><option value="maintenance">Pemeliharaan</option><option value="warning">Peringatan</option></select></label>
+        <label>Mulai ditampilkan (opsional)<input type="datetime-local" name="starts_at"></label>
+        <label>Berakhir (opsional)<input type="datetime-local" name="ends_at"></label>
+        <label class="check-label"><input type="checkbox" name="published" checked> Tampilkan saat jadwal aktif</label></div>
+      <button class="btn" id="announcement-submit" type="submit">Terbitkan pengumuman</button>
+      <button class="btn ghost" id="announcement-reset" type="button" hidden>Batal mengedit</button>
+    </form><div id="announcements-list" class="support-admin-list"><p>Memuat pengumuman...</p></div>
+  </section>
+  <section id="admin-audit" class="dashboard-section"><div class="section-heading"><div><p class="eyebrow">Keamanan</p><h2>Log aktivitas admin</h2></div></div>
+    <div id="audit-list" class="table-scroll"><p>Memuat log...</p></div>
+  </section>
+</div>
 </main>
 <footer>
-  <div class="wrap">
-    <div>Konvertin &middot; Konverter file untuk pemakaian sehari-hari.</div>
-    <ul>
-      <li><a href="./tentang.html">Tentang</a></li>
-      <li><a href="./privasi.html">Kebijakan privasi</a></li>
-      <li><a href="./syarat.html">Syarat penggunaan</a></li>
-      <li><a href="./kontak.html">Kontak</a></li>
-    </ul>
+  <div class="wrap footer-layout">
+    <div class="footer-brand">
+      <a class="footer-logo" href="./index.html" aria-label="Konvertin, kembali ke beranda"><img src="./logo.svg" alt="" width="159" height="41"></a>
+      <p>Ruang kerja file yang simpel, rapi, dan siap membantu.</p>
+    </div>
+    <div class="footer-links">
+      <span class="footer-label">JELAJAHI KONVERTIN</span>
+      <ul>
+        <li><a href="./index.html#tool">Semua tool</a></li>
+        <li><a href="./index.html#cara-kerja">Cara kerja</a></li>
+        <li><a href="./index.html#privasi">Privasi file</a></li>
+        <li><a href="./index.html#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-meta">
+      <ul>
+        <li><a href="./tentang.html">Tentang</a></li>
+        <li><a href="./privasi.html">Kebijakan privasi</a></li>
+        <li><a href="./syarat.html">Syarat penggunaan</a></li>
+        <li><a href="./kontak.html">Kontak</a></li>
+      </ul>
+      <span>© 2026 Konvertin</span>
+    </div>
   </div>
 </footer>
 <script src="./js/config.js"></script>
-<script src="./js/accounts.js?v=88a0edbe" defer></script>
-<script src="./js/app.js?v=6f8b9138" defer></script>
-
+<script src="./js/accounts.js?v=3105ec9b" defer></script>
+<script src="./js/app.js?v=88f45f0a" defer></script>
+<script src="./js/admin.js?v=a4b622d9" defer></script>
 </body>
 </html>

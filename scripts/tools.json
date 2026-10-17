@@ -15,6 +15,14 @@
     {
       "id": "dokumen",
       "label": "Dokumen"
+    },
+    {
+      "id": "spreadsheet",
+      "label": "Spreadsheet"
+    },
+    {
+      "id": "presentasi",
+      "label": "Presentasi"
     }
   ],
   "tools": [
@@ -319,7 +327,7 @@
     },
     {
       "slug": "pptx-ke-pdf",
-      "cat": "dokumen",
+      "cat": "presentasi",
       "op": "server",
       "side": "server",
       "job": "pptx_to_pdf",
@@ -338,7 +346,7 @@
     },
     {
       "slug": "excel-ke-pdf",
-      "cat": "dokumen",
+      "cat": "spreadsheet",
       "op": "server",
       "side": "server",
       "job": "xlsx_to_pdf",
@@ -517,6 +525,159 @@
       "notes": [
         "Satu gambar jadi satu halaman, sesuai urutan di daftar.",
         "Gambar WEBP dan HEIC disimpan sebagai JPG di dalam PDF."
+      ]
+    },
+    {
+      "slug": "word-ke-odt",
+      "cat": "dokumen",
+      "op": "server",
+      "side": "server",
+      "job": "docx_to_odt",
+      "name": "Word ke ODT",
+      "short": "DOCX jadi ODT untuk LibreOffice",
+      "title": "Word ke ODT Online",
+      "h1": "Word ke ODT",
+      "desc": "Ubah DOCX menjadi ODT dengan LibreOffice. File diunggah sementara ke server dan dihapus otomatis.",
+      "accept": ".docx",
+      "inputs": "DOCX",
+      "outExt": "odt",
+      "maxMB": 25,
+      "notes": [
+        "Format teks dan tata letak dipertahankan sejauh didukung oleh LibreOffice."
+      ]
+    },
+    {
+      "slug": "word-ke-markdown",
+      "cat": "dokumen",
+      "op": "server",
+      "side": "server",
+      "job": "docx_to_md",
+      "name": "Word ke Markdown",
+      "short": "Ambil judul, paragraf, dan tabel dari DOCX",
+      "title": "Word ke Markdown Online",
+      "h1": "Word ke Markdown",
+      "desc": "Ekstrak judul, paragraf, dan tabel DOCX menjadi Markdown. File diunggah sementara ke server.",
+      "accept": ".docx",
+      "inputs": "DOCX",
+      "outExt": "md",
+      "maxMB": 25,
+      "notes": [
+        "Tata letak halaman, gambar, header, dan footer tidak disalin."
+      ]
+    },
+    {
+      "slug": "txt-ke-word",
+      "cat": "dokumen",
+      "op": "server",
+      "side": "server",
+      "job": "txt_to_docx",
+      "name": "TXT ke Word",
+      "short": "Buat DOCX dari file teks UTF-8",
+      "title": "TXT ke Word Online",
+      "h1": "TXT ke Word",
+      "desc": "Ubah file teks UTF-8 menjadi DOCX. Setiap baris menjadi paragraf dokumen.",
+      "accept": ".txt",
+      "inputs": "TXT UTF-8",
+      "outExt": "docx",
+      "maxMB": 25,
+      "notes": [
+        "Format teks, gambar, dan tata letak lanjutan tidak tersedia di file TXT."
+      ]
+    },
+    {
+      "slug": "excel-ke-ods",
+      "cat": "spreadsheet",
+      "op": "server",
+      "side": "server",
+      "job": "xlsx_to_ods",
+      "name": "Excel ke ODS",
+      "short": "XLSX jadi spreadsheet OpenDocument",
+      "title": "Excel ke ODS Online",
+      "h1": "Excel ke ODS",
+      "desc": "Ubah workbook XLSX menjadi ODS menggunakan LibreOffice. File dihapus otomatis setelah proses.",
+      "accept": ".xlsx",
+      "inputs": "XLSX",
+      "outExt": "ods",
+      "maxMB": 25,
+      "notes": [
+        "Rumus dan format khusus dapat berubah bila tidak didukung ODS."
+      ]
+    },
+    {
+      "slug": "excel-ke-csv",
+      "cat": "spreadsheet",
+      "op": "server",
+      "side": "server",
+      "job": "xlsx_to_csv",
+      "name": "Excel ke CSV",
+      "short": "Ekspor lembar pertama XLSX ke CSV",
+      "title": "Excel ke CSV Online",
+      "h1": "Excel ke CSV",
+      "desc": "Ekspor data tampilan lembar pertama workbook XLSX ke CSV UTF-8.",
+      "accept": ".xlsx",
+      "inputs": "XLSX",
+      "outExt": "csv",
+      "maxMB": 25,
+      "notes": [
+        "Hanya lembar pertama dan nilai tersimpan yang diekspor; rumus, gaya, dan grafik tidak ikut."
+      ]
+    },
+    {
+      "slug": "csv-ke-excel",
+      "cat": "spreadsheet",
+      "op": "server",
+      "side": "server",
+      "job": "csv_to_xlsx",
+      "name": "CSV ke Excel",
+      "short": "Buat XLSX dari CSV UTF-8",
+      "title": "CSV ke Excel Online",
+      "h1": "CSV ke Excel",
+      "desc": "Ubah CSV UTF-8 menjadi workbook XLSX. Konten dimasukkan sebagai teks agar tidak dijalankan sebagai rumus.",
+      "accept": ".csv",
+      "inputs": "CSV UTF-8",
+      "outExt": "xlsx",
+      "maxMB": 25,
+      "notes": [
+        "Delimiter koma, titik koma, tab, atau pipa dideteksi otomatis.",
+        "Nilai dipertahankan sebagai teks, tidak otomatis diubah menjadi tanggal atau angka."
+      ]
+    },
+    {
+      "slug": "powerpoint-ke-odp",
+      "cat": "presentasi",
+      "op": "server",
+      "side": "server",
+      "job": "pptx_to_odp",
+      "name": "PowerPoint ke ODP",
+      "short": "PPTX jadi OpenDocument Presentation",
+      "title": "PowerPoint ke ODP Online",
+      "h1": "PowerPoint ke ODP",
+      "desc": "Ubah presentasi PPTX menjadi ODP dengan LibreOffice.",
+      "accept": ".pptx",
+      "inputs": "PPTX",
+      "outExt": "odp",
+      "maxMB": 25,
+      "notes": [
+        "Animasi, font, dan tata letak dapat berubah bila tidak didukung ODP."
+      ]
+    },
+    {
+      "slug": "powerpoint-ke-txt",
+      "cat": "presentasi",
+      "op": "server",
+      "side": "server",
+      "job": "pptx_to_txt",
+      "name": "PowerPoint ke TXT",
+      "short": "Ekstrak teks dari setiap slide PPTX",
+      "title": "PowerPoint ke TXT Online",
+      "h1": "PowerPoint ke TXT",
+      "desc": "Ekstrak teks dan isi tabel dari setiap slide menjadi TXT UTF-8.",
+      "accept": ".pptx",
+      "inputs": "PPTX",
+      "outExt": "txt",
+      "maxMB": 25,
+      "notes": [
+        "Gambar, animasi, catatan presenter, dan tata letak tidak disalin."
       ]
     }
   ]

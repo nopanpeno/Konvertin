@@ -2,6 +2,10 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parents[2] / ".env", override=False)
+
 
 def _int(name: str, default: int) -> int:
     return int(os.environ.get(f"KONVERTIN_{name}", default))
@@ -33,7 +37,35 @@ CORS_ORIGINS = [o for o in os.environ.get("KONVERTIN_CORS_ORIGINS", "").split(",
 SESSION_COOKIE_SECURE = os.environ.get("KONVERTIN_SESSION_COOKIE_SECURE", "1") != "0"
 SESSION_TTL_SEC = _int("SESSION_TTL_SEC", 14 * 24 * 3600)
 HISTORY_TTL_SEC = _int("HISTORY_TTL_SEC", 365 * 24 * 3600)
-ADMIN_EMAIL = os.environ.get("KONVERTIN_ADMIN_EMAIL", "").strip().lower()
+ADMIN_EMAIL = os.environ.get("KONVERTIN_ADMIN_EMAIL", "admin@konvertin.com").strip().lower()
 ADMIN_PASSWORD = os.environ.get("KONVERTIN_ADMIN_PASSWORD", "")
+ADMIN_NAME = os.environ.get("KONVERTIN_ADMIN_NAME", "Admin Konvertin").strip() or "Admin Konvertin"
+MAX_STAFF_ADMINS = 7
+SUPERADMIN_EMAILS = frozenset({"setara.sea@gmail.com", "kartikafajar13@gmail.com"})
+GOOGLE_CLIENT_ID = os.environ.get("KONVERTIN_GOOGLE_CLIENT_ID", "").strip()
+GOOGLE_CLIENT_SECRET = os.environ.get("KONVERTIN_GOOGLE_CLIENT_SECRET", "")
+MIDTRANS_SERVER_KEY = os.environ.get("KONVERTIN_MIDTRANS_SERVER_KEY", "")
+MIDTRANS_CLIENT_KEY = os.environ.get("KONVERTIN_MIDTRANS_CLIENT_KEY", "")
+MIDTRANS_IS_PRODUCTION = os.environ.get("KONVERTIN_MIDTRANS_IS_PRODUCTION", "0") == "1"
+XENDIT_WEBHOOK_TOKEN = os.environ.get("KONVERTIN_XENDIT_WEBHOOK_TOKEN", "")
+GOOGLE_CALLBACK_PATH = "/api/auth/google/callback"
+
+
+def normalize_public_base_url(value: str) -> str:
+    value = value.rstrip("/")
+    if value.endswith(GOOGLE_CALLBACK_PATH):
+        value = value[:-len(GOOGLE_CALLBACK_PATH)]
+    return value.rstrip("/")
+
+
+PUBLIC_BASE_URL = normalize_public_base_url(os.environ.get("KONVERTIN_PUBLIC_BASE_URL", ""))
+SMTP_HOST = os.environ.get("KONVERTIN_SMTP_HOST", "").strip()
+SMTP_PORT = _int("SMTP_PORT", 587)
+SMTP_USERNAME = os.environ.get("KONVERTIN_SMTP_USERNAME", "")
+SMTP_PASSWORD = os.environ.get("KONVERTIN_SMTP_PASSWORD", "")
+SMTP_FROM_EMAIL = os.environ.get("KONVERTIN_SMTP_FROM_EMAIL", "").strip()
+SMTP_FROM_NAME = os.environ.get("KONVERTIN_SMTP_FROM_NAME", "Konvertin").strip() or "Konvertin"
+SMTP_USE_SSL = os.environ.get("KONVERTIN_SMTP_USE_SSL", "0") == "1"
+SMTP_STARTTLS = os.environ.get("KONVERTIN_SMTP_STARTTLS", "1") != "0"
 
 FRONTEND_DIR = Path(os.environ.get("KONVERTIN_FRONTEND_DIR", Path(__file__).resolve().parents[2] / "frontend"))
