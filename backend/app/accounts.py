@@ -16,7 +16,7 @@ _ITERATIONS = 310_000
 BROWSER_TOOL_TYPES = frozenset({
     "konversi-gambar", "heic-ke-jpg", "jpg-ke-png", "png-ke-jpg", "webp-ke-jpg",
     "jpg-ke-webp", "ubah-ukuran-gambar", "kompres-gambar", "konversi-audio",
-    "wav-ke-mp3", "m4a-ke-mp3", "flac-ke-mp3", "gabung-pdf", "pisah-pdf", "gambar-ke-pdf",
+    "wav-ke-mp3", "m4a-ke-mp3", "flac-ke-mp3", "gabung-pdf", "pisah-pdf", "gambar-ke-pdf", "upscale-gambar",
 })
 
 

@@ -1,0 +1,7 @@
+TensorFlow.js (tf.min.js), versi 4.11.0
+Copyright 2023 Google LLC. All Rights Reserved.
+Dilisensikan di bawah Apache License, Version 2.0.
+Teks lengkap: http://www.apache.org/licenses/LICENSE-2.0
+
+Paket npm @tensorflow/tfjs tidak menyertakan berkas LICENSE terpisah.
+Pemberitahuan lisensi yang sama tetap ada di bagian atas tf.min.js.

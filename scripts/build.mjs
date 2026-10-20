@@ -391,6 +391,11 @@ function optionsHtml(t) {
 <label><input type="radio" name="splitmode" value="all"><span>Semua halaman</span></label></div></fieldset></div>
 <div class="field" id="f-pages"><label for="o-pages">Halaman yang diambil</label><input id="o-pages" type="text" inputmode="text" autocomplete="off" placeholder="contoh: 1-3, 5"><div class="hint">Angka dan rentang, dipisah koma.</div></div>`);
   }
+  if (t.upscale) {
+    f.push(`<div class="field"><fieldset><legend>Skala</legend><div class="seg">
+<label><input type="radio" name="upscale" value="2" checked><span>2x</span></label>
+<label><input type="radio" name="upscale" value="4"><span>4x</span></label></div><div class="hint">4x lebih lambat dan butuh memori lebih besar.</div></fieldset></div>`);
+  }
   if (t.pageSize) {
     f.push(`<div class="field"><label for="o-page">Ukuran halaman</label><select id="o-page" name="page"><option value="a4" selected>A4, dengan margin</option><option value="asli">Ukuran asli gambar</option></select></div>`);
   }
@@ -694,7 +699,7 @@ write("privasi.html", layout({
 <h1>Kebijakan privasi</h1>
 <p class="muted">Terakhir diubah 15 Oktober 2026. Tinjau ulang sebelum rilis publik, terutama bagian iklan dan cookie.</p>
 <h2>Yang diproses di browser</h2>
-<p>Konversi gambar, kompres gambar, ubah ukuran gambar, konversi audio, gabung PDF, pisah PDF, dan gambar ke PDF berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. ${FFMPEG_NOTE}</p>
+<p>Konversi gambar, kompres gambar, ubah ukuran gambar, upscale gambar, konversi audio, gabung PDF, pisah PDF, dan gambar ke PDF berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. ${FFMPEG_NOTE}</p>
 <h2>${STATIC_MODE ? "Privasi versi GitHub Pages" : "Yang lewat server"}</h2>
 <p>${STATIC_MODE ? "Versi GitHub Pages ini hanya menyediakan tool yang berjalan di browser. Tool yang memerlukan server belum aktif." : "Konversi Office, spreadsheet CSV/XLSX, dan kompres dokumen tertentu membutuhkan server. File kamu diunggah, diproses di wadah terisolasi tanpa akses internet, dan hasilnya tersedia untuk kamu unduh."}</p>
 ${!STATIC_MODE ? `<ul>

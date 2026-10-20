@@ -178,6 +178,34 @@
       ]
     },
     {
+      "slug": "upscale-gambar",
+      "cat": "gambar",
+      "op": "image-upscale",
+      "side": "browser",
+      "name": "Upscale gambar",
+      "short": "Perbesar gambar 2x atau 4x di browser",
+      "title": "Upscale Gambar Online: Perbesar Resolusi 2x dan 4x",
+      "h1": "Upscale gambar",
+      "desc": "Perbesar resolusi gambar 2x atau 4x dengan model AI langsung di browser. File tidak diunggah ke server.",
+      "accept": ".jpg,.jpeg,.png,.webp,.heic,.heif",
+      "inputs": "JPG, PNG, WEBP, HEIC",
+      "formats": [
+        "png",
+        "jpg",
+        "webp"
+      ],
+      "defaultFormat": "png",
+      "quality": true,
+      "upscale": true,
+      "maxMB": 20,
+      "notes": [
+        "Cocok untuk gambar kecil yang mau dibesarkan. Hasilnya lebih halus daripada diperbesar biasa, tetapi tidak menambah detail yang memang tidak ada.",
+        "Hasil dibatasi 12 juta piksel. Skala 2x menerima gambar sampai sekitar 3 juta piksel, skala 4x sampai sekitar 0,75 juta piksel.",
+        "Mesin dan model sekitar 3 MB diunduh sekali, lalu disimpan browser. Prosesnya memakai kartu grafis lewat WebGL, jadi di perangkat lama bisa lambat.",
+        "Bagian transparan PNG dipertahankan. Ke JPG, bagian transparan jadi putih."
+      ]
+    },
+    {
       "slug": "kompres-gambar",
       "cat": "kompres",
       "op": "image-compress",
