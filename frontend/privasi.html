@@ -14,7 +14,7 @@
 <meta property="og:description" content="Apa yang diproses di browser, apa yang lewat server, dan kapan file dihapus.">
 <meta property="og:type" content="website">
 <link rel="icon" href="./logo-mark.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./css/style.css?v=cf36b5cd">
+<link rel="stylesheet" href="./css/style.css?v=a9ee6709">
 </head>
 <body class="">
 <a class="skip" href="#main">Lewati ke isi</a>
@@ -27,18 +27,7 @@
         <li class="nl"><a href="./index.html#cara-kerja">Cara kerja</a></li>
         <li class="nl"><a href="./index.html#privasi">Privasi</a></li>
         <li class="nl"><a href="./index.html#faq">FAQ</a></li>
-        <li id="account-login-item"><a id="account-link" href="./akun.html">Masuk</a></li>
-        <li id="account-menu-item" hidden>
-          <details class="account-menu">
-            <summary id="account-menu-name">Akun</summary>
-            <div class="account-menu-panel">
-              <a id="account-dashboard-link" data-user-href="./profil.html" data-admin-href="./admin.html" href="./profil.html">Dashboard</a>
-              <a id="account-settings-link" data-user-href="./profil.html#settings" data-admin-href="./admin.html#admin-tools" href="./profil.html#settings">Pengaturan</a>
-              <a id="account-history-link" href="./riwayat.html">Riwayat konversi</a>
-              <button id="account-menu-logout" data-account-logout type="button">Keluar</button>
-            </div>
-          </details>
-        </li>
+        
         <li><a class="btn small" href="./index.html#tool">Mulai konversi</a></li>
       </ul>
     </nav>
@@ -49,18 +38,12 @@
 <h1>Kebijakan privasi</h1>
 <p class="muted">Terakhir diubah 15 Oktober 2026. Tinjau ulang sebelum rilis publik, terutama bagian iklan dan cookie.</p>
 <h2>Yang diproses di browser</h2>
-<p>Konversi gambar, kompres gambar, ubah ukuran gambar, konversi audio, gabung PDF, pisah PDF, dan gambar ke PDF berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. Untuk konversi audio, browser memuat mesin pemroses (ffmpeg.wasm) dari situs ini sendiri, bukan dari pihak ketiga, lalu menyimpannya di browser.</p>
-<h2>Yang lewat server</h2>
-<p>Konversi Office, spreadsheet CSV/XLSX, dan kompres dokumen tertentu membutuhkan server. File kamu diunggah, diproses di wadah terisolasi tanpa akses internet, dan hasilnya tersedia untuk kamu unduh.</p>
-<ul>
-<li>File input dan hasil dihapus otomatis paling lama 1 jam setelah selesai.</li>
-<li>Nama file di penyimpanan diacak.</li>
-<li>Kami tidak membaca isi file, dan isi file tidak dicatat di log.</li>
-<li>Kami mencatat jenis konversi, status, dan waktu. Alamat IP dipakai sementara di memori untuk pembatasan laju dan tidak disimpan di database.</li>
-</ul>
+<p>Konversi gambar, kompres gambar, ubah ukuran gambar, upscale gambar, konversi audio, gabung PDF, pisah PDF, dan gambar ke PDF berjalan sepenuhnya di browser kamu. File tidak dikirim ke server kami. Untuk konversi audio, browser memuat mesin pemroses (ffmpeg.wasm) dari situs ini sendiri, bukan dari pihak ketiga, lalu menyimpannya di browser.</p>
+<h2>Privasi versi GitHub Pages</h2>
+<p>Versi GitHub Pages ini hanya menyediakan tool yang berjalan di browser. Tool yang memerlukan server belum aktif.</p>
+<p>Tool browser memproses file di perangkatmu. File tidak dikirim ke server Konvertin.</p>
 <h2>Akun</h2>
-<p>Kamu dapat memakai tool tanpa akun. Sistem mencatat jumlah konversi browser dan server secara agregat, termasuk penggunaan tanpa akun. Jika mendaftar, kami menyimpan email, nama tampilan, dan hash password untuk mengelola akun. Sesi masuk disimpan dalam cookie HttpOnly. Untuk akun login, riwayat mencatat jenis tool, sumber proses (browser/server), status, dan waktu; nama file serta isi file tidak dicatat. Riwayat disimpan sampai 1 tahun. File hasil tetap dihapus otomatis paling lama 1 jam setelah selesai.</p>
-<p>Admin hanya dapat melihat jumlah penggunaan agregat per hari dan jenis tool, tanpa akses ke file atau riwayat per pengguna.</p>
+<p>Fitur akun, riwayat, dan dashboard admin belum tersedia di situs GitHub Pages ini.</p>
 <h2>Iklan dan cookie</h2>
 <p>Situs ini direncanakan menampilkan iklan lewat Google AdSense. Saat iklan aktif, Google dapat memakai cookie untuk menampilkan iklan, dan kami akan menampilkan banner persetujuan cookie. Bagian ini harus diperbarui saat iklan dipasang.</p>
 <h2>Kontak</h2>
@@ -94,8 +77,8 @@
   </div>
 </footer>
 <script src="./js/config.js"></script>
-<script src="./js/accounts.js?v=3105ec9b" defer></script>
-<script src="./js/app.js?v=88f45f0a" defer></script>
+
+<script src="./js/app.js?v=c9a474cd" defer></script>
 
 </body>
 </html>

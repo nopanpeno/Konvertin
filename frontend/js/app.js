@@ -49,7 +49,12 @@
       pagesBad: "Halaman \"{x}\" tidak valid. Pakai angka dan rentang, misalnya 1-3, 5.",
       pagesRange: "Halaman {x} di luar jangkauan. PDF ini punya {n} halaman.",
       moveUp: "Naik",
-      moveDown: "Turun"
+      moveDown: "Turun",
+      upLoading: "Mengunduh mesin upscale (sekitar 3 MB, sekali saja)...",
+      upLoadFail: "Mesin upscale gagal diunduh. Cek koneksi internet lalu coba lagi.",
+      upTooBig: "Gambar ini terlalu besar untuk diperbesar {n}x. Hasil dibatasi {max} juta piksel, jadi gambar masuk maksimal sekitar {mp} juta piksel. Kecilkan dulu lewat Ubah ukuran, atau pilih skala yang lebih kecil.",
+      upFail: "Gambar gagal diperbesar. Perangkat mungkin kehabisan memori. Coba gambar yang lebih kecil atau skala 2x.",
+      upSlow: "Browser ini tidak mendukung WebGL, jadi prosesnya akan lambat."
     }
   };
   var LANG = "id";
@@ -274,6 +279,97 @@
         });
       });
     }
+  };
+
+  // ---------- upscale gambar (TensorFlow.js + model esrgan-slim, di browser) ----------
+  var UP_MAX_OUT = 12e6; // piksel hasil maksimal
+  var upState = { loading: null, byScale: {} };
+  function loadUpscaler(scale) {
+    if (!upState.loading) {
+      upState.loading = (window.tf ? Promise.resolve() : loadScript(APP_ROOT + "vendor/upscaler/tf.min.js"))
+        .then(function () { return window.Upscaler ? null : loadScript(APP_ROOT + "vendor/upscaler/upscaler.min.js"); })
+        .then(function () { return window.tf.ready(); })
+        .catch(function () { upState.loading = null; throw KError(t("upLoadFail")); });
+    }
+    return upState.loading.then(function () {
+      if (!upState.byScale[scale]) {
+        upState.byScale[scale] = new window.Upscaler({
+          model: { path: APP_ROOT + "vendor/upscaler/x" + scale + "/model.json", scale: scale, modelType: "layers", inputRange: [0, 255], outputRange: [0, 255] }
+        });
+      }
+      return upState.byScale[scale];
+    });
+  }
+  function hasAlpha(ctx2d, w, h) {
+    var d = ctx2d.getImageData(0, 0, w, h).data;
+    for (var i = 3; i < d.length; i += 4) if (d[i] < 255) return true;
+    return false;
+  }
+  imageOps["image-upscale"] = function (item, o, ctx) {
+    var scale = o.scale === 4 ? 4 : 2, aborted = false, current = null;
+    // pasang pembatalan sejak awal, supaya klik Batalkan saat mesin masih dimuat tidak hilang
+    ctx.setCancel(function () { aborted = true; if (current) current.abort(); });
+    return decodeImage(item.file, item.kind).then(function (bmp) {
+      var W = bmp.width, H = bmp.height;
+      if (W * H * scale * scale > UP_MAX_OUT) {
+        throw KError(t("upTooBig", { n: scale, max: UP_MAX_OUT / 1e6, mp: +(UP_MAX_OUT / 1e6 / (scale * scale)).toFixed(2) }));
+      }
+      var src = document.createElement("canvas"); src.width = W; src.height = H;
+      var sx = src.getContext("2d", { willReadFrequently: true });
+      sx.drawImage(bmp, 0, 0);
+      var alpha = hasAlpha(sx, W, H);
+      ctx.note(t("upLoading"));
+      return loadUpscaler(scale).then(function (up) {
+        ctx.note("");
+        if (aborted) throw KError(t("cancelled"));
+        if (window.tf.getBackend() === "cpu") ctx.note(t("upSlow"));
+        current = up;
+        ctx.progress(0.05);
+        // Upscaler.js baru menangkap sinyal batal saat upscale() mulai, jadi tunggu model siap dulu
+        return up.ready.then(function () {
+          if (aborted) throw KError(t("cancelled"));
+          var input = window.tf.browser.fromPixels(src);
+          return up.upscale(input, {
+            patchSize: 128, padding: 8, output: "tensor", awaitNextFrame: true, // jeda satu frame per langkah: UI dan tombol Batalkan tetap hidup
+            progressOutput: "tensor",
+            // WebGL hanya mengantre perintah. Baca hasil tiap petak supaya komputasinya benar-benar selesai:
+            // bilah proses jujur, dan tombol Batalkan berefek di antara petak.
+            progress: function (p, slice) {
+              if (slice && slice.dataSync) { try { slice.dataSync(); } catch (e) {} slice.dispose(); }
+              ctx.progress(0.05 + 0.85 * p);
+            }
+          });
+        });
+      }).then(function (out) {
+        var fixed = window.tf.tidy(function () { return out.clipByValue(0, 255).toInt(); });
+        out.dispose();
+        var oc = document.createElement("canvas"); oc.width = fixed.shape[1]; oc.height = fixed.shape[0];
+        return window.tf.browser.toPixels(fixed, oc).then(function () {
+          fixed.dispose();
+          if (!alpha) return oc;
+          // transparansi tidak ikut model: skalakan alpha asli dengan interpolasi, lalu tempel
+          var big = document.createElement("canvas"); big.width = oc.width; big.height = oc.height;
+          var bx = big.getContext("2d", { willReadFrequently: true });
+          bx.imageSmoothingQuality = "high"; bx.drawImage(src, 0, 0, big.width, big.height);
+          var a = bx.getImageData(0, 0, big.width, big.height).data;
+          var ox = oc.getContext("2d", { willReadFrequently: true });
+          var img = ox.getImageData(0, 0, oc.width, oc.height), d = img.data;
+          for (var i = 3; i < d.length; i += 4) d[i] = a[i];
+          ox.putImageData(img, 0, 0);
+          return oc;
+        });
+      }).then(function (oc) {
+        ctx.progress(0.95);
+        return encode(oc, o.format, o.quality / 100, 1).then(function (b) {
+          return { blob: b, name: baseName(item.file.name) + "-" + scale + "x." + o.format };
+        });
+      }).catch(function (e) {
+        if (aborted) throw KError(t("cancelled"));
+        if (e && e.user) throw e;
+        console.error(e);
+        throw KError(t("upFail"));
+      });
+    });
   };
 
   // ---------- PDF (pdf-lib, di browser) ----------
@@ -559,6 +655,7 @@
         targetKB: +v("#o-target") || 0, w: +v("#o-w") || 0, h: +v("#o-h") || 0,
         ts: +v("#o-ts") || 0, te: +v("#o-te") || 0,
         splitMode: (($("input[name=splitmode]:checked") || {}).value) || "range", pages: v("#o-pages"), page: v("#o-page"),
+        scale: +(($("input[name=upscale]:checked") || {}).value) || 2,
         server: level ? { level: level } : {}
       };
     }
@@ -708,7 +805,7 @@
     if (q) q.addEventListener("input", function () { qv.textContent = q.value; });
     function syncOpts() {
       var fmt = $("#o-format") ? $("#o-format").value : "";
-      var fq = $("#f-quality"); if (fq && (cfg.op === "image-convert" || cfg.op === "image-resize")) fq.hidden = fmt === "png";
+      var fq = $("#f-quality"); if (fq && (cfg.op === "image-convert" || cfg.op === "image-resize" || cfg.op === "image-upscale")) fq.hidden = fmt === "png";
       var fb = $("#f-bitrate"); if (fb && AUDIO[fmt]) fb.hidden = !AUDIO[fmt].br;
       var fp = $("#f-pages"), sm = $("input[name=splitmode]:checked"); if (fp && sm) fp.hidden = sm.value === "all";
     }

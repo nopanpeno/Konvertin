@@ -430,5 +430,32 @@
         "a": "JPG dimasukkan ulang dengan kualitas tinggi. PNG tetap PNG. WEBP dan HEIC disimpan sebagai JPG di dalam PDF."
       }
     ]
+  },
+  "upscale-gambar": {
+    "use": "Pakai Upscale gambar untuk membesarkan gambar kecil, misalnya foto lama, ikon, atau tangkapan layar beresolusi rendah, supaya lebih layak dicetak atau dipakai di layar besar. Prosesnya memakai model jaringan saraf yang berjalan di browser, jadi gambar tidak diunggah ke server. Hasilnya lebih halus daripada diperbesar biasa, tetapi model ini ringan, jadi jangan berharap detail baru muncul.",
+    "steps": [
+      "Tarik gambar ke kotak, atau tempel dengan Ctrl+V.",
+      "Pilih skala 2x atau 4x, dan format hasil. PNG paling aman untuk kualitas.",
+      "Klik Konversi dan tunggu bilah proses selesai. Pertama kali, mesin sekitar 3 MB diunduh dulu.",
+      "Unduh gambar hasil."
+    ],
+    "faq": [
+      {
+        "q": "Apakah gambar saya diunggah?",
+        "a": "Tidak. Model dan mesinnya dijalankan di browser kamu. Hanya file mesin dan model yang diunduh dari situs ini, sekali saja."
+      },
+      {
+        "q": "Kenapa gambar besar ditolak?",
+        "a": "Hasil dibatasi 12 juta piksel supaya browser tidak kehabisan memori. Skala 2x menerima gambar sampai sekitar 3 juta piksel, dan 4x sampai sekitar 0,75 juta piksel. Kecilkan dulu lewat Ubah ukuran, atau pilih skala lebih kecil."
+      },
+      {
+        "q": "Kenapa prosesnya lambat?",
+        "a": "Model berjalan di kartu grafis lewat WebGL. Di perangkat tanpa dukungan itu, prosesnya jatuh ke prosesor dan jauh lebih lambat. Skala 2x lebih cepat daripada 4x."
+      },
+      {
+        "q": "Apakah hasilnya setajam Real-ESRGAN atau aplikasi desktop?",
+        "a": "Tidak. Model yang dipakai sengaja ringan agar muat di browser dan di halaman statis. Hasilnya lebih halus dari pembesaran biasa, tetapi tidak sekuat model besar."
+      }
+    ]
   }
 }
